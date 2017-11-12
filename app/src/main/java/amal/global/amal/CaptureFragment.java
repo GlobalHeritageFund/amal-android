@@ -186,7 +186,7 @@ public class CaptureFragment extends Fragment {
                 }
                 @Override
                 public void onConfigureFailed(@NonNull CameraCaptureSession cameraCaptureSession) {
-//                    Toast.makeText(CameraActivity.this, "Configuration change", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getActivity(), "Configuration change", Toast.LENGTH_SHORT).show();
                 }
             }, null);
         } catch (CameraAccessException e) {
@@ -291,7 +291,7 @@ public class CaptureFragment extends Fragment {
                 @Override
                 public void onCaptureCompleted(CameraCaptureSession session, CaptureRequest request, TotalCaptureResult result) {
                     super.onCaptureCompleted(session, request, result);
-//                    Toast.makeText(CaptureFragment.this, "Saved:" + file, Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getActivity(), "Saved:" + file, Toast.LENGTH_SHORT).show();
                     createCameraPreview();
                 }
             };
@@ -328,7 +328,7 @@ public class CaptureFragment extends Fragment {
     @Override
     public void onPause() {
         Log.e("asdf", "onPause");
-        // we don't have a close camera method? probably should go find that
+//        we don't have a close camera method? probably should go find that
 //        closeCamera();
         stopBackgroundThread();
         super.onPause();
