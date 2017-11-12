@@ -16,12 +16,15 @@ public class TabActivity extends AppCompatActivity {
             switch (item.getItemId()) {
                 case R.id.navigation_assess:
                     getSupportFragmentManager().beginTransaction().replace(R.id.content, new AssessFragment()).commit();
+                    getSupportActionBar().setTitle(R.string.title_assess);
                     return true;
                 case R.id.navigation_capture:
                     getSupportFragmentManager().beginTransaction().replace(R.id.content, new CaptureFragment()).commit();
+                    getSupportActionBar().setTitle(R.string.title_capture);
                     return true;
                 case R.id.navigation_report:
                     getSupportFragmentManager().beginTransaction().replace(R.id.content, new ReportFragment()).commit();
+                    getSupportActionBar().setTitle(R.string.title_report);
                     return true;
             }
             return false;
