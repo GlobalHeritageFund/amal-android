@@ -2,7 +2,7 @@
     <string name="app_name">Amal</string>
     <string name="take_picture">Take Picture</string>
     <string name="title_activity_main">MainActivity</string>
-    <string name="title_home">Home</string>
-    <string name="title_dashboard">Dashboard</string>
-    <string name="title_notifications">Notifications</string>
+    <string name="title_assess">Assess</string>
+    <string name="title_capture">Capture</string>
+    <string name="title_report">Report</string>
 </resources>
