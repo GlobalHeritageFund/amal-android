@@ -301,14 +301,6 @@ public class CameraActivity extends AppCompatActivity {
         } else {
             textureView.setSurfaceTextureListener(textureListener);
         }
-
-
-        File f = getFilesDir();
-        Log.d("asdf", f.getAbsolutePath());
-        File[] files = f.listFiles();
-        for (File file : files) {
-            Log.d("asdf", file.getName());
-        }
     }
 
     @Override
