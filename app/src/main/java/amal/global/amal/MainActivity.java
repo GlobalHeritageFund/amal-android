@@ -26,7 +26,7 @@ public class MainActivity extends AppCompatActivity {
                     mTextMessage.setText(R.string.title_assess);
                     return true;
                 case R.id.navigation_report:
-                    mTextMessage.setText(R.string.title_report);
+                    getSupportFragmentManager().beginTransaction().replace(R.id.content, new ReportFragment()).commit();
                     return true;
             }
             return false;

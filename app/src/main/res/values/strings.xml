@@ -5,5 +5,7 @@
     <string name="title_assess">Assess</string>
     <string name="title_capture">Capture</string>
     <string name="title_report">Report</string>
-    <string name="hello_blank_fragment">Hello assess</string>
+    <string name="hello_assess_fragment">Hello assess</string>
+    <string name="hello_report_fragment">Hello report</string>
+    <string name="hello_capture_fragment">Hello capture</string>
 </resources>
