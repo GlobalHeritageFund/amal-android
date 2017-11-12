@@ -23,7 +23,7 @@ public class MainActivity extends AppCompatActivity {
                     getSupportFragmentManager().beginTransaction().replace(R.id.content, new AssessFragment()).commit();
                     return true;
                 case R.id.navigation_capture:
-                    mTextMessage.setText(R.string.title_assess);
+                    getSupportFragmentManager().beginTransaction().replace(R.id.content, new CaptureFragment()).commit();
                     return true;
                 case R.id.navigation_report:
                     getSupportFragmentManager().beginTransaction().replace(R.id.content, new ReportFragment()).commit();
