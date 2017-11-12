@@ -24,7 +24,6 @@ import android.media.ImageReader;
 import android.graphics.ImageFormat;
 import android.support.annotation.NonNull;
 import android.media.Image;
-import android.os.Environment;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -44,7 +43,7 @@ import android.hardware.camera2.TotalCaptureResult;
 import android.hardware.camera2.params.StreamConfigurationMap;
 
 
-public class RootActivity extends AppCompatActivity {
+public class CameraActivity extends AppCompatActivity {
 
     private TextureView textureView;
     private Button takePictureButton;
@@ -134,7 +133,7 @@ public class RootActivity extends AppCompatActivity {
             // Add permission for camera and let user grant the permission
             if (ActivityCompat.checkSelfPermission(this, Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED
                     && ActivityCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
-                ActivityCompat.requestPermissions(RootActivity.this, new String[]{Manifest.permission.CAMERA, Manifest.permission.WRITE_EXTERNAL_STORAGE}, REQUEST_CAMERA_PERMISSION);
+                ActivityCompat.requestPermissions(CameraActivity.this, new String[]{Manifest.permission.CAMERA, Manifest.permission.WRITE_EXTERNAL_STORAGE}, REQUEST_CAMERA_PERMISSION);
                 return;
             }
             manager.openCamera(cameraId, stateCallback, null);
@@ -165,7 +164,7 @@ public class RootActivity extends AppCompatActivity {
                 }
                 @Override
                 public void onConfigureFailed(@NonNull CameraCaptureSession cameraCaptureSession) {
-                    Toast.makeText(RootActivity.this, "Configuration change", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(CameraActivity.this, "Configuration change", Toast.LENGTH_SHORT).show();
                 }
             }, null);
         } catch (CameraAccessException e) {
@@ -270,7 +269,7 @@ public class RootActivity extends AppCompatActivity {
                 @Override
                 public void onCaptureCompleted(CameraCaptureSession session, CaptureRequest request, TotalCaptureResult result) {
                     super.onCaptureCompleted(session, request, result);
-                    Toast.makeText(RootActivity.this, "Saved:" + file, Toast.LENGTH_SHORT).show();
+                    Toast.makeText(CameraActivity.this, "Saved:" + file, Toast.LENGTH_SHORT).show();
                     createCameraPreview();
                 }
             };

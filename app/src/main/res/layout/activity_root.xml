@@ -4,7 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    tools:context="amal.global.amal.RootActivity">
+    tools:context="amal.global.amal.CameraActivity">
 
     <TextureView
         android:id="@+id/texture"
