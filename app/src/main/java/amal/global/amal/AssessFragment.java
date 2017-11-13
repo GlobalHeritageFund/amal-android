@@ -55,25 +55,7 @@ class ImageAdapter extends BaseAdapter {
 
     public ImageAdapter(Context c) {
         context = c;
-        images = fetchImages();
-        Log.d("Asdfasda", String.format("%d", images.size()));
-    }
-
-    public ArrayList<Image> fetchImages() {
-        final File dir = new File(context.getFilesDir() + "/images/");
-        dir.mkdirs();
-        File[] files = dir.listFiles();
-        ArrayList<Image> images = new ArrayList<Image>();
-        for (File file : files) {
-            String filename = file.getName();
-            String fileExtension = FilenameUtils.getExtension(filename);
-            String IDString = FilenameUtils.removeExtension(filename);
-            Log.d("asdfasd", fileExtension);
-            if (fileExtension.equals("jpg") || fileExtension.equals("jpeg")) {
-                images.add(new Image(file.getAbsolutePath()));
-            }
-        }
-        return images;
+        images = new PhotoStorage(context).fetchImages();
     }
 
     @Override
