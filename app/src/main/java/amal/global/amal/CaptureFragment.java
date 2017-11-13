@@ -251,18 +251,6 @@ public class CaptureFragment extends Fragment {
             // Orientation
             int rotation = getActivity().getWindowManager().getDefaultDisplay().getRotation();
             captureBuilder.set(CaptureRequest.JPEG_ORIENTATION, ORIENTATIONS.get(rotation));
-            final File dir = new File(getActivity().getFilesDir() + "/images/");
-            dir.mkdirs();
-            int maxImageID = -1;
-            for (File file : dir.listFiles()) {
-                String filename = file.getName();
-                String IDString = FilenameUtils.removeExtension(filename);
-                int id = Integer.parseInt(IDString);
-                if (id > maxImageID) {
-                    maxImageID = id;
-                }
-            }
-            final File file = new File(dir + String.format("/%d.jpg", maxImageID+1));
             ImageReader.OnImageAvailableListener readerListener = new ImageReader.OnImageAvailableListener() {
                 @Override
                 public void onImageAvailable(ImageReader reader) {
@@ -284,15 +272,7 @@ public class CaptureFragment extends Fragment {
                     }
                 }
                 private void save(byte[] bytes) throws IOException {
-                    OutputStream output = null;
-                    try {
-                        output = new FileOutputStream(file);
-                        output.write(bytes);
-                    } finally {
-                        if (null != output) {
-                            output.close();
-                        }
-                    }
+                    new PhotoStorage(getActivity()).savePhotoLocally(bytes);
                 }
             };
             reader.setOnImageAvailableListener(readerListener, backgroundHandler);
@@ -300,7 +280,7 @@ public class CaptureFragment extends Fragment {
                 @Override
                 public void onCaptureCompleted(CameraCaptureSession session, CaptureRequest request, TotalCaptureResult result) {
                     super.onCaptureCompleted(session, request, result);
-                    Toast.makeText(getActivity(), "Saved:" + file, Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getActivity(), "Saved a file", Toast.LENGTH_SHORT).show();
                     createCameraPreview();
                 }
             };
