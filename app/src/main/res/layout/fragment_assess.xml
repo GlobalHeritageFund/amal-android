@@ -4,10 +4,16 @@
     android:layout_height="match_parent"
     tools:context="amal.global.amal.AssessFragment">
 
-    <!-- TODO: Update blank fragment layout -->
-    <TextView
+    <GridView xmlns:android="http://schemas.android.com/apk/res/android"
+        android:id="@+id/gridview"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:text="@string/hello_assess_fragment" />
+        android:columnWidth="90dp"
+        android:numColumns="auto_fit"
+        android:verticalSpacing="10dp"
+        android:horizontalSpacing="10dp"
+        android:stretchMode="columnWidth"
+        android:gravity="center"
+        />
 
 </FrameLayout>
