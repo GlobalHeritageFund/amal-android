@@ -253,7 +253,16 @@ public class CaptureFragment extends Fragment {
             captureBuilder.set(CaptureRequest.JPEG_ORIENTATION, ORIENTATIONS.get(rotation));
             final File dir = new File(getActivity().getFilesDir() + "/images/");
             dir.mkdirs();
-            final File file = new File(dir + "/0.jpg");
+            int maxImageID = -1;
+            for (File file : dir.listFiles()) {
+                String filename = file.getName();
+                String IDString = FilenameUtils.removeExtension(filename);
+                int id = Integer.parseInt(IDString);
+                if (id > maxImageID) {
+                    maxImageID = id;
+                }
+            }
+            final File file = new File(dir + String.format("/%d.jpg", maxImageID+1));
             ImageReader.OnImageAvailableListener readerListener = new ImageReader.OnImageAvailableListener() {
                 @Override
                 public void onImageAvailable(ImageReader reader) {
@@ -335,3 +344,4 @@ public class CaptureFragment extends Fragment {
     }
 
 }
+
