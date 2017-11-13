@@ -1,6 +1,7 @@
 package amal.global.amal;
 
 import android.content.Context;
+import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -86,7 +87,9 @@ class ImageAdapter extends BaseAdapter {
         }
 
         Image image = (Image)getItem(position);
-        imageView.setImageBitmap(BitmapFactory.decodeFile(image.filePath));
+        Bitmap fullBitmap = BitmapFactory.decodeFile(image.filePath);
+        Bitmap resizedBitmap = Bitmap.createScaledBitmap(fullBitmap, 200, 200, true);
+        imageView.setImageBitmap(resizedBitmap);
         return imageView;
     }
 
