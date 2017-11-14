@@ -48,10 +48,3 @@ public class AssessFragment extends Fragment {
     }
 }
 
-class Image {
-    String filePath;
-
-    Image(String filePath) {
-        this.filePath = filePath;
-    }
-}
