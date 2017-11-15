@@ -48,7 +48,7 @@ class ImageAdapter extends BaseAdapter {
         }
 
         Image image = (Image)getItem(position);
-        Bitmap fullBitmap = BitmapFactory.decodeFile(image.filePath);
+        Bitmap fullBitmap = BitmapFactory.decodeFile(image.getFilePath());
         Bitmap resizedBitmap = Bitmap.createScaledBitmap(fullBitmap, 200, 200, true);
         imageView.setImageBitmap(resizedBitmap);
         return imageView;

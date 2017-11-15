@@ -48,7 +48,7 @@ public class AssessFragment extends Fragment {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 Image image = (Image)imageAdapter.getItem(position);
-                Log.d("asf", image.filePath);
+                Log.d("asf", image.getFilePath());
             }
         });
 
