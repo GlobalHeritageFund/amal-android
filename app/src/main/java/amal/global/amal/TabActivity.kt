@@ -1,5 +1,7 @@
 package amal.global.amal
 
+import android.app.Fragment
+import android.app.FragmentTransaction
 import android.os.Bundle
 import android.support.design.widget.BottomNavigationView
 import android.support.v7.app.AppCompatActivity
@@ -39,11 +41,13 @@ class TabActivity : AppCompatActivity(), AssessDelegate {
         navigation.selectedItemId = R.id.navigation_capture
     }
 
-    override fun imageTapped(image: Image) {
+    override fun imageTapped(fragment: AssessFragment, image: Image) {
         val reportFragment = ReportFragment()
         supportFragmentManager
                 .beginTransaction()
-                .replace(R.id.content, reportFragment)
+                .setCustomAnimations(R.anim.enter, R.anim.exit, R.anim.pop_enter, R.anim.pop_exit)
+                .remove(fragment)
+                .add(R.id.content, reportFragment)
                 .addToBackStack(null)
                 .commit()
 

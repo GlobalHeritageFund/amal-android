@@ -18,7 +18,7 @@ import java.io.File
 import java.util.ArrayList
 
 public interface AssessDelegate {
-    public fun imageTapped(image: Image)
+    public fun imageTapped(fragment: AssessFragment, image: Image)
 }
 
 class AssessFragment : Fragment() {
@@ -44,7 +44,7 @@ class AssessFragment : Fragment() {
 
         gridview.onItemClickListener = AdapterView.OnItemClickListener { parent, view, position, id ->
             val image = imageAdapter?.getItem(position) as Image
-            delegate?.imageTapped(image)
+            delegate?.imageTapped(this, image)
         }
     }
 }
