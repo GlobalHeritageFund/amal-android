@@ -17,8 +17,13 @@ import android.widget.ImageView
 import java.io.File
 import java.util.ArrayList
 
+public interface AssessDelegate {
+    public fun imageTapped(image: Image)
+}
 
 class AssessFragment : Fragment() {
+
+    var delegate: AssessDelegate? = null
 
     internal var imageAdapter: ImageAdapter? = null
 
@@ -39,9 +44,8 @@ class AssessFragment : Fragment() {
 
         gridview.onItemClickListener = AdapterView.OnItemClickListener { parent, view, position, id ->
             val image = imageAdapter?.getItem(position) as Image
-            Log.d("asf", image.filePath)
+            delegate?.imageTapped(image)
         }
-
     }
 }
 

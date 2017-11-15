@@ -5,12 +5,14 @@ import android.support.design.widget.BottomNavigationView
 import android.support.v7.app.AppCompatActivity
 import android.view.View
 
-class TabActivity : AppCompatActivity() {
+class TabActivity : AppCompatActivity(), AssessDelegate {
 
     private val mOnNavigationItemSelectedListener = BottomNavigationView.OnNavigationItemSelectedListener { item ->
         when (item.itemId) {
             R.id.navigation_assess -> {
-                supportFragmentManager.beginTransaction().replace(R.id.content, AssessFragment()).commit()
+                val assess = AssessFragment()
+                assess.delegate = this
+                supportFragmentManager.beginTransaction().replace(R.id.content, assess).commit()
                 supportActionBar?.setTitle(R.string.title_assess)
                 return@OnNavigationItemSelectedListener true
             }
@@ -35,6 +37,16 @@ class TabActivity : AppCompatActivity() {
         val navigation = findViewById<View>(R.id.navigation) as BottomNavigationView
         navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener)
         navigation.selectedItemId = R.id.navigation_capture
+    }
+
+    override fun imageTapped(image: Image) {
+        val reportFragment = ReportFragment()
+        supportFragmentManager
+                .beginTransaction()
+                .replace(R.id.content, reportFragment)
+                .addToBackStack(null)
+                .commit()
+
     }
 
 }
