@@ -220,7 +220,7 @@ class CaptureFragment : Fragment() {
             captureBuilder.set(CaptureRequest.CONTROL_MODE, CameraMetadata.CONTROL_MODE_AUTO)
             // Orientation
             val rotation = activity.windowManager.defaultDisplay.rotation
-            captureBuilder.set(CaptureRequest.JPEG_ORIENTATION, ORIENTATIONS.get(rotation))
+            captureBuilder.set(CaptureRequest.JPEG_ORIENTATION, orientationFor(rotation))
             val readerListener = object : ImageReader.OnImageAvailableListener {
                 override fun onImageAvailable(reader: ImageReader) {
                     var image: Image? = null
@@ -291,18 +291,24 @@ class CaptureFragment : Fragment() {
         super.onPause()
     }
 
-    companion object {
+    private val REQUEST_CAMERA_PERMISSION = 200
 
-        private val REQUEST_CAMERA_PERMISSION = 200
-
-        private val ORIENTATIONS = SparseIntArray()
-
-        init {
-            ORIENTATIONS.append(Surface.ROTATION_0, 90)
-            ORIENTATIONS.append(Surface.ROTATION_90, 0)
-            ORIENTATIONS.append(Surface.ROTATION_180, 270)
-            ORIENTATIONS.append(Surface.ROTATION_270, 180)
+    fun orientationFor(rotation: Int): Int {
+        when (rotation) {
+            Surface.ROTATION_0 -> {
+                return 90
+            }
+            Surface.ROTATION_90 -> {
+                return 0
+            }
+            Surface.ROTATION_180 -> {
+                return 270
+            }
+            Surface.ROTATION_270 -> {
+                return 170
+            }
         }
+        return 0
     }
 
 }
