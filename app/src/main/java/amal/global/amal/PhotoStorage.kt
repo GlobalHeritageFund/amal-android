@@ -47,20 +47,12 @@ class PhotoStorage internal constructor(internal var context: Context) {
         }
     }
 
-    public fun fetchImages(): ArrayList<Image> {
+    public fun fetchImages(): List<Image> {
         val dir = File(context.filesDir.toString() + "/images/")
         dir.mkdirs()
-        val files = dir.listFiles()
-        val images = ArrayList<Image>()
-        for (file in files) {
-            val filename = file.name
-            val fileExtension = filename.getExtension()
-            val IDString = filename.removeExtension()
-            if (fileExtension == "jpg" || fileExtension == "jpeg") {
-                images.add(Image(file.absolutePath))
-            }
-        }
-        return images
+        return dir.listFiles()
+                .filter { file -> file.extension == "jpg" || file.extension == "jpeg" }
+                .map { file -> Image(file.absolutePath) }
     }
 
 }
