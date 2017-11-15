@@ -17,7 +17,7 @@ class PhotoStorage internal constructor(internal var context: Context) {
         dir.mkdirs()
 
         val maxImageID = dir.listFiles()
-                .map { file ->  file.name.removeExtension().toIntOrNull() }
+                .map { file ->  file.nameWithoutExtension.toIntOrNull() }
                 .filterNotNull()
                 .max() ?: 0
 
