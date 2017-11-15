@@ -30,10 +30,10 @@ class GalleryFragment : Fragment() {
 
     override fun onViewCreated(view: View?, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        val gridview = getView()?.findViewById<View>(R.id.gridview) as GridView
-        gridview.adapter = imageAdapter
+        val gridview = getView()?.findViewById<GridView>(R.id.gridview)
+        gridview?.adapter = imageAdapter
 
-        gridview.onItemClickListener = AdapterView.OnItemClickListener { parent, view, position, id ->
+        gridview?.onItemClickListener = AdapterView.OnItemClickListener { parent, view, position, id ->
             val image = imageAdapter?.getItem(position) as Image
             delegate?.imageTapped(this, image)
         }

@@ -100,13 +100,10 @@ class CaptureFragment : Fragment() {
 
     override fun onViewCreated(view: View?, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        textureView = getView()?.findViewById<View>(R.id.texture) as TextureView
-        assert(textureView != null)
+        textureView = getView()?.findViewById<TextureView>(R.id.texture)
         textureView?.surfaceTextureListener = textureListener
-        takePictureButton = getView()?.findViewById<View>(R.id.btn_takepicture) as Button
-        assert(takePictureButton != null)
+        takePictureButton = getView()?.findViewById<Button>(R.id.btn_takepicture)
         takePictureButton?.setOnClickListener { takePicture() }
-
     }
 
     override fun onDetach() {

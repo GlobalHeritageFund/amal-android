@@ -36,7 +36,7 @@ class TabActivity : AppCompatActivity(), GalleryDelegate {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_tab)
 
-        val navigation = findViewById<View>(R.id.navigation) as BottomNavigationView
+        val navigation = findViewById<BottomNavigationView>(R.id.navigation)
         navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener)
         navigation.selectedItemId = R.id.navigation_capture
     }
