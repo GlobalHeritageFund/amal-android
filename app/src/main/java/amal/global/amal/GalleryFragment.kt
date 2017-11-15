@@ -17,13 +17,13 @@ import android.widget.ImageView
 import java.io.File
 import java.util.ArrayList
 
-public interface AssessDelegate {
-    public fun imageTapped(fragment: AssessFragment, image: Image)
+public interface GalleryDelegate {
+    public fun imageTapped(fragment: GalleryFragment, image: Image)
 }
 
-class AssessFragment : Fragment() {
+class GalleryFragment : Fragment() {
 
-    var delegate: AssessDelegate? = null
+    var delegate: GalleryDelegate? = null
 
     internal var imageAdapter: ImageAdapter? = null
 
