@@ -42,12 +42,13 @@ class TabActivity : AppCompatActivity(), GalleryDelegate {
     }
 
     override fun imageTapped(fragment: GalleryFragment, image: Image) {
-        val reportFragment = ReportFragment()
+        val assessFragment = AssessFragment()
+        assessFragment.image = image
         supportFragmentManager
                 .beginTransaction()
                 .setCustomAnimations(R.anim.enter, R.anim.exit, R.anim.pop_enter, R.anim.pop_exit)
                 .remove(fragment)
-                .add(R.id.content, reportFragment)
+                .add(R.id.content, assessFragment)
                 .addToBackStack(null)
                 .commit()
 
