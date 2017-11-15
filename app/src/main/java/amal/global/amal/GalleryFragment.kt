@@ -1,21 +1,12 @@
 package amal.global.amal
 
-import android.content.Context
-import android.graphics.Bitmap
-import android.graphics.BitmapFactory
 import android.os.Bundle
 import android.support.v4.app.Fragment
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.AdapterView
-import android.widget.BaseAdapter
 import android.widget.GridView
-import android.widget.ImageView
-
-import java.io.File
-import java.util.ArrayList
 
 public interface GalleryDelegate {
     public fun imageTapped(fragment: GalleryFragment, image: Image)
@@ -34,7 +25,7 @@ class GalleryFragment : Fragment() {
 
     override fun onCreateView(inflater: LayoutInflater?, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
-        return inflater?.inflate(R.layout.fragment_assess, container, false)
+        return inflater?.inflate(R.layout.fragment_gallery, container, false)
     }
 
     override fun onViewCreated(view: View?, savedInstanceState: Bundle?) {
