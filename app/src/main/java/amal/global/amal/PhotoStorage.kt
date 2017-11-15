@@ -15,15 +15,12 @@ class PhotoStorage internal constructor(internal var context: Context) {
     public fun savePhotoLocally(bytes: ByteArray) {
         val dir = File(context.filesDir.toString() + "/images/")
         dir.mkdirs()
-        var maxImageID = -1
-        for (file in dir.listFiles()) {
-            val filename = file.name
-            val IDString = filename.removeExtension()
-            val id = Integer.parseInt(IDString)
-            if (id > maxImageID) {
-                maxImageID = id
-            }
-        }
+
+        val maxImageID = dir.listFiles()
+                .map { file ->  file.name.removeExtension().toIntOrNull() }
+                .filterNotNull()
+                .max() ?: 0
+
         val newImageID = maxImageID + 1
         val file = File(dir.toString() + "/$newImageID.jpg")
         val output: OutputStream? = null
