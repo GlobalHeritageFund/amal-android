@@ -23,7 +23,6 @@ class PhotoStorage internal constructor(internal var context: Context) {
 
         val newImageID = maxImageID + 1
         val file = File(dir.toString() + "/$newImageID.jpg")
-        val output: OutputStream? = null
         try {
             save(bytes, file)
         } catch (e: FileNotFoundException) {
