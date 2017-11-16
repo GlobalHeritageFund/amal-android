@@ -24,13 +24,12 @@
             android:layout_width="fill_parent">
         </EditText>
 
-        <com.google.android.gms.maps.MapView
-            android:id="@+id/mapView"
-            android:layout_width="match_parent"
-            android:layout_height="200dp" />
+        <!--<com.google.android.gms.maps.MapView-->
+            <!--android:id="@+id/mapView"-->
+            <!--android:layout_width="match_parent"-->
+            <!--android:layout_height="200dp" />-->
 
         <TextView
-            android:id="@+id/textView"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="Category" />
@@ -57,7 +56,27 @@
         </RadioGroup>
 
         <TextView
-            android:id="@+id/textView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Assess" />
+
+        <CheckBox android:id="@+id/checkbox_hazards"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Hazards"
+            android:onClick="onCheckboxClicked"/>
+        <CheckBox android:id="@+id/checkbox_safety"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Safety/Personal Hazard"
+            android:onClick="onCheckboxClicked"/>
+        <CheckBox android:id="@+id/checkbox_intervention"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Intervention Recommended"
+            android:onClick="onCheckboxClicked"/>
+
+        <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="Description" />
