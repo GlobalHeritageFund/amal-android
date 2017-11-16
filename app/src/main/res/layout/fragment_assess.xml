@@ -16,10 +16,15 @@
             android:layout_height="200dp"
             android:contentDescription="Image Thumb" />
 
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Name" />
+
         <EditText
             android:id="@+id/edit_text_view"
             android:layout_height="wrap_content"
-            android:hint="name"
+            android:hint="Name"
             android:inputType="textPersonName"
             android:layout_width="fill_parent">
         </EditText>
@@ -41,17 +46,53 @@
             <RadioButton android:id="@+id/radio_overall"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="overall area"
+                android:text="Overall Area"
                 android:onClick="onRadioButtonClicked"/>
             <RadioButton android:id="@+id/radio_site"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="site/building"
+                android:text="Site / Building"
                 android:onClick="onRadioButtonClicked"/>
             <RadioButton android:id="@+id/radio_object"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="object"
+                android:text="Object"
+                android:onClick="onRadioButtonClicked"/>
+        </RadioGroup>
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Condition" />
+
+        <RadioGroup xmlns:android="http://schemas.android.com/apk/res/android"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+            <RadioButton android:id="@+id/radio_condition_1"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="1"
+                android:onClick="onRadioButtonClicked"/>
+            <RadioButton android:id="@+id/radio_condition_2"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="2"
+                android:onClick="onRadioButtonClicked"/>
+            <RadioButton android:id="@+id/radio_condition_3"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="3"
+                android:onClick="onRadioButtonClicked"/>
+            <RadioButton android:id="@+id/radio_condition_4"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="4"
+                android:onClick="onRadioButtonClicked"/>
+            <RadioButton android:id="@+id/radio_condition_5"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="5"
                 android:onClick="onRadioButtonClicked"/>
         </RadioGroup>
 
@@ -79,10 +120,10 @@
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Description" />
+            android:text="Notes" />
 
         <EditText
-            android:id="@+id/description"
+            android:id="@+id/notes"
             android:inputType="textMultiLine"
             android:lines="8"
             android:minLines="6"
@@ -92,6 +133,12 @@
             android:layout_width="match_parent"
             android:scrollbars="vertical"
         />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="45.38, 75.7" />
+
 
     </LinearLayout>
 </ScrollView>
