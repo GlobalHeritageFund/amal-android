@@ -1,2 +1,0 @@
-package amal.global.amal
-
