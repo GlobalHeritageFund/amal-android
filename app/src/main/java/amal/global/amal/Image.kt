@@ -4,7 +4,9 @@ import org.json.JSONObject
 import java.time.LocalDateTime
 
 data class Image internal constructor(
-        public var filePath: String
+        public var filePath: String,
+        public var settingsPath: String,
+        public var metadata: Metadata = Metadata()
 )
 
 data class Metadata internal constructor(
