@@ -49,9 +49,15 @@ class PhotoStorage internal constructor(internal var context: Context) {
     public fun fetchImages(): List<Image> {
         val dir = File(context.filesDir.toString() + "/images/")
         dir.mkdirs()
-        return dir.listFiles()
-                .filter { file -> file.extension == "jpg" || file.extension == "jpeg" }
-                .map { file -> Image(file.absolutePath) }
+        return dir
+                .listFiles()
+                .filter { file ->
+                    file.extension == "jpg" || file.extension == "jpeg"
+                }
+                .map { file ->
+                    Image.convenience(file.absolutePath, file.absolutePath.replaceAfterLast(".", "json"))
+                }
+
     }
 
 }

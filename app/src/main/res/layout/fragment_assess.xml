@@ -22,7 +22,7 @@
             android:text="@string/name" />
 
         <EditText
-            android:id="@+id/edit_text_view"
+            android:id="@+id/name_field"
             android:layout_height="wrap_content"
             android:hint="@string/name"
             android:inputType="textPersonName"

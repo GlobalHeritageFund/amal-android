@@ -1,13 +1,31 @@
 package amal.global.amal
 
 import org.json.JSONObject
-import java.time.LocalDateTime
+import java.io.File
 
 data class Image internal constructor(
         public var filePath: String,
         public var settingsPath: String,
-        public var metadata: Metadata = Metadata()
-)
+        public var metadata: Metadata
+) {
+    companion object {
+        fun convenience(filePath: String, settingsPath: String) : Image {
+            var metadata: Metadata? = null
+            try {
+                metadata = Metadata.fromJSON(File(settingsPath).readText())
+            } catch (e: Exception) {
+
+            }
+
+            return Image(filePath, settingsPath, metadata ?: Metadata())
+        }
+    }
+
+    fun saveMetaData() {
+        val json = metadata.toJSON()
+        File(settingsPath).writeText(json)
+    }
+}
 
 data class Metadata internal constructor(
         public var name: String = "",
@@ -23,7 +41,7 @@ data class Metadata internal constructor(
         public var localIdentifier: String = ""
 ) {
     fun toJSON(): String {
-        var jsonObject = JSONObject()
+        val jsonObject = JSONObject()
         jsonObject.put("name", name)
         jsonObject.put("category", category)
         jsonObject.put("levelOfDamage", levelOfDamage)
@@ -40,7 +58,7 @@ data class Metadata internal constructor(
 
     companion object {
         fun fromJSON(string: String): Metadata {
-            var jsonObject = JSONObject(string)
+            val jsonObject = JSONObject(string)
             return Metadata(
                     jsonObject.getString("name"),
                     jsonObject.getString("category"),
