@@ -14,17 +14,17 @@
             android:id="@+id/image_view"
             android:layout_width="match_parent"
             android:layout_height="200dp"
-            android:contentDescription="Image Thumb" />
+            android:contentDescription="@string/image_thumb" />
 
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Name" />
+            android:text="@string/name" />
 
         <EditText
             android:id="@+id/edit_text_view"
             android:layout_height="wrap_content"
-            android:hint="Name"
+            android:hint="@string/name"
             android:inputType="textPersonName"
             android:layout_width="fill_parent">
         </EditText>
@@ -37,7 +37,7 @@
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Category" />
+            android:text="@string/category" />
 
         <RadioGroup xmlns:android="http://schemas.android.com/apk/res/android"
             android:layout_width="fill_parent"
@@ -46,24 +46,21 @@
             <RadioButton android:id="@+id/radio_overall"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Overall Area"
-                android:onClick="onRadioButtonClicked"/>
+                android:text="@string/overall_area"/>
             <RadioButton android:id="@+id/radio_site"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Site / Building"
-                android:onClick="onRadioButtonClicked"/>
+                android:text="@string/site_building"/>
             <RadioButton android:id="@+id/radio_object"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Object"
-                android:onClick="onRadioButtonClicked"/>
+                android:text="@string/object"/>
         </RadioGroup>
 
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Condition" />
+            android:text="@string/condition" />
 
         <RadioGroup xmlns:android="http://schemas.android.com/apk/res/android"
             android:layout_width="fill_parent"
@@ -72,62 +69,57 @@
             <RadioButton android:id="@+id/radio_condition_1"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="1"
-                android:onClick="onRadioButtonClicked"/>
+                android:text="1"/>
             <RadioButton android:id="@+id/radio_condition_2"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="2"
-                android:onClick="onRadioButtonClicked"/>
+                android:text="2"/>
             <RadioButton android:id="@+id/radio_condition_3"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="3"
-                android:onClick="onRadioButtonClicked"/>
+                android:text="3"/>
             <RadioButton android:id="@+id/radio_condition_4"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="4"
-                android:onClick="onRadioButtonClicked"/>
+                android:text="4"/>
             <RadioButton android:id="@+id/radio_condition_5"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="5"
-                android:onClick="onRadioButtonClicked"/>
+                android:text="5"/>
         </RadioGroup>
 
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Assess" />
+            android:text="@string/assess" />
 
         <CheckBox android:id="@+id/checkbox_hazards"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Hazards"
+            android:text="@string/hazards"
             android:onClick="onCheckboxClicked"/>
         <CheckBox android:id="@+id/checkbox_safety"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Safety/Personal Hazard"
+            android:text="@string/safety_personal_hazard"
             android:onClick="onCheckboxClicked"/>
         <CheckBox android:id="@+id/checkbox_intervention"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Intervention Recommended"
+            android:text="@string/intervention_recommended"
             android:onClick="onCheckboxClicked"/>
 
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Notes" />
+            android:text="@string/notes" />
 
         <EditText
             android:id="@+id/notes"
             android:inputType="textMultiLine"
             android:lines="8"
             android:minLines="6"
-            android:gravity="top|left"
+            android:gravity="top|start"
             android:maxLines="10"
             android:layout_height="wrap_content"
             android:layout_width="match_parent"

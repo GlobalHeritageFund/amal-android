@@ -8,4 +8,16 @@
     <string name="hello_assess_fragment">Hello assess</string>
     <string name="hello_report_fragment">Hello report</string>
     <string name="hello_capture_fragment">Hello capture</string>
+    <string name="image_thumb">Image Thumb</string>
+    <string name="name">Name</string>
+    <string name="category">Category</string>
+    <string name="overall_area">Overall Area</string>
+    <string name="site_building">Site / Building</string>
+    <string name="object">Object</string>
+    <string name="condition">Condition</string>
+    <string name="assess">Assess</string>
+    <string name="hazards">Hazards</string>
+    <string name="safety_personal_hazard">Safety/Personal Hazard</string>
+    <string name="intervention_recommended">Intervention Recommended</string>
+    <string name="notes">Notes</string>
 </resources>
