@@ -16,11 +16,11 @@ class GalleryFragment : Fragment() {
 
     var delegate: GalleryDelegate? = null
 
-    internal var imageAdapter: ImageAdapter? = null
+    internal var imageAdapter: GalleryAdapter? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        imageAdapter = ImageAdapter(activity)
+        imageAdapter = GalleryAdapter(activity)
     }
 
     override fun onCreateView(inflater: LayoutInflater?, container: ViewGroup?,

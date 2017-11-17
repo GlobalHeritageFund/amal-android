@@ -8,10 +8,7 @@ import android.view.ViewGroup
 import android.widget.BaseAdapter
 import android.widget.ImageView
 
-/**
- * Created by soroushkhanlou on 11/14/17.
- */
-internal class ImageAdapter(private val context: Context) : BaseAdapter() {
+internal class GalleryAdapter(private val context: Context) : BaseAdapter() {
 
     private val images: List<Image>
 
