@@ -2,15 +2,12 @@ package amal.global.amal
 
 import android.content.Context
 import android.graphics.Bitmap
-import android.graphics.BitmapFactory
-import android.provider.ContactsContract
 import android.view.View
 import android.view.ViewGroup
 import android.widget.BaseAdapter
 import android.widget.ImageView
+import java.io.File
 import java.util.concurrent.Semaphore
-import kotlin.concurrent.thread
-import kotlin.coroutines.experimental.suspendCoroutine
 
 internal class GalleryAdapter(private val context: Context) : BaseAdapter() {
 
@@ -39,17 +36,20 @@ internal class GalleryAdapter(private val context: Context) : BaseAdapter() {
 
         val image = getItem(position) as Image
 
-        thread {
-            semaphore.acquire()
-            val fullBitmap = BitmapFactory.decodeFile(image.filePath)
-            val resizedBitmap = Bitmap.createScaledBitmap(fullBitmap, 200, 200, true)
-            imageView.post {
-                imageView.setImageBitmap(resizedBitmap)
-                semaphore.release()
-            }
-        }
-
+        semaphore.acquire()
+        File(image.filePath)
+                .decodeBitmap()
+                .flatMap<Bitmap>({ fullBitmap ->
+                    fullBitmap.scale(200, 200, true)
+                })
+                .then({ scaledBitmap ->
+                    imageView.post {
+                        imageView.setImageBitmap(scaledBitmap)
+                    }
+                    semaphore.release()
+                })
         return imageView
     }
 
 }
+
