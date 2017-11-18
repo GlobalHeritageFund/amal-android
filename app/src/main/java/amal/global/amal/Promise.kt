@@ -1,5 +1,6 @@
 package amal.global.amal
 
+import java.util.concurrent.atomic.AtomicInteger
 import java.util.concurrent.atomic.AtomicReference
 import kotlin.concurrent.thread
 
@@ -44,6 +45,14 @@ class Promise<T> private constructor(state: State<T>) {
 
     fun reject(error: Error) {
         update(State.Rejected(error))
+    }
+
+    fun value(): T? {
+        val currentState = this.state.get()
+        when (currentState) {
+            is State.Fulfilled -> return currentState.value
+            else -> return null
+        }
     }
 
     private fun update(state: State<T>) {
@@ -128,4 +137,26 @@ class Promise<T> private constructor(state: State<T>) {
         })
     }
 
+    companion object {
+        fun <U: Any> all(promises: Sequence<Promise<U>>): Promise<List<U>> {
+            val promiseList = promises.toList()
+
+            val remainingCount = AtomicInteger(promiseList.size)
+
+            return Promise<List<U>>{ fulfill, reject ->
+                
+                promiseList.forEach { promise ->
+                    promise
+                            .then { value ->
+                                if (remainingCount.decrementAndGet() == 0) {
+                                    fulfill(promiseList.mapNotNull { it.value() })
+                                }
+                            }
+                            .catch { error ->
+                                reject(error)
+                            }
+                }
+            }
+        }
+    }
 }
