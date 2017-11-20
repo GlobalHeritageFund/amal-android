@@ -1,12 +1,8 @@
 package amal.global.amal
 
-import android.app.Fragment
-import android.app.FragmentTransaction
 import android.os.Bundle
 import android.support.design.widget.BottomNavigationView
 import android.support.v7.app.AppCompatActivity
-import android.util.Log
-import android.view.View
 
 class TabActivity : AppCompatActivity(), GalleryDelegate {
 
@@ -25,7 +21,7 @@ class TabActivity : AppCompatActivity(), GalleryDelegate {
                 return@OnNavigationItemSelectedListener true
             }
             R.id.navigation_report -> {
-                supportFragmentManager.beginTransaction().replace(R.id.content, ReportFragment()).commit()
+                supportFragmentManager.beginTransaction().replace(R.id.content, ReportsFragment()).commit()
                 supportActionBar?.setTitle(R.string.title_report)
                 return@OnNavigationItemSelectedListener true
             }
