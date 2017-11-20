@@ -57,6 +57,7 @@ class Promise<T> private constructor(state: State<T>) {
 
     private fun update(state: State<T>) {
         val oldState = this.state.get()
+        this.state.set(state)
         when(oldState) {
             is State.Pending -> fireCallbacks(oldState.callbacks, state)
             is State.Fulfilled -> return
@@ -65,7 +66,6 @@ class Promise<T> private constructor(state: State<T>) {
     }
 
     private fun fireCallbacks(callbacks: Set<Callback<T>>, newState: State<T>) {
-        this.state.set(newState)
         when (newState) {
             is State.Fulfilled -> callbacks.forEach { callback -> callback.onFulfilled(newState.value) }
             is State.Rejected -> callbacks.forEach { callback -> callback.onRejected(newState.error) }
