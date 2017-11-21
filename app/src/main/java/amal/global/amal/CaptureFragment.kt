@@ -86,10 +86,6 @@ class CaptureFragment : Fragment() {
         }
     }
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-    }
-
     override fun onCreateView(inflater: LayoutInflater?, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
         return inflater?.inflate(R.layout.fragment_capture, container, false)
@@ -101,6 +97,11 @@ class CaptureFragment : Fragment() {
         textureView?.surfaceTextureListener = textureListener
         takePictureButton = getView()?.findViewById<Button>(R.id.btn_takepicture)
         takePictureButton?.setOnClickListener { takePicture() }
+    }
+
+    override fun onActivityCreated(savedInstanceState: Bundle?) {
+        super.onActivityCreated(savedInstanceState)
+        activity.setTitle(R.string.title_capture)
     }
 
     override fun onDetach() {

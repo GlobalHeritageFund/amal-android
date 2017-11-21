@@ -14,6 +14,11 @@ class ReportsFragment : Fragment() {
         return inflater?.inflate(R.layout.fragment_report, container, false)
     }
 
+    override fun onActivityCreated(savedInstanceState: Bundle?) {
+        super.onActivityCreated(savedInstanceState)
+        activity.setTitle(R.string.title_report)
+    }
+
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
         super.onCreateOptionsMenu(menu, inflater)
         inflater.inflate(R.menu.menu_report, menu)
