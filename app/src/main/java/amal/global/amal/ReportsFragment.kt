@@ -5,8 +5,13 @@ import android.support.v4.app.Fragment
 import android.util.Log
 import android.view.*
 
+interface ReportsDelegate {
+    fun newReportTapped(reportsFragment: ReportsFragment)
+}
 
 class ReportsFragment : Fragment() {
+
+    var delegate: ReportsDelegate? = null
 
     override fun onCreateView(inflater: LayoutInflater?, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
@@ -27,6 +32,7 @@ class ReportsFragment : Fragment() {
     override fun onOptionsItemSelected(item: MenuItem?): Boolean {
         when (item!!.getItemId()) {
             R.id.menu_item_add_report -> {
+                delegate?.newReportTapped(this)
                 return true
             }
             else ->
