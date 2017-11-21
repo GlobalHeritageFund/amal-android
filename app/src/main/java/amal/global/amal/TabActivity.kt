@@ -22,9 +22,8 @@ class TabActivity : AppCompatActivity(), GalleryDelegate, ReportsDelegate {
         }
         if (fragment != null) {
             supportFragmentManager.beginTransaction().replace(R.id.content, fragment).commit()
-            return@OnNavigationItemSelectedListener true
         }
-        false
+        fragment != null
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
