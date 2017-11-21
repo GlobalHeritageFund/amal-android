@@ -42,8 +42,7 @@ class TabActivity : AppCompatActivity(), GalleryDelegate {
         supportFragmentManager
                 .beginTransaction()
                 .setCustomAnimations(R.anim.enter, R.anim.exit, R.anim.pop_enter, R.anim.pop_exit)
-                .remove(fragment)
-                .add(R.id.content, assessFragment)
+                .replace(R.id.content, assessFragment)
                 .addToBackStack(null)
                 .commit()
 
