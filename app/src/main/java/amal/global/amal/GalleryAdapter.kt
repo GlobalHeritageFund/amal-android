@@ -9,7 +9,7 @@ import android.widget.ImageView
 import java.io.File
 import java.util.concurrent.Semaphore
 
-internal class GalleryAdapter(private val context: Context) : BaseAdapter() {
+public class GalleryAdapter(private val context: Context) : BaseAdapter() {
 
     private val images: List<Image>
 
