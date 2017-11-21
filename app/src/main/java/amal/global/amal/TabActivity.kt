@@ -5,7 +5,7 @@ import android.support.design.widget.BottomNavigationView
 import android.support.v4.app.Fragment
 import android.support.v7.app.AppCompatActivity
 
-class TabActivity : AppCompatActivity(), GalleryDelegate {
+class TabActivity : AppCompatActivity(), GalleryDelegate, ReportsDelegate {
 
     private val mOnNavigationItemSelectedListener = BottomNavigationView.OnNavigationItemSelectedListener { item ->
         var fragment: Fragment? = null
@@ -17,7 +17,7 @@ class TabActivity : AppCompatActivity(), GalleryDelegate {
                 fragment = CaptureFragment()
             }
             R.id.navigation_report -> {
-                fragment = ReportsFragment()
+                fragment = ReportsFragment().also { it.delegate = this }
             }
         }
         if (fragment != null) {
@@ -46,6 +46,16 @@ class TabActivity : AppCompatActivity(), GalleryDelegate {
                 .addToBackStack(null)
                 .commit()
 
+    }
+
+    override fun newReportTapped(reportsFragment: ReportsFragment) {
+        val chooseImages = ChooseImagesFragment()
+        supportFragmentManager
+                .beginTransaction()
+                .setCustomAnimations(R.anim.enter, R.anim.exit, R.anim.pop_enter, R.anim.pop_exit)
+                .replace(R.id.content, chooseImages)
+                .addToBackStack(null)
+                .commit()
     }
 
 }
