@@ -38,23 +38,20 @@ class TabActivity : AppCompatActivity(), GalleryDelegate, ReportsDelegate {
     override fun imageTapped(fragment: GalleryFragment, image: Image) {
         val assessFragment = AssessFragment()
         assessFragment.image = image
-        supportFragmentManager
-                .beginTransaction()
-                .setCustomAnimations(R.anim.enter, R.anim.exit, R.anim.pop_enter, R.anim.pop_exit)
-                .replace(R.id.content, assessFragment)
-                .addToBackStack(null)
-                .commit()
-
+        pushFragment(assessFragment)
     }
 
     override fun newReportTapped(reportsFragment: ReportsFragment) {
-        val chooseImages = ChooseImagesFragment()
+        pushFragment(ChooseImagesFragment())
+    }
+
+    fun pushFragment(fragment: Fragment) {
         supportFragmentManager
                 .beginTransaction()
                 .setCustomAnimations(R.anim.enter, R.anim.exit, R.anim.pop_enter, R.anim.pop_exit)
-                .replace(R.id.content, chooseImages)
+                .replace(R.id.content, fragment)
                 .addToBackStack(null)
                 .commit()
-    }
 
+    }
 }
