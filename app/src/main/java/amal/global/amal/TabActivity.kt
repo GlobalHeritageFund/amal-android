@@ -8,22 +8,25 @@ import android.support.v7.app.AppCompatActivity
 class TabActivity : AppCompatActivity(), GalleryDelegate, ReportsDelegate {
 
     private val mOnNavigationItemSelectedListener = BottomNavigationView.OnNavigationItemSelectedListener { item ->
-        var fragment: Fragment? = null
-        when (item.itemId) {
+        var fragment: Fragment = when (item.itemId) {
             R.id.navigation_assess -> {
-                fragment = GalleryFragment().also { it.delegate = this }
+                GalleryFragment().also { it.delegate = this }
             }
             R.id.navigation_capture -> {
-                fragment = CaptureFragment()
+                CaptureFragment()
             }
             R.id.navigation_report -> {
-                fragment = ReportsFragment().also { it.delegate = this }
+                ReportsFragment().also { it.delegate = this }
+            }
+            else -> {
+                return@OnNavigationItemSelectedListener false
             }
         }
-        if (fragment != null) {
-            supportFragmentManager.beginTransaction().replace(R.id.content, fragment).commit()
-        }
-        fragment != null
+        supportFragmentManager
+                .beginTransaction()
+                .replace(R.id.content, fragment)
+                .commit()
+        true
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
