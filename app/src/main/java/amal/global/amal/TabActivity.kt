@@ -5,7 +5,7 @@ import android.support.design.widget.BottomNavigationView
 import android.support.v4.app.Fragment
 import android.support.v7.app.AppCompatActivity
 
-class TabActivity : AppCompatActivity(), GalleryDelegate, ReportsDelegate {
+class TabActivity : AppCompatActivity(), GalleryDelegate, ReportsDelegate, ChooseImagesFragmentDelegate {
 
     private val mOnNavigationItemSelectedListener = BottomNavigationView.OnNavigationItemSelectedListener { item ->
         var fragment: Fragment = when (item.itemId) {
@@ -45,7 +45,11 @@ class TabActivity : AppCompatActivity(), GalleryDelegate, ReportsDelegate {
     }
 
     override fun newReportTapped(reportsFragment: ReportsFragment) {
-        pushFragment(ChooseImagesFragment())
+        pushFragment(ChooseImagesFragment().also { it.delegate = this })
+    }
+
+    override fun choseImages(fragment: ChooseImagesFragment, images: List<Image>) {
+        //push new report form fragment
     }
 
     fun pushFragment(fragment: Fragment) {
