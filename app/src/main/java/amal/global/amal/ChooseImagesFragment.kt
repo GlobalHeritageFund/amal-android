@@ -2,9 +2,11 @@ package amal.global.amal
 
 import android.support.v4.app.Fragment
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.AdapterView
 import android.widget.GridView
 
 class ChooseImagesFragment: Fragment() {
@@ -29,6 +31,14 @@ class ChooseImagesFragment: Fragment() {
 
         gridView.adapter = adapter
 
-        gridView.choiceMode = GridView.CHOICE_MODE_MULTIPLE
+        gridView.onItemClickListener = AdapterView.OnItemClickListener { parent, view, position, id ->
+            gridView.setItemChecked(position, !gridView.isItemChecked(position))
+            if (adapter.checkedItems.contains(position)) {
+                adapter.checkedItems.remove(position)
+            } else {
+                adapter.checkedItems.add(position)
+            }
+        }
     }
+
 }

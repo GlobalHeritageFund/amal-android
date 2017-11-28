@@ -15,6 +15,8 @@ public class GalleryAdapter(private val context: Context) : BaseAdapter() {
 
     private val semaphore = Semaphore(3)
 
+    var checkedItems = mutableListOf<Int>()
+
     init {
         images = PhotoStorage(context).fetchImages()
     }
