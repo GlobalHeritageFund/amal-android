@@ -32,12 +32,7 @@ class ChooseImagesFragment: Fragment() {
         gridView.adapter = adapter
 
         gridView.onItemClickListener = AdapterView.OnItemClickListener { parent, view, position, id ->
-            gridView.setItemChecked(position, !gridView.isItemChecked(position))
-            if (adapter.checkedItems.contains(position)) {
-                adapter.checkedItems.remove(position)
-            } else {
-                adapter.checkedItems.add(position)
-            }
+            adapter.toggleSelectionAt(position)
         }
     }
 

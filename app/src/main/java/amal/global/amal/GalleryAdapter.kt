@@ -15,7 +15,7 @@ public class GalleryAdapter(private val context: Context) : BaseAdapter() {
 
     private val semaphore = Semaphore(3)
 
-    var checkedItems = mutableListOf<Int>()
+    var selectedImages = mutableListOf<Int>()
 
     init {
         images = PhotoStorage(context).fetchImages()
@@ -51,6 +51,18 @@ public class GalleryAdapter(private val context: Context) : BaseAdapter() {
                     semaphore.release()
                 })
         return imageView
+    }
+
+    fun selectedItems(): List<Image> {
+        return selectedImages.sorted().map { getItem(it) as Image }
+    }
+
+    fun toggleSelectionAt(position: Int) {
+        if (selectedImages.contains(position)) {
+            selectedImages.remove(position)
+        } else {
+            selectedImages.add(position)
+        }
     }
 
 }
