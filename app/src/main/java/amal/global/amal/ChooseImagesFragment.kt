@@ -2,9 +2,7 @@ package amal.global.amal
 
 import android.support.v4.app.Fragment
 import android.os.Bundle
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
+import android.view.*
 import android.widget.AdapterView
 import android.widget.GridView
 
@@ -26,7 +24,13 @@ class ChooseImagesFragment: Fragment() {
     }
 
     override fun onCreateView(inflater: LayoutInflater?, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+        setHasOptionsMenu(true)
         return inflater?.inflate(R.layout.fragment_gallery, container, false)
+    }
+
+    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
+        super.onCreateOptionsMenu(menu, inflater)
+        inflater.inflate(R.menu.menu_choose_images, menu)
     }
 
     override fun onViewCreated(view: View?, savedInstanceState: Bundle?) {
@@ -40,5 +44,17 @@ class ChooseImagesFragment: Fragment() {
             adapter.toggleSelectionAt(position)
         }
     }
+
+    override fun onOptionsItemSelected(item: MenuItem?): Boolean {
+        when (item!!.getItemId()) {
+            R.id.menu_item_add_report -> {
+                delegate?.choseImages(this, adapter.selectedItems())
+                return true
+            }
+            else ->
+                return super.onOptionsItemSelected(item)
+        }
+    }
+
 
 }
