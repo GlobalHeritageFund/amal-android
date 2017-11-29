@@ -15,6 +15,11 @@ fun <T : View> Fragment.bind(@IdRes res : Int) : T {
     return getView()!!.findViewById<T>(res)
 }
 
+fun <T : View> View.bind(@IdRes res : Int) : T {
+    @Suppress("UNCHECKED_CAST")
+    return findViewById<T>(res)
+}
+
 fun EditText.afterTextChanged(afterTextChanged: (Editable?) -> Unit) {
     this.addTextChangedListener(object : TextWatcher {
         override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {

@@ -34,7 +34,7 @@ public class GalleryAdapter(private val context: Context) : BaseAdapter() {
     }
 
     override fun getView(position: Int, convertView: View?, parent: ViewGroup): View {
-        val imageView = (convertView as? ImageView) ?: ImageView(context)
+        val imageView = (convertView as? GalleryCell) ?: GalleryCell(context)
 
         val image = getItem(position) as Image
 
@@ -46,7 +46,7 @@ public class GalleryAdapter(private val context: Context) : BaseAdapter() {
                 })
                 .then({ scaledBitmap ->
                     imageView.post {
-                        imageView.setImageBitmap(scaledBitmap)
+                        imageView.contentImageView.setImageBitmap(scaledBitmap)
                     }
                     semaphore.release()
                 })
