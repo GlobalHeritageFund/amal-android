@@ -1,7 +1,6 @@
 package amal.global.amal
 
 import android.content.Context
-import android.util.Log
 import android.view.LayoutInflater
 import android.widget.ImageView
 import android.widget.RelativeLayout
@@ -17,8 +16,4 @@ class GalleryCell(context: Context?) : RelativeLayout(context) {
         selectionStateImageView = bind(R.id.gallery_cell_selection_state)
     }
 
-    override fun setSelected(selected: Boolean) {
-        super.setSelected(selected)
-        Log.d("asdf", "setting selected")
-    }
 }
