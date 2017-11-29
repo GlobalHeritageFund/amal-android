@@ -35,7 +35,7 @@ public class GalleryAdapter(private val context: Context) : BaseAdapter() {
     }
 
     override fun getView(position: Int, convertView: View?, parent: ViewGroup): View {
-        val imageView = (convertView as? GalleryCell) ?: GalleryCell(context)
+        val galleryCell = (convertView as? GalleryCell) ?: GalleryCell(context)
 
         val image = getItem(position) as Image
 
@@ -46,14 +46,14 @@ public class GalleryAdapter(private val context: Context) : BaseAdapter() {
                     fullBitmap.scale(200, 200, true)
                 })
                 .then({ scaledBitmap ->
-                    imageView.post {
-                        imageView.contentImageView.setImageBitmap(scaledBitmap)
+                    galleryCell.post {
+                        galleryCell.contentImageView.setImageBitmap(scaledBitmap)
                     }
                     semaphore.release()
                 })
 
-        imageView.selectionStateImageView.visibility = if (selectedImages.contains(position)) View.VISIBLE else View.INVISIBLE
-        return imageView
+        galleryCell.selectionStateImageView.visibility = if (selectedImages.contains(position)) View.VISIBLE else View.INVISIBLE
+        return galleryCell
     }
 
     fun selectedItems(): List<Image> {
