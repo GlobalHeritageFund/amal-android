@@ -49,7 +49,7 @@ class TabActivity : AppCompatActivity(), GalleryDelegate, ReportsDelegate, Choos
     }
 
     override fun choseImages(fragment: ChooseImagesFragment, images: List<Image>) {
-        //push new report form fragment
+        pushFragment(NewReportFragment())
     }
 
     fun pushFragment(fragment: Fragment) {
