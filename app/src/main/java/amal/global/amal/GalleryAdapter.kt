@@ -2,6 +2,7 @@ package amal.global.amal
 
 import android.content.Context
 import android.graphics.Bitmap
+import android.util.Log
 import android.view.View
 import android.view.ViewGroup
 import android.widget.BaseAdapter
@@ -50,6 +51,8 @@ public class GalleryAdapter(private val context: Context) : BaseAdapter() {
                     }
                     semaphore.release()
                 })
+
+        imageView.selectionStateImageView.visibility = if (selectedImages.contains(position)) View.VISIBLE else View.INVISIBLE
         return imageView
     }
 
@@ -63,6 +66,7 @@ public class GalleryAdapter(private val context: Context) : BaseAdapter() {
         } else {
             selectedImages.add(position)
         }
+        notifyDataSetChanged()
     }
 
 }
