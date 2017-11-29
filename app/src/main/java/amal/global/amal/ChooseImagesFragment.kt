@@ -47,7 +47,7 @@ class ChooseImagesFragment: Fragment() {
 
     override fun onOptionsItemSelected(item: MenuItem?): Boolean {
         when (item!!.getItemId()) {
-            R.id.menu_item_add_report -> {
+            R.id.menu_item_choose_images_next -> {
                 delegate?.choseImages(this, adapter.selectedItems())
                 return true
             }
