@@ -5,18 +5,27 @@ import android.support.v4.app.Fragment
 import android.view.*
 import android.widget.EditText
 import android.widget.TextView
+import java.util.*
 
 interface NewReportFragmentDelegate {
     fun uploadReport(fragment: NewReportFragment, report: ReportDraft)
 }
 
-class ReportDraft { }
+data class ReportDraft internal constructor(
+        var images: List<Image> = listOf(),
+        var localIdentifier: String = "",
+        var creationDate: Date = Date(),
+        var title: String = "",
+        var assessorEmail: String = ""
+)
 
 class NewReportFragment: Fragment() {
 
     lateinit var titleField: EditText
     lateinit var dateLabel: TextView
     lateinit var emailField: EditText
+
+    var report = ReportDraft()
 
     var delegate: NewReportFragmentDelegate? = null
 
@@ -47,7 +56,7 @@ class NewReportFragment: Fragment() {
     override fun onOptionsItemSelected(item: MenuItem?): Boolean {
         when (item!!.getItemId()) {
             R.id.menu_item_upload_report -> {
-                delegate?.uploadReport(this, ReportDraft())
+                delegate?.uploadReport(this, report)
                 return true
             }
             else ->
