@@ -10,24 +10,37 @@
         android:orientation="vertical"
         android:layout_height="wrap_content">
 
-        <ImageView
-            android:id="@+id/image_view2"
+        <TextView
             android:layout_width="match_parent"
-            android:layout_height="200dp"
-            android:contentDescription="@string/image_thumb" />
+            android:layout_height="wrap_content"
+            android:text="@string/title" />
+
+        <EditText
+            android:id="@+id/report_title_field"
+            android:layout_height="wrap_content"
+            android:hint="@string/title"
+            android:inputType="textPersonName"
+            android:layout_width="fill_parent">
+        </EditText>
+
+        <TextView
+            android:id="@+id/report_creation_date"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Sept 20, 2017, 9:59 AM"
+            />
 
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="@string/name" />
-
+            android:text="@string/assessor_email"
+            />
         <EditText
-            android:id="@+id/name_field2"
+            android:id="@+id/report_assessor_email"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="@string/name"
-            android:inputType="textPersonName"
-            android:layout_width="fill_parent">
-        </EditText>
+            android:hint="email@domain.com"
+            />
 
 
 

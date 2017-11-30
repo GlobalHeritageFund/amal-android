@@ -22,4 +22,7 @@
     <string name="notes">Notes</string>
     <string name="new_report">New</string>
     <string name="next">Next</string>
+    <string name="assessor_email">Assessor Email</string>
+    <string name="title">Title</string>
+    <string name="upload">Upload</string>
 </resources>
