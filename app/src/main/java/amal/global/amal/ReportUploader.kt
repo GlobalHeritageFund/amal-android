@@ -10,7 +10,26 @@ class ReportUploader (val reportDraft: ReportDraft) {
                 firebase.set("title", reportDraft.title),
                 firebase.set("authorDeviceToken", reportDraft.localIdentifier),
                 firebase.set("creationDate", reportDraft.creationDate.time)
-        ))
+//                Promise.all<Unit>(reportDraft.images.map { uploadImage(it, "key") }).map({ Unit() })
+        )).map {
+            return@map Report(
+                    listOf(),
+                    reportDraft.localIdentifier,
+                    reportDraft.creationDate,
+                    reportDraft.title,
+                    reportDraft.assessorEmail
+                    )
+        }.then { report ->
+            promise.fulfill(report)
+        }.catch { error ->
+            promise.reject(error)
+        }
+    }
+
+    fun uploadImage(image: Image, name: String): Promise<Unit> {
+        //upload image
+        //set firebase ref
+        return Promise<Unit>({ fulfill, reject ->  reject(Error("placeholder")) })
     }
 }
 
