@@ -11,14 +11,6 @@ interface NewReportFragmentDelegate {
     fun uploadReport(fragment: NewReportFragment, report: ReportDraft)
 }
 
-data class ReportDraft internal constructor(
-        var images: List<Image> = listOf(),
-        var localIdentifier: String = "",
-        var creationDate: Date = Date(),
-        var title: String = "",
-        var assessorEmail: String = ""
-)
-
 class NewReportFragment: Fragment() {
 
     lateinit var titleField: EditText
