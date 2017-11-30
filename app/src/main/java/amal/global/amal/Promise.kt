@@ -29,7 +29,7 @@ class Promise<T> private constructor(state: State<T>) {
 
     private val state: AtomicReference<State<T>> = AtomicReference(state)
 
-    constructor(resolver: (fulfill: (T) -> Unit, reject: (Error) -> Unit) -> Unit) : this(
+    constructor(resolver: (fulfill: (T) -> Unit, reject: (Error) -> Unit) -> Unit = { _, _ -> }) : this(
             State.Pending(
                     callbacks = mutableSetOf()
             )
