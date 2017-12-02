@@ -7,7 +7,6 @@ import com.google.firebase.storage.FirebaseStorage
 import com.google.firebase.storage.StorageMetadata
 import com.google.firebase.storage.StorageReference
 import java.io.File
-import java.net.URI
 
 class ReportUploader (val reportDraft: ReportDraft) {
 
@@ -61,28 +60,4 @@ class ReportUploader (val reportDraft: ReportDraft) {
                 reference.child("imageRef").setValuePromise(imageReference.path)
         )).map { Unit }
     }
-}
-
-fun DatabaseReference.setValuePromise(value: Any): Promise<Unit> {
-    return Promise<Unit>({ fulfill, reject ->
-        this.setValue(value, { databaseError, databaseReference ->
-            if (databaseError != null) {
-                reject(Error(databaseError.message))
-            } else {
-                fulfill(Unit)
-            }
-        })
-    })
-}
-
-fun StorageReference.putFilePromise(uri: Uri, metadata: StorageMetadata): Promise<Unit> {
-    return Promise<Unit>({ fulfill, reject ->
-        val uploadTask = this.putFile(uri, metadata)
-        uploadTask.addOnCompleteListener({ task ->
-            fulfill(Unit)
-        })
-        uploadTask.addOnFailureListener({ exception ->
-            reject(Error(exception.message))
-        })
-    })
 }
