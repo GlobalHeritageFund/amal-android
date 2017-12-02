@@ -1,7 +1,13 @@
 package amal.global.amal
 
+import android.net.Uri
 import com.google.firebase.database.DatabaseReference
 import com.google.firebase.database.FirebaseDatabase
+import com.google.firebase.storage.FirebaseStorage
+import com.google.firebase.storage.StorageMetadata
+import com.google.firebase.storage.StorageReference
+import java.io.File
+import java.net.URI
 
 class ReportUploader (val reportDraft: ReportDraft) {
 
@@ -9,8 +15,14 @@ class ReportUploader (val reportDraft: ReportDraft) {
 
     val database = FirebaseDatabase.getInstance()
 
+    val storage = FirebaseStorage.getInstance()
+
     val reportsDirectory: DatabaseReference by lazy {
         database.reference.child("reports")
+    }
+
+    val imagesDirectory: StorageReference by lazy {
+        storage.reference.child("images")
     }
 
     fun upload() {
@@ -37,9 +49,17 @@ class ReportUploader (val reportDraft: ReportDraft) {
     }
 
     fun uploadImage(image: Image, reference: DatabaseReference): Promise<Unit> {
-        //upload image
-        //set firebase ref
-        return Promise<Unit>({ fulfill, reject ->  reject(Error("placeholder")) })
+
+        val imageReference = imagesDirectory.child(reference.key)
+
+        val metadata = StorageMetadata.Builder()
+                .setContentType("image/type")
+                .build()
+
+        return Promise.all<Unit>(sequenceOf<Promise<Unit>>(
+                imageReference.putFilePromise(Uri.fromFile(File(image.filePath))),
+                reference.child("imageRef").setValuePromise(imageReference.path)
+        )).map { Unit }
     }
 }
 
@@ -51,6 +71,18 @@ fun DatabaseReference.setValuePromise(value: Any): Promise<Unit> {
             } else {
                 fulfill(Unit)
             }
+        })
+    })
+}
+
+fun StorageReference.putFilePromise(uri: Uri, metadata: StorageMetadata): Promise<Unit> {
+    return Promise<Unit>({ fulfill, reject ->
+        val uploadTask = this.putFile(uri, metadata)
+        uploadTask.addOnCompleteListener({ task ->
+            fulfill(Unit)
+        })
+        uploadTask.addOnFailureListener({ exception ->
+            reject(Error(exception.message))
         })
     })
 }
