@@ -52,7 +52,7 @@ class ReportUploader (val reportDraft: ReportDraft) {
         val imageReference = imagesDirectory.child(reference.key)
 
         val metadata = StorageMetadata.Builder()
-                .setContentType("image/type")
+                .setContentType("image/jpeg")
                 .build()
 
         return Promise.all<Unit>(sequenceOf<Promise<Unit>>(
