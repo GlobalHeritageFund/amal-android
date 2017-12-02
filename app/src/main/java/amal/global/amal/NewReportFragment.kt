@@ -46,6 +46,9 @@ class NewReportFragment: Fragment() {
     }
 
     override fun onOptionsItemSelected(item: MenuItem?): Boolean {
+        report.assessorEmail = emailField.text.toString()
+        report.creationDate = Date()
+        report.title = titleField.text.toString()
         when (item!!.getItemId()) {
             R.id.menu_item_upload_report -> {
                 delegate?.uploadReport(this, report)

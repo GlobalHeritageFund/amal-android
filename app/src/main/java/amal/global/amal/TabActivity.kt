@@ -5,7 +5,7 @@ import android.support.design.widget.BottomNavigationView
 import android.support.v4.app.Fragment
 import android.support.v7.app.AppCompatActivity
 
-class TabActivity : AppCompatActivity(), GalleryDelegate, ReportsDelegate, ChooseImagesFragmentDelegate {
+class TabActivity : AppCompatActivity(), GalleryDelegate, ReportsDelegate, ChooseImagesFragmentDelegate, NewReportFragmentDelegate {
 
     private val mOnNavigationItemSelectedListener = BottomNavigationView.OnNavigationItemSelectedListener { item ->
         var fragment: Fragment = when (item.itemId) {
@@ -49,7 +49,20 @@ class TabActivity : AppCompatActivity(), GalleryDelegate, ReportsDelegate, Choos
     }
 
     override fun choseImages(fragment: ChooseImagesFragment, images: List<Image>) {
-        pushFragment(NewReportFragment().also { it.report.images = images })
+        pushFragment(NewReportFragment().also { it.report.images = images; it.delegate = this })
+    }
+
+    override fun uploadReport(fragment: NewReportFragment, report: ReportDraft) {
+        val uploader = ReportUploader(report)
+
+        uploader.upload()
+
+        uploader.promise.then {
+          Log.d("asdF", "report upload done!")
+        }.catch { error ->
+            Log.e("asdf", error.message)
+        }
+
     }
 
     fun pushFragment(fragment: Fragment) {
