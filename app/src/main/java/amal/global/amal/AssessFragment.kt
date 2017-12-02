@@ -32,8 +32,6 @@ class AssessFragment : Fragment() {
 
         nameField.setText(image?.metadata?.name ?: "")
 
-        Log.d("Asdf", "setting up listener")
-
         nameField.afterTextChanged { editable: Editable? ->
             image?.metadata?.name = editable.toString()
             image?.saveMetaData()
