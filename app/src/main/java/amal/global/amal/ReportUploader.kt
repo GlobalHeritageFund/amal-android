@@ -27,24 +27,31 @@ class ReportUploader (val reportDraft: ReportDraft) {
     fun upload() {
         val reportReference = reportsDirectory.push()
 
-        Promise.all<Unit>(sequenceOf<Promise<Unit>>(
-                reportReference.child("title").setValuePromise(reportDraft.title),
-                reportReference.child("authorDeviceToken").setValuePromise(reportDraft.localIdentifier),
-                reportReference.child("creationDate").setValuePromise(reportDraft.creationDate.time),
-                Promise.all<Unit>(reportDraft.images.map { uploadImage(it, reportReference.child("images").push()) }.asSequence()).map({ Unit })
-        )).map {
-            return@map Report(
-                    listOf(),
-                    reportDraft.localIdentifier,
-                    reportDraft.creationDate,
-                    reportDraft.title,
-                    reportDraft.assessorEmail
+        Promise
+                .all<Unit>(sequenceOf<Promise<Unit>>(
+                        reportReference.child("title").setValuePromise(reportDraft.title),
+                        reportReference.child("authorDeviceToken").setValuePromise(reportDraft.localIdentifier),
+                        reportReference.child("creationDate").setValuePromise(reportDraft.creationDate.time),
+                        Promise.all<Unit>(reportDraft.images.map { uploadImage(it, reportReference.child("images").push()) }.asSequence()).map({ Unit })
+                ))
+                .flatMap {
+                    reportReference.child("uploadComplete").setValuePromise(true)
+                }
+                .map {
+                    return@map Report(
+                            listOf(),
+                            reportDraft.localIdentifier,
+                            reportDraft.creationDate,
+                            reportDraft.title,
+                            reportDraft.assessorEmail
                     )
-        }.then { report ->
-            promise.fulfill(report)
-        }.catch { error ->
-            promise.reject(error)
-        }
+                }
+                .then { report ->
+                    promise.fulfill(report)
+                }
+                .catch { error ->
+                    promise.reject(error)
+                }
     }
 
     fun uploadImage(image: Image, reference: DatabaseReference): Promise<Unit> {
