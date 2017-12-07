@@ -4,10 +4,13 @@ import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.net.Uri
 import android.support.annotation.IdRes
+import android.support.annotation.LayoutRes
 import android.support.v4.app.Fragment
 import android.text.Editable
 import android.text.TextWatcher
+import android.view.LayoutInflater
 import android.view.View
+import android.view.ViewGroup
 import android.widget.EditText
 import com.google.firebase.database.DatabaseReference
 import com.google.firebase.storage.StorageMetadata
@@ -23,6 +26,11 @@ fun <T : View> View.bind(@IdRes res : Int) : T {
     @Suppress("UNCHECKED_CAST")
     return findViewById<T>(res)
 }
+
+fun ViewGroup.inflate(@LayoutRes layoutRes: Int, attachToRoot: Boolean = false): View {
+    return LayoutInflater.from(context).inflate(layoutRes, this, attachToRoot)
+}
+
 
 fun EditText.afterTextChanged(afterTextChanged: (Editable?) -> Unit) {
     this.addTextChangedListener(object : TextWatcher {
@@ -73,3 +81,4 @@ fun StorageReference.putFilePromise(uri: Uri, metadata: StorageMetadata): Promis
         })
     })
 }
+
