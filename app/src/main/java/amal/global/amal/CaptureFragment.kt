@@ -151,9 +151,6 @@ class CaptureFragment : Fragment() {
     }
 
     protected fun updatePreview() {
-        if (null == cameraDevice) {
-            Log.e("Asdf", "updatePreview error, return")
-        }
         captureRequestBuilder?.set(CaptureRequest.CONTROL_MODE, CameraMetadata.CONTROL_MODE_AUTO)
         try {
             cameraCaptureSession?.setRepeatingRequest(captureRequestBuilder!!.build(), null, backgroundHandler)
@@ -261,7 +258,6 @@ class CaptureFragment : Fragment() {
     }
 
     override fun onPause() {
-        Log.e("asdf", "onPause")
         closeCamera();
         stopBackgroundThread()
         super.onPause()
@@ -271,7 +267,6 @@ class CaptureFragment : Fragment() {
         cameraDevice?.close()
         cameraDevice = null
     }
-
 
     private val REQUEST_CAMERA_PERMISSION = 200
 
