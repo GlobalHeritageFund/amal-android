@@ -44,13 +44,16 @@ class CaptureFragment : Fragment() {
 
     private var textureView: TextureView? = null
     private var takePictureButton: Button? = null
-    private var cameraId: String? = null
     private var imageDimension: Size? = null
     protected var cameraDevice: CameraDevice? = null
     protected var captureRequestBuilder: CaptureRequest.Builder? = null
     protected var cameraCaptureSession: CameraCaptureSession? = null
     private var backgroundHandler: Handler? = null
     private var backgroundThread: HandlerThread? = null
+
+    val cameraManager by lazy {
+        activity.getSystemService(Context.CAMERA_SERVICE) as CameraManager
+    }
 
     internal var textureListener: TextureView.SurfaceTextureListener = object : TextureView.SurfaceTextureListener {
         override fun onSurfaceTextureAvailable(surface: SurfaceTexture, width: Int, height: Int) {
@@ -70,14 +73,13 @@ class CaptureFragment : Fragment() {
 
     private val stateCallback = object : CameraDevice.StateCallback() {
         override fun onOpened(camera: CameraDevice) {
-            //This is called when the camera is open
-            Log.e("ASDF", "onOpened")
             cameraDevice = camera
             createCameraPreview()
         }
 
         override fun onDisconnected(camera: CameraDevice) {
             cameraDevice?.close()
+            cameraDevice = null
         }
 
         override fun onError(camera: CameraDevice, error: Int) {
@@ -104,29 +106,23 @@ class CaptureFragment : Fragment() {
         activity.setTitle(R.string.title_capture)
     }
 
-    override fun onDetach() {
-        super.onDetach()
-    }
-
     private fun openCamera() {
-        val manager = activity.getSystemService(Context.CAMERA_SERVICE) as CameraManager
-        Log.e("asdf", "is camera open")
         try {
-            cameraId = manager.cameraIdList[0]
-            val characteristics = manager.getCameraCharacteristics(cameraId!!)
-            val map = characteristics.get(CameraCharacteristics.SCALER_STREAM_CONFIGURATION_MAP)!!
-            imageDimension = map.getOutputSizes(SurfaceTexture::class.java)[0]
-            // Add permission for camera and let user grant the permission
-            if (ActivityCompat.checkSelfPermission(activity, Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(activity, Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
+            val cameraId = cameraManager.cameraIdList.first()
+            imageDimension = cameraManager
+                    .getCameraCharacteristics(cameraId)
+                    .get(CameraCharacteristics.SCALER_STREAM_CONFIGURATION_MAP)
+                    .getOutputSizes(SurfaceTexture::class.java)[0]
+
+            if (ActivityCompat.checkSelfPermission(activity, Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED
+                    && ActivityCompat.checkSelfPermission(activity, Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
                 ActivityCompat.requestPermissions(activity, arrayOf(Manifest.permission.CAMERA, Manifest.permission.WRITE_EXTERNAL_STORAGE), REQUEST_CAMERA_PERMISSION)
                 return
             }
-            manager.openCamera(cameraId!!, stateCallback, null)
+            cameraManager.openCamera(cameraId, stateCallback, null)
         } catch (e: CameraAccessException) {
             e.printStackTrace()
         }
-
-        Log.e("asdf", "openCamera X")
     }
 
     protected fun createCameraPreview() {
@@ -134,12 +130,12 @@ class CaptureFragment : Fragment() {
             val texture = textureView!!.surfaceTexture!!
             texture.setDefaultBufferSize(imageDimension!!.width, imageDimension!!.height)
             val surface = Surface(texture)
-            captureRequestBuilder = cameraDevice!!.createCaptureRequest(CameraDevice.TEMPLATE_PREVIEW)
+            captureRequestBuilder = cameraDevice?.createCaptureRequest(CameraDevice.TEMPLATE_PREVIEW)
             captureRequestBuilder?.addTarget(surface)
-            cameraDevice?.createCaptureSession(Arrays.asList(surface), object : CameraCaptureSession.StateCallback() {
+            cameraDevice?.createCaptureSession(listOf(surface), object : CameraCaptureSession.StateCallback() {
                 override fun onConfigured(lCameraCaptureSession: CameraCaptureSession) {
                     //The camera is already closed
-                    if (null == cameraDevice) {
+                    if (cameraDevice == null) {
                         return
                     }
                     // When the session is ready, we start displaying the preview.
@@ -154,7 +150,6 @@ class CaptureFragment : Fragment() {
         } catch (e: CameraAccessException) {
             e.printStackTrace()
         }
-
     }
 
     protected fun updatePreview() {
@@ -185,27 +180,22 @@ class CaptureFragment : Fragment() {
         } catch (e: InterruptedException) {
             e.printStackTrace()
         }
-
     }
 
     protected fun takePicture() {
         if (null == cameraDevice) {
-            Log.e("ASDF", "cameraDevice is null")
+            Log.e("ASDF", "trying to capture a picture without a cameraDevice")
             return
         }
-        val manager = activity.getSystemService(Context.CAMERA_SERVICE) as CameraManager
         try {
-            val characteristics = manager.getCameraCharacteristics(cameraDevice!!.id)
-            var jpegSizes: Array<Size>? = null
-            if (characteristics != null) {
-                jpegSizes = characteristics.get(CameraCharacteristics.SCALER_STREAM_CONFIGURATION_MAP)!!.getOutputSizes(ImageFormat.JPEG)
-            }
-            var width = 640
-            var height = 480
-            if (jpegSizes != null && 0 < jpegSizes.size) {
-                width = jpegSizes[0].width
-                height = jpegSizes[0].height
-            }
+            val jpegSizes: Array<Size>? = cameraManager
+                    .getCameraCharacteristics(cameraDevice!!.id)
+                    .get(CameraCharacteristics.SCALER_STREAM_CONFIGURATION_MAP)
+                    .getOutputSizes(ImageFormat.JPEG)
+
+            var width = jpegSizes?.first()?.width ?: 640
+            var height = jpegSizes?.first()?.height ?: 480
+
             val reader = ImageReader.newInstance(width, height, ImageFormat.JPEG, 1)
             val outputSurfaces = ArrayList<Surface>(2)
             outputSurfaces.add(reader.surface)
@@ -213,9 +203,7 @@ class CaptureFragment : Fragment() {
             val captureBuilder = cameraDevice!!.createCaptureRequest(CameraDevice.TEMPLATE_STILL_CAPTURE)
             captureBuilder.addTarget(reader.surface)
             captureBuilder.set(CaptureRequest.CONTROL_MODE, CameraMetadata.CONTROL_MODE_AUTO)
-            // Orientation
-            val rotation = activity.windowManager.defaultDisplay.rotation
-            captureBuilder.set(CaptureRequest.JPEG_ORIENTATION, orientationFor(rotation))
+            captureBuilder.set(CaptureRequest.JPEG_ORIENTATION, orientationFor(activity.windowManager.defaultDisplay.rotation))
             val readerListener = object : ImageReader.OnImageAvailableListener {
                 override fun onImageAvailable(reader: ImageReader) {
                     var image: Image? = null
@@ -245,7 +233,6 @@ class CaptureFragment : Fragment() {
             val captureListener = object : CameraCaptureSession.CaptureCallback() {
                 override fun onCaptureCompleted(session: CameraCaptureSession, request: CaptureRequest, result: TotalCaptureResult) {
                     super.onCaptureCompleted(session, request, result)
-                    Toast.makeText(activity, "Saved a file", Toast.LENGTH_SHORT).show()
                     createCameraPreview()
                 }
             }
@@ -256,7 +243,6 @@ class CaptureFragment : Fragment() {
                     } catch (e: CameraAccessException) {
                         e.printStackTrace()
                     }
-
                 }
 
                 override fun onConfigureFailed(session: CameraCaptureSession) {}
@@ -264,17 +250,15 @@ class CaptureFragment : Fragment() {
         } catch (e: CameraAccessException) {
             e.printStackTrace()
         }
-
     }
 
     override fun onResume() {
         super.onResume()
-        Log.e("asf", "onResume")
         startBackgroundThread()
         if (textureView!!.isAvailable) {
             openCamera()
         } else {
-            textureView!!.surfaceTextureListener = textureListener
+            textureView?.surfaceTextureListener = textureListener
         }
     }
 
@@ -305,6 +289,5 @@ class CaptureFragment : Fragment() {
         }
         return 0
     }
-
 }
 
