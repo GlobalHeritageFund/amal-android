@@ -30,7 +30,7 @@ class ReportUploader (val reportDraft: ReportDraft) {
         Promise
                 .all<Unit>(sequenceOf<Promise<Unit>>(
                         reportReference.child("title").setValuePromise(reportDraft.title),
-                        reportReference.child("authorDeviceToken").setValuePromise(reportDraft.localIdentifier),
+                        reportReference.child("authorDeviceToken").setValuePromise(reportDraft.deviceToken),
                         reportReference.child("creationDate").setValuePromise(reportDraft.creationDate.time),
                         Promise.all<Unit>(reportDraft.images.map { uploadImage(it, reportReference.child("images").push()) }.asSequence()).map({ Unit })
                 ))
@@ -40,7 +40,7 @@ class ReportUploader (val reportDraft: ReportDraft) {
                 .map {
                     return@map Report(
                             listOf(),
-                            reportDraft.localIdentifier,
+                            reportDraft.deviceToken,
                             reportDraft.creationDate,
                             reportDraft.title,
                             reportDraft.assessorEmail

@@ -50,7 +50,11 @@ class TabActivity : AppCompatActivity(), GalleryDelegate, ReportsDelegate, Choos
     }
 
     override fun choseImages(fragment: ChooseImagesFragment, images: List<Image>) {
-        pushFragment(NewReportFragment().also { it.report.images = images; it.delegate = this })
+        val fragment = NewReportFragment()
+        fragment.report.deviceToken = CurrentUser(this).token
+        fragment.report.images = images
+        fragment.delegate = this
+        pushFragment(fragment)
     }
 
     override fun uploadReport(fragment: NewReportFragment, report: ReportDraft) {
