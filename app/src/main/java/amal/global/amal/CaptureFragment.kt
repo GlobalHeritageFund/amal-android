@@ -78,13 +78,11 @@ class CaptureFragment : Fragment() {
         }
 
         override fun onDisconnected(camera: CameraDevice) {
-            cameraDevice?.close()
-            cameraDevice = null
+            closeCamera()
         }
 
         override fun onError(camera: CameraDevice, error: Int) {
-            cameraDevice?.close()
-            cameraDevice = null
+            closeCamera()
         }
     }
 
@@ -264,11 +262,16 @@ class CaptureFragment : Fragment() {
 
     override fun onPause() {
         Log.e("asdf", "onPause")
-        //        we don't have a close camera method? probably should go find that
-        //        closeCamera();
+        closeCamera();
         stopBackgroundThread()
         super.onPause()
     }
+
+    private fun closeCamera() {
+        cameraDevice?.close()
+        cameraDevice = null
+    }
+
 
     private val REQUEST_CAMERA_PERMISSION = 200
 
