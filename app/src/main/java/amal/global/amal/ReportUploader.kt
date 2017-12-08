@@ -31,6 +31,7 @@ class ReportUploader (val reportDraft: ReportDraft) {
                 .all<Unit>(sequenceOf<Promise<Unit>>(
                         reportReference.child("title").setValuePromise(reportDraft.title),
                         reportReference.child("authorDeviceToken").setValuePromise(reportDraft.deviceToken),
+                        reportReference.child("assessorEmail").setValuePromise(reportDraft.assessorEmail),
                         reportReference.child("creationDate").setValuePromise(reportDraft.creationDate.time),
                         Promise.all<Unit>(reportDraft.images.map { uploadImage(it, reportReference.child("images").push()) }.asSequence()).map({ Unit })
                 ))

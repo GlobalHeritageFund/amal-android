@@ -14,6 +14,7 @@ import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.database.ValueEventListener
 import java.util.*
+import kotlin.collections.HashMap
 
 interface ReportsDelegate {
     fun newReportTapped(reportsFragment: ReportsFragment)
@@ -40,10 +41,7 @@ class ReportsFragment : Fragment() {
         listView.setLayoutManager(LinearLayoutManager(activity));
 
 
-        listView.adapter = ReportsAdapter(
-                context,
-                listOf<Report>(Report(listOf(), "token", Date(), "title", "email@email.com"))
-        )
+        listView.adapter = ReportsAdapter(context)
 
         view?.findViewById<FloatingActionButton>(R.id.new_report_button)?.setOnClickListener({
             delegate?.newReportTapped(this)
@@ -52,7 +50,7 @@ class ReportsFragment : Fragment() {
     }
 }
 
-class ReportsAdapter(context: Context, var reports: List<Report>) : RecyclerView.Adapter<ReportsAdapter.MyViewHolder>() {
+class ReportsAdapter(context: Context, var reports: List<Report> = listOf()) : RecyclerView.Adapter<ReportsAdapter.MyViewHolder>() {
 
     inner class MyViewHolder(view: View) : RecyclerView.ViewHolder(view) {
         var title = view.bind<TextView>(R.id.report_cell_title)
@@ -68,7 +66,12 @@ class ReportsAdapter(context: Context, var reports: List<Report>) : RecyclerView
 
         query.addValueEventListener(object : ValueEventListener {
             override fun onDataChange(snapshot: DataSnapshot) {
-                Log.d("asdf", snapshot.value.toString())
+                val map = snapshot.value as? HashMap<String, Any> ?: hashMapOf()
+                Log.d("asdf", map?.values?.first()?.javaClass.toString())
+                Log.d("asdf", map?.keys.toString())
+
+                reports = map.values.map { Report.fromJSON(it as HashMap<String, Any>) }.filterNotNull()
+                notifyDataSetChanged()
             }
 
             override fun onCancelled(error: DatabaseError) {
