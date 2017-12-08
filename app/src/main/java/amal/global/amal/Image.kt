@@ -25,6 +25,11 @@ data class Image internal constructor(
         val json = metadata.toJSON()
         File(settingsPath).writeText(json)
     }
+
+    val file: File by lazy {
+        File(this.filePath)
+    }
+
 }
 
 data class Metadata internal constructor(

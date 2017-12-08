@@ -35,9 +35,10 @@ public class GalleryAdapter(private val context: Context) : BaseAdapter() {
 
         val image = getItem(position) as Image
 
-        semaphore.acquire()
-        File(image.filePath)
-                .decodeBitmap()
+        semaphore.acquirePromise()
+                .flatMap {
+                    image.file.decodeBitmap()
+                }
                 .flatMap<Bitmap>({ fullBitmap ->
                     fullBitmap.scale(200, 200, true)
                 })

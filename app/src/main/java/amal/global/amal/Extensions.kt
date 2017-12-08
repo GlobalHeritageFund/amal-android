@@ -16,6 +16,7 @@ import com.google.firebase.database.DatabaseReference
 import com.google.firebase.storage.StorageMetadata
 import com.google.firebase.storage.StorageReference
 import java.io.File
+import java.util.concurrent.Semaphore
 
 fun <T : View> Fragment.bind(@IdRes res : Int) : T {
     @Suppress("UNCHECKED_CAST")
@@ -82,3 +83,9 @@ fun StorageReference.putFilePromise(uri: Uri, metadata: StorageMetadata): Promis
     })
 }
 
+fun Semaphore.acquirePromise(): Promise<Unit> {
+    return Promise<Unit>({ fulfill, reject ->
+        this.acquire()
+        fulfill(Unit)
+    })
+}
