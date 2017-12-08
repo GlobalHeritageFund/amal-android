@@ -8,17 +8,17 @@ data class Report internal constructor(
         val deviceToken: String,
         val creationDate: Date,
         val title: String,
-        val assessorEmail: String
+        val assessorEmail: String?
 ) {
 
     companion object {
         fun fromJSON(map: HashMap<String, Any>): Report? {
-            val deviceToken = map["authorDeviceToken"] as String
-            val creationDate = Date()
-            val title = map["title"] as String
-            val assessorEmail = ""// map["assessorEmail"] as String
+            val deviceToken = map["authorDeviceToken"] as? String ?: return null
+            val creationDate = map["creationDate"] as? Double ?: return null
+            val title = map["title"] as? String ?: return null
+            val assessorEmail = map["assessorEmail"] as? String
 
-            return Report(listOf(), deviceToken, creationDate, title, assessorEmail)
+            return Report(listOf(), deviceToken, Date((creationDate*1000).toLong()), title, assessorEmail)
         }
     }
 }
