@@ -1,12 +1,18 @@
 package amal.global.amal
 
+import android.content.Context
 import android.os.Bundle
 import android.support.design.widget.FloatingActionButton
 import android.support.v4.app.Fragment
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
+import android.util.Log
 import android.view.*
 import android.widget.TextView
+import com.google.firebase.database.DataSnapshot
+import com.google.firebase.database.DatabaseError
+import com.google.firebase.database.FirebaseDatabase
+import com.google.firebase.database.ValueEventListener
 import java.util.*
 
 interface ReportsDelegate {
@@ -35,6 +41,7 @@ class ReportsFragment : Fragment() {
 
 
         listView.adapter = ReportsAdapter(
+                context,
                 listOf<Report>(Report(listOf(), "token", Date(), "title", "email@email.com"))
         )
 
@@ -45,11 +52,30 @@ class ReportsFragment : Fragment() {
     }
 }
 
-class ReportsAdapter(private var reports: List<Report>) : RecyclerView.Adapter<ReportsAdapter.MyViewHolder>() {
+class ReportsAdapter(context: Context, var reports: List<Report>) : RecyclerView.Adapter<ReportsAdapter.MyViewHolder>() {
 
     inner class MyViewHolder(view: View) : RecyclerView.ViewHolder(view) {
         var title = view.bind<TextView>(R.id.report_cell_title)
         var subtitle = view.bind<TextView>(R.id.report_cell_subtitle)
+    }
+
+    init {
+        val reference = FirebaseDatabase.getInstance().reference.child("reports")
+
+         val query = reference
+                 .orderByChild("authorDeviceToken")
+                 .equalTo(CurrentUser(context).token)
+
+        query.addValueEventListener(object : ValueEventListener {
+            override fun onDataChange(snapshot: DataSnapshot) {
+                Log.d("asdf", snapshot.value.toString())
+            }
+
+            override fun onCancelled(error: DatabaseError) {
+                Log.d("asdf", error.toString())
+            }
+
+        })
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MyViewHolder {
