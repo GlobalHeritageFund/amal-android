@@ -12,15 +12,11 @@ import java.util.concurrent.Semaphore
 
 public class GalleryAdapter(private val context: Context) : BaseAdapter() {
 
-    private val images: List<Image>
+    private val images: List<Image> = PhotoStorage(context).fetchImages()
 
     private val semaphore = Semaphore(3)
 
-    var selectedImages = mutableListOf<Int>()
-
-    init {
-        images = PhotoStorage(context).fetchImages()
-    }
+    private var selectedImages = mutableListOf<Int>()
 
     override fun getCount(): Int {
         return images.size
