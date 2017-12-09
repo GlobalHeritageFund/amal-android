@@ -42,8 +42,8 @@ import java.util.Arrays
 
 class CaptureFragment : Fragment() {
 
-    private var textureView: TextureView? = null
-    private var takePictureButton: Button? = null
+    private lateinit var textureView: TextureView
+    private lateinit var takePictureButton: Button
     private var imageDimension = Size(640, 480)
     private var cameraDevice: CameraDevice? = null
     private var captureRequestBuilder: CaptureRequest.Builder? = null
@@ -93,10 +93,10 @@ class CaptureFragment : Fragment() {
 
     override fun onViewCreated(view: View?, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        textureView = getView()?.findViewById<TextureView>(R.id.texture)
-        textureView?.surfaceTextureListener = textureListener
-        takePictureButton = getView()?.findViewById<Button>(R.id.btn_takepicture)
-        takePictureButton?.setOnClickListener { takePicture() }
+        textureView =  bind(R.id.texture)
+        textureView.surfaceTextureListener = textureListener
+        takePictureButton = bind(R.id.btn_takepicture)
+        takePictureButton.setOnClickListener { takePicture() }
     }
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
@@ -125,9 +125,9 @@ class CaptureFragment : Fragment() {
 
     fun createCameraPreview() {
         try {
-            val texture = textureView?.surfaceTexture
-            texture?.setDefaultBufferSize(imageDimension.width, imageDimension.height)
-            val surface = Surface(texture!!)
+            val texture = textureView.surfaceTexture
+            texture.setDefaultBufferSize(imageDimension.width, imageDimension.height)
+            val surface = Surface(texture)
             captureRequestBuilder = cameraDevice?.createCaptureRequest(CameraDevice.TEMPLATE_PREVIEW)
             captureRequestBuilder?.addTarget(surface)
             cameraDevice?.createCaptureSession(listOf(surface), object : CameraCaptureSession.StateCallback() {
@@ -235,10 +235,10 @@ class CaptureFragment : Fragment() {
     override fun onResume() {
         super.onResume()
         startBackgroundThread()
-        if (textureView!!.isAvailable) {
+        if (textureView.isAvailable) {
             openCamera()
         } else {
-            textureView?.surfaceTextureListener = textureListener
+            textureView.surfaceTextureListener = textureListener
         }
     }
 
