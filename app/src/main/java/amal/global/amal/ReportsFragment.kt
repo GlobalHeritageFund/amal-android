@@ -68,7 +68,7 @@ class ReportsAdapter(context: Context, var reports: List<Report> = listOf()) : R
             override fun onDataChange(snapshot: DataSnapshot) {
                 val map = snapshot.value as? HashMap<String, Any> ?: hashMapOf()
 
-                reports = map.values.map { Report.fromJSON(it as HashMap<String, Any>) }.filterNotNull()
+                reports = map.values.mapNotNull { Report.fromJSON(it as HashMap<String, Any>) }
                 notifyDataSetChanged()
             }
 
