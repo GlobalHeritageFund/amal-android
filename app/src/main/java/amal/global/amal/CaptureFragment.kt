@@ -53,6 +53,7 @@ class CaptureFragment : Fragment() {
     private var cameraCaptureSession: CameraCaptureSession? = null
     private var backgroundHandler: Handler? = null
     private var backgroundThread: HandlerThread? = null
+    private var lastLocation: Location? = null
 
     private val cameraManager by lazy {
         activity.getSystemService(Context.CAMERA_SERVICE) as CameraManager
@@ -120,7 +121,7 @@ class CaptureFragment : Fragment() {
                     Manifest.permission.WRITE_EXTERNAL_STORAGE,
                     Manifest.permission.ACCESS_FINE_LOCATION
             )
-            if (permissions.any({ ActivityCompat.checkSelfPermission(activity, it) != PackageManager.PERMISSION_GRANTED })) {
+            if (permissions.all({ ActivityCompat.checkSelfPermission(activity, it) != PackageManager.PERMISSION_GRANTED })) {
                 ActivityCompat.requestPermissions(activity, permissions, requestCameraPermission)
                 return
             }
@@ -163,13 +164,12 @@ class CaptureFragment : Fragment() {
         }
     }
 
-    fun beginListeningForLocation() {
+    private fun beginListeningForLocation() {
         val locationManager = context.getSystemService(Context.LOCATION_SERVICE) as LocationManager
 
         val locationListener = object : LocationListener {
             override fun onLocationChanged(location: Location) {
-                //handle new location
-                Log.d("locatoin", location.latitude.toString() + location.longitude.toString())
+                lastLocation = location
             }
 
             override fun onStatusChanged(provider: String, status: Int, extras: Bundle) {}
@@ -181,6 +181,7 @@ class CaptureFragment : Fragment() {
 
         if (context.checkSelfPermission(Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
             locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0f, locationListener)
+            lastLocation = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER)
         }
 
     }
@@ -263,6 +264,7 @@ class CaptureFragment : Fragment() {
 
     override fun onResume() {
         super.onResume()
+        beginListeningForLocation()
         startBackgroundThread()
         if (textureView.isAvailable) {
             openCamera()
