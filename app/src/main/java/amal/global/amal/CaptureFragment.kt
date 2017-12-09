@@ -188,9 +188,7 @@ class CaptureFragment : Fragment() {
             val height = jpegSizes?.first()?.height ?: 480
 
             val reader = ImageReader.newInstance(width, height, ImageFormat.JPEG, 1)
-            val outputSurfaces = ArrayList<Surface>(2)
-            outputSurfaces.add(reader.surface)
-            outputSurfaces.add(Surface(textureView!!.surfaceTexture))
+            val outputSurfaces = listOf<Surface>(reader.surface, Surface(textureView.surfaceTexture))
             val captureBuilder = cameraDevice!!.createCaptureRequest(CameraDevice.TEMPLATE_STILL_CAPTURE)
             captureBuilder.addTarget(reader.surface)
             captureBuilder.set(CaptureRequest.CONTROL_MODE, CameraMetadata.CONTROL_MODE_AUTO)
