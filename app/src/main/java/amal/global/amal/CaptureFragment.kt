@@ -13,6 +13,9 @@ import android.hardware.camera2.CameraManager
 import android.hardware.camera2.CameraMetadata
 import android.hardware.camera2.CaptureRequest
 import android.hardware.camera2.TotalCaptureResult
+import android.location.Location
+import android.location.LocationListener
+import android.location.LocationManager
 import android.media.Image
 import android.media.ImageReader
 import android.os.Bundle
@@ -112,9 +115,13 @@ class CaptureFragment : Fragment() {
                     .get(CameraCharacteristics.SCALER_STREAM_CONFIGURATION_MAP)
                     .getOutputSizes(SurfaceTexture::class.java)[0]
 
-            if (ActivityCompat.checkSelfPermission(activity, Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED
-                    && ActivityCompat.checkSelfPermission(activity, Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
-                ActivityCompat.requestPermissions(activity, arrayOf(Manifest.permission.CAMERA, Manifest.permission.WRITE_EXTERNAL_STORAGE), requestCameraPermission)
+            val permissions = arrayOf(
+                    Manifest.permission.CAMERA,
+                    Manifest.permission.WRITE_EXTERNAL_STORAGE,
+                    Manifest.permission.ACCESS_FINE_LOCATION
+            )
+            if (permissions.any({ ActivityCompat.checkSelfPermission(activity, it) != PackageManager.PERMISSION_GRANTED })) {
+                ActivityCompat.requestPermissions(activity, permissions, requestCameraPermission)
                 return
             }
             cameraManager.openCamera(cameraId, stateCallback, null)
@@ -154,6 +161,28 @@ class CaptureFragment : Fragment() {
         } catch (e: CameraAccessException) {
             e.printStackTrace()
         }
+    }
+
+    fun beginListeningForLocation() {
+        val locationManager = context.getSystemService(Context.LOCATION_SERVICE) as LocationManager
+
+        val locationListener = object : LocationListener {
+            override fun onLocationChanged(location: Location) {
+                //handle new location
+                Log.d("locatoin", location.latitude.toString() + location.longitude.toString())
+            }
+
+            override fun onStatusChanged(provider: String, status: Int, extras: Bundle) {}
+
+            override fun onProviderEnabled(provider: String) {}
+
+            override fun onProviderDisabled(provider: String) {}
+        }
+
+        if (context.checkSelfPermission(Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
+            locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0f, locationListener)
+        }
+
     }
 
     private fun startBackgroundThread() {
