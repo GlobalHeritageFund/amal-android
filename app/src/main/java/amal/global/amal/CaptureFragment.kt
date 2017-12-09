@@ -196,24 +196,21 @@ class CaptureFragment : Fragment() {
             captureBuilder.addTarget(reader.surface)
             captureBuilder.set(CaptureRequest.CONTROL_MODE, CameraMetadata.CONTROL_MODE_AUTO)
             captureBuilder.set(CaptureRequest.JPEG_ORIENTATION, orientationFor(activity.windowManager.defaultDisplay.rotation))
-            val readerListener = object : ImageReader.OnImageAvailableListener {
-                override fun onImageAvailable(reader: ImageReader) {
-                    var image: Image? = null
-                    try {
-                        image = reader.acquireLatestImage()
-                        val buffer = image!!.planes[0].buffer
-                        val bytes = ByteArray(buffer.capacity())
-                        buffer.get(bytes)
-                        PhotoStorage(activity).savePhotoLocally(bytes)
-                    } catch (e: FileNotFoundException) {
-                        e.printStackTrace()
-                    } catch (e: IOException) {
-                        e.printStackTrace()
-                    } finally {
-                        image?.close()
-                    }
+            val readerListener = ImageReader.OnImageAvailableListener { reader ->
+                var image: Image? = null
+                try {
+                    image = reader.acquireLatestImage()
+                    val buffer = image!!.planes[0].buffer
+                    val bytes = ByteArray(buffer.capacity())
+                    buffer.get(bytes)
+                    PhotoStorage(activity).savePhotoLocally(bytes)
+                } catch (e: FileNotFoundException) {
+                    e.printStackTrace()
+                } catch (e: IOException) {
+                    e.printStackTrace()
+                } finally {
+                    image?.close()
                 }
-
             }
             reader.setOnImageAvailableListener(readerListener, backgroundHandler)
             val captureListener = object : CameraCaptureSession.CaptureCallback() {
