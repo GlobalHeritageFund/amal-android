@@ -67,8 +67,6 @@ class ReportsAdapter(context: Context, var reports: List<Report> = listOf()) : R
         query.addValueEventListener(object : ValueEventListener {
             override fun onDataChange(snapshot: DataSnapshot) {
                 val map = snapshot.value as? HashMap<String, Any> ?: hashMapOf()
-                Log.d("asdf", map?.values?.first()?.javaClass.toString())
-                Log.d("asdf", map?.keys.toString())
 
                 reports = map.values.map { Report.fromJSON(it as HashMap<String, Any>) }.filterNotNull()
                 notifyDataSetChanged()
