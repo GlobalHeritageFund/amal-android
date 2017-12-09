@@ -174,7 +174,7 @@ class CaptureFragment : Fragment() {
     }
 
     private fun takePicture() {
-        if (null == cameraDevice) {
+        if (cameraDevice == null) {
             Log.e("ASDF", "trying to capture a picture without a cameraDevice")
             return
         }
