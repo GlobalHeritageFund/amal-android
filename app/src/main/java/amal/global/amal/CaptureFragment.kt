@@ -44,7 +44,7 @@ class CaptureFragment : Fragment() {
 
     private var textureView: TextureView? = null
     private var takePictureButton: Button? = null
-    private var imageDimension: Size? = null
+    private var imageDimension = Size(640, 480)
     private var cameraDevice: CameraDevice? = null
     private var captureRequestBuilder: CaptureRequest.Builder? = null
     private var cameraCaptureSession: CameraCaptureSession? = null
@@ -126,7 +126,7 @@ class CaptureFragment : Fragment() {
     fun createCameraPreview() {
         try {
             val texture = textureView?.surfaceTexture
-            texture?.setDefaultBufferSize(imageDimension!!.width, imageDimension!!.height)
+            texture?.setDefaultBufferSize(imageDimension.width, imageDimension.height)
             val surface = Surface(texture!!)
             captureRequestBuilder = cameraDevice?.createCaptureRequest(CameraDevice.TEMPLATE_PREVIEW)
             captureRequestBuilder?.addTarget(surface)
