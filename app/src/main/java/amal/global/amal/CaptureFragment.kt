@@ -114,7 +114,7 @@ class CaptureFragment : Fragment() {
 
             if (ActivityCompat.checkSelfPermission(activity, Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED
                     && ActivityCompat.checkSelfPermission(activity, Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
-                ActivityCompat.requestPermissions(activity, arrayOf(Manifest.permission.CAMERA, Manifest.permission.WRITE_EXTERNAL_STORAGE), REQUEST_CAMERA_PERMISSION)
+                ActivityCompat.requestPermissions(activity, arrayOf(Manifest.permission.CAMERA, Manifest.permission.WRITE_EXTERNAL_STORAGE), requestCameraPermission)
                 return
             }
             cameraManager.openCamera(cameraId, stateCallback, null)
@@ -256,7 +256,7 @@ class CaptureFragment : Fragment() {
         cameraDevice = null
     }
 
-    private val REQUEST_CAMERA_PERMISSION = 200
+    private val requestCameraPermission = 200
 
     private fun orientationFor(rotation: Int): Int {
         when (rotation) {
