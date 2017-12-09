@@ -197,8 +197,8 @@ class CaptureFragment : Fragment() {
                 var image: Image? = null
                 try {
                     image = reader.acquireLatestImage()
-                    val buffer = image!!.planes[0].buffer
-                    val bytes = ByteArray(buffer.capacity())
+                    val buffer = image?.planes?.firstOrNull()?.buffer
+                    val bytes = ByteArray(buffer!!.capacity())
                     buffer.get(bytes)
                     PhotoStorage(activity).savePhotoLocally(bytes)
                 } catch (e: FileNotFoundException) {
