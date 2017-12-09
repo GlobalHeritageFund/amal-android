@@ -219,10 +219,16 @@ class CaptureFragment : Fragment() {
 
             val reader = ImageReader.newInstance(width, height, ImageFormat.JPEG, 1)
             val outputSurfaces = listOf<Surface>(reader.surface, Surface(textureView.surfaceTexture))
+
             val captureBuilder = cameraDevice!!.createCaptureRequest(CameraDevice.TEMPLATE_STILL_CAPTURE)
             captureBuilder.addTarget(reader.surface)
             captureBuilder.set(CaptureRequest.CONTROL_MODE, CameraMetadata.CONTROL_MODE_AUTO)
             captureBuilder.set(CaptureRequest.JPEG_ORIENTATION, orientationFor(activity.windowManager.defaultDisplay.rotation))
+
+            val metadata = Metadata()
+            metadata.latitude = lastLocation?.latitude ?: 0.0
+            metadata.longitude = lastLocation?.longitude ?: 0.0
+
             val readerListener = ImageReader.OnImageAvailableListener { reader ->
                 var image: Image? = null
                 try {
@@ -230,7 +236,7 @@ class CaptureFragment : Fragment() {
                     val buffer = image?.planes?.firstOrNull()?.buffer
                     val bytes = ByteArray(buffer!!.capacity())
                     buffer.get(bytes)
-                    PhotoStorage(activity).savePhotoLocally(bytes)
+                    PhotoStorage(activity).savePhotoLocally(bytes, metadata)
                 } catch (e: FileNotFoundException) {
                     e.printStackTrace()
                 } catch (e: IOException) {
