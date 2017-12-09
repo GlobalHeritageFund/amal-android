@@ -12,13 +12,13 @@ import java.util.ArrayList
 
 class PhotoStorage internal constructor(internal var context: Context) {
 
+    @Throws(IOException::class)
     public fun savePhotoLocally(bytes: ByteArray) {
         val dir = File(context.filesDir.toString() + "/images/")
         dir.mkdirs()
 
         val maxImageID = dir.listFiles()
-                .map { file ->  file.nameWithoutExtension.toIntOrNull() }
-                .filterNotNull()
+                .mapNotNull { file ->  file.nameWithoutExtension.toIntOrNull() }
                 .max() ?: 0
 
         val newImageID = maxImageID + 1
@@ -40,9 +40,7 @@ class PhotoStorage internal constructor(internal var context: Context) {
             output = FileOutputStream(file)
             output.write(bytes)
         } finally {
-            if (null != output) {
-                output.close()
-            }
+            output?.close()
         }
     }
 
