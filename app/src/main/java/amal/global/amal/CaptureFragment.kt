@@ -154,16 +154,15 @@ class CaptureFragment : Fragment() {
         } catch (e: CameraAccessException) {
             e.printStackTrace()
         }
-
     }
 
-    protected fun startBackgroundThread() {
+    private fun startBackgroundThread() {
         backgroundThread = HandlerThread("Camera Background")
         backgroundThread?.start()
         backgroundHandler = Handler(backgroundThread!!.looper)
     }
 
-    protected fun stopBackgroundThread() {
+    private fun stopBackgroundThread() {
         backgroundThread?.quitSafely()
         try {
             backgroundThread?.join()
