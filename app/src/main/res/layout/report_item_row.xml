@@ -1,22 +1,22 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="horizontal" android:layout_width="match_parent"
-    android:layout_height="44dp">
+    android:layout_height="64dp">
     <ImageView
         android:id="@+id/report_cell_image"
-        android:layout_width="44dp"
-        android:layout_height="44dp"
+        android:layout_width="64dp"
+        android:layout_height="64dp"
         android:layout_gravity="start|center_vertical"
         android:adjustViewBounds="true"
         android:contentDescription="@string/report_thumbnail" />
 
     <LinearLayout
         android:orientation="vertical"
-        android:layout_centerVertical="true"
         android:layout_marginStart="8dp"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content">
         <TextView
+            android:textSize="20sp"
             android:id="@+id/report_cell_title"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
