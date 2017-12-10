@@ -88,6 +88,9 @@ class ReportsAdapter(context: Context, var reports: List<Report> = listOf()) : R
     override fun onBindViewHolder(holder: MyViewHolder, position: Int) {
         val report = reports[position]
         holder.title.text = report.title
+
+        val count = report.images.count()
+        holder.subtitle.text = if (count == 1) "1 item" else count.toString() + " items"
     }
 
     override fun getItemCount(): Int {
