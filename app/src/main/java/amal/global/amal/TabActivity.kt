@@ -39,7 +39,7 @@ class TabActivity : AppCompatActivity(), GalleryDelegate, ReportsDelegate, Choos
         navigation.selectedItemId = R.id.navigation_capture
     }
 
-    override fun imageTapped(fragment: GalleryFragment, image: Image) {
+    override fun imageTapped(fragment: GalleryFragment, image: LocalImage) {
         val assessFragment = AssessFragment()
         assessFragment.image = image
         pushFragment(assessFragment)
@@ -49,7 +49,7 @@ class TabActivity : AppCompatActivity(), GalleryDelegate, ReportsDelegate, Choos
         pushFragment(ChooseImagesFragment().also { it.delegate = this })
     }
 
-    override fun choseImages(fragment: ChooseImagesFragment, images: List<Image>) {
+    override fun choseImages(fragment: ChooseImagesFragment, images: List<LocalImage>) {
         val fragment = NewReportFragment()
         fragment.report.deviceToken = CurrentUser(this).token
         fragment.report.images = images

@@ -55,7 +55,7 @@ class ReportUploader (val reportDraft: ReportDraft) {
                 }
     }
 
-    fun uploadImage(image: Image, reference: DatabaseReference): Promise<Unit> {
+    fun uploadImage(image: LocalImage, reference: DatabaseReference): Promise<Unit> {
 
         val imageReference = imagesDirectory.child(reference.key)
 

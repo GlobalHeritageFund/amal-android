@@ -14,7 +14,7 @@ import android.widget.ImageView
 
 class AssessFragment : Fragment() {
 
-    var image: Image? = null
+    var image: LocalImage? = null
 
     lateinit var imageView: ImageView
     lateinit var nameField: EditText

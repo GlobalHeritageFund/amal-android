@@ -7,8 +7,6 @@ import java.io.FileNotFoundException
 import java.io.FileOutputStream
 import java.io.IOException
 import java.io.OutputStream
-import java.util.ArrayList
-
 
 class PhotoStorage internal constructor(internal var context: Context) {
 
@@ -46,7 +44,7 @@ class PhotoStorage internal constructor(internal var context: Context) {
         }
     }
 
-    public fun fetchImages(): List<Image> {
+    public fun fetchImages(): List<LocalImage> {
         val dir = File(context.filesDir.toString() + "/images/")
         dir.mkdirs()
         return dir
@@ -55,7 +53,7 @@ class PhotoStorage internal constructor(internal var context: Context) {
                     file.extension == "jpg" || file.extension == "jpeg"
                 }
                 .map { file ->
-                    Image.convenience(file.absolutePath, file.absolutePath.replaceAfterLast(".", "json"))
+                    LocalImage.convenience(file.absolutePath, file.absolutePath.replaceAfterLast(".", "json"))
                 }
 
     }

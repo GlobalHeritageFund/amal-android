@@ -53,6 +53,12 @@ fun File.decodeBitmap(): Promise<Bitmap> {
     })
 }
 
+fun ByteArray.decodeBitmap(offset: Int = 0): Promise<Bitmap> {
+    return Promise({ fulfill, reject ->
+        fulfill(BitmapFactory.decodeByteArray(this, offset, this.count()))
+    })
+}
+
 fun Bitmap.scale(dstWidth: Int, dstHeight: Int, filter: Boolean): Promise<Bitmap> {
     return Promise<Bitmap>({ fulfill, reject ->
         fulfill(Bitmap.createScaledBitmap(this, dstWidth, dstHeight, filter))
@@ -78,6 +84,20 @@ fun StorageReference.putFilePromise(uri: Uri, metadata: StorageMetadata): Promis
             fulfill(Unit)
         })
         uploadTask.addOnFailureListener({ exception ->
+            reject(Error(exception.message))
+        })
+    })
+}
+
+fun StorageReference.getBytesPromise(maxDownloadSizeBytes: Long): Promise<ByteArray> {
+    return Promise({ fulfill, reject ->
+        val task = this.getBytes(maxDownloadSizeBytes)
+
+        task.addOnCompleteListener({ task ->
+            fulfill(task.result)
+        })
+
+        task.addOnFailureListener({ exception ->
             reject(Error(exception.message))
         })
     })

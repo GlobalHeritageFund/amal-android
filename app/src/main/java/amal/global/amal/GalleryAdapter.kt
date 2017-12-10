@@ -1,13 +1,9 @@
 package amal.global.amal
 
 import android.content.Context
-import android.graphics.Bitmap
-import android.util.Log
 import android.view.View
 import android.view.ViewGroup
 import android.widget.BaseAdapter
-import android.widget.ImageView
-import java.io.File
 import java.util.concurrent.Semaphore
 
 public class GalleryAdapter(private val context: Context) : BaseAdapter() {
@@ -37,14 +33,11 @@ public class GalleryAdapter(private val context: Context) : BaseAdapter() {
 
         semaphore.acquirePromise()
                 .flatMap {
-                    image.file.decodeBitmap()
+                    image.loadThumbnail()
                 }
-                .flatMap<Bitmap>({ fullBitmap ->
-                    fullBitmap.scale(200, 200, true)
-                })
-                .then({ scaledBitmap ->
+                .then({ thumbnail ->
                     galleryCell.post {
-                        galleryCell.contentImageView.setImageBitmap(scaledBitmap)
+                        galleryCell.contentImageView.setImageBitmap(thumbnail)
                     }
                     semaphore.release()
                 })
@@ -53,8 +46,8 @@ public class GalleryAdapter(private val context: Context) : BaseAdapter() {
         return galleryCell
     }
 
-    fun selectedItems(): List<Image> {
-        return selectedImages.sorted().map { getItem(it) as Image }
+    fun selectedItems(): List<LocalImage> {
+        return selectedImages.sorted().mapNotNull { getItem(it) as? LocalImage }
     }
 
     fun toggleSelectionAt(position: Int) {

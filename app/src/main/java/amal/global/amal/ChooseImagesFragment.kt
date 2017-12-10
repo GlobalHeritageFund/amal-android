@@ -7,7 +7,7 @@ import android.widget.AdapterView
 import android.widget.GridView
 
 interface ChooseImagesFragmentDelegate {
-    fun choseImages(fragment: ChooseImagesFragment, images: List<Image>)
+    fun choseImages(fragment: ChooseImagesFragment, images: List<LocalImage>)
 }
 
 class ChooseImagesFragment: Fragment() {

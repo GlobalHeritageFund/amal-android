@@ -4,7 +4,7 @@ import java.util.*
 import kotlin.collections.HashMap
 
 data class Report internal constructor(
-        val images: List<Image>,
+        val images: List<RemoteImage>,
         val deviceToken: String,
         val creationDate: Date,
         val title: String,
@@ -18,7 +18,12 @@ data class Report internal constructor(
             val title = map["title"] as? String ?: return null
             val assessorEmail = map["assessorEmail"] as? String
 
-            return Report(listOf(), deviceToken, Date((creationDate*1000).toLong()), title, assessorEmail)
+            val imagesMaps = map["images"] as? HashMap<*, *> ?: hashMapOf<String, Any>()
+            val images = imagesMaps
+                    .values
+                    .filterIsInstance<HashMap<String, Any>>()
+                    .mapNotNull { RemoteImage.fromJSON(it) }
+            return Report(images, deviceToken, Date((creationDate*1000).toLong()), title, assessorEmail)
         }
     }
 }

@@ -9,7 +9,7 @@ import android.widget.AdapterView
 import android.widget.GridView
 
 public interface GalleryDelegate {
-    public fun imageTapped(fragment: GalleryFragment, image: Image)
+    public fun imageTapped(fragment: GalleryFragment, image: LocalImage)
 }
 
 class GalleryFragment : Fragment() {
@@ -40,7 +40,7 @@ class GalleryFragment : Fragment() {
         gridview?.adapter = imageAdapter
 
         gridview?.onItemClickListener = AdapterView.OnItemClickListener { parent, view, position, id ->
-            val image = imageAdapter?.getItem(position) as Image
+            val image = imageAdapter?.getItem(position) as LocalImage
             delegate?.imageTapped(this, image)
         }
     }
