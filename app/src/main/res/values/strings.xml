@@ -25,4 +25,5 @@
     <string name="assessor_email">Assessor Email</string>
     <string name="title">Title</string>
     <string name="upload">Upload</string>
+    <string name="report_thumbnail">Report Thumbnail</string>
 </resources>
