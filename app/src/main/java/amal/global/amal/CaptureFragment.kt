@@ -99,7 +99,7 @@ class CaptureFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         textureView =  bind(R.id.texture)
         textureView.surfaceTextureListener = textureListener
-        takePictureButton = bind(R.id.btn_takepicture)
+        takePictureButton = bind(R.id.btn_take_picture)
         takePictureButton.setOnClickListener { takePicture() }
     }
 
