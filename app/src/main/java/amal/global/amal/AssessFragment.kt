@@ -107,6 +107,8 @@ class AssessFragment : Fragment() {
             image?.saveMetaData()
         }
 
+        coordinatesTextView = bind(R.id.coordinates_text_view)
+        coordinatesTextView.text = image?.metadata?.coordinatesString()
 
         updateImage()
     }

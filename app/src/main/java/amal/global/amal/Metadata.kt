@@ -17,6 +17,15 @@ data class Metadata internal constructor(
         public var firebaseImageKey: String = "",
         public var localIdentifier: String = ""
 ) {
+
+    fun coordinatesString(): String? {
+        if (latitude == 0.0 && longitude == 0.0) {
+            return null
+        }
+
+        return "%.4f, %.4f".format(latitude, longitude)
+    }
+
     fun toJSON(): String {
         val jsonObject = JSONObject()
         jsonObject.put("name", name)
