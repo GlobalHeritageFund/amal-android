@@ -20,7 +20,7 @@ import java.util.concurrent.Semaphore
 
 fun <T : View> Fragment.bind(@IdRes res : Int) : T {
     @Suppress("UNCHECKED_CAST")
-    return getView()!!.findViewById<T>(res)
+    return view!!.findViewById<T>(res)
 }
 
 fun <T : View> View.bind(@IdRes res : Int) : T {
