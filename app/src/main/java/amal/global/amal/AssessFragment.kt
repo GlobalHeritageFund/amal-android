@@ -41,10 +41,12 @@ class AssessFragment : Fragment() {
     }
 
     private fun updateImage() {
-        val fullBitmap = BitmapFactory.decodeFile(image!!.filePath)
-        val resizedBitmap = Bitmap.createScaledBitmap(fullBitmap, 200, 200, true)
+        image?.loadFullSize()?.then { bitmap ->
+            imageView.post({
+                imageView.setImageBitmap(bitmap)
+            })
 
-        imageView.setImageBitmap(resizedBitmap)
+        }
     }
 
 }
