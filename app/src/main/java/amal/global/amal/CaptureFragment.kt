@@ -3,10 +3,7 @@ package amal.global.amal
 import android.Manifest
 import android.content.Context
 import android.content.pm.PackageManager
-import android.graphics.ImageFormat
-import android.graphics.Matrix
-import android.graphics.Rect
-import android.graphics.SurfaceTexture
+import android.graphics.*
 import android.hardware.camera2.CameraAccessException
 import android.hardware.camera2.CameraCaptureSession
 import android.hardware.camera2.CameraCharacteristics
@@ -44,7 +41,6 @@ class CaptureFragment : Fragment() {
     private lateinit var takePictureButton: Button
     private var imageDimension = Size(640, 480)
     private var cameraDevice: CameraDevice? = null
-    private var cameraCaptureSession: CameraCaptureSession? = null
     private var backgroundHandler: Handler? = null
     private var backgroundThread: HandlerThread? = null
     private var lastLocation: Location? = null
@@ -133,12 +129,11 @@ class CaptureFragment : Fragment() {
             val captureRequestBuilder = cameraDevice?.createCaptureRequest(CameraDevice.TEMPLATE_PREVIEW)
             captureRequestBuilder?.addTarget(surface)
             cameraDevice?.createCaptureSession(listOf(surface), object : CameraCaptureSession.StateCallback() {
-                override fun onConfigured(lCameraCaptureSession: CameraCaptureSession) {
+                override fun onConfigured(cameraCaptureSession: CameraCaptureSession) {
                     if (cameraDevice != null) {
-                        cameraCaptureSession = lCameraCaptureSession
                         captureRequestBuilder?.set(CaptureRequest.CONTROL_MODE, CameraMetadata.CONTROL_MODE_AUTO)
                         try {
-                            cameraCaptureSession?.setRepeatingRequest(captureRequestBuilder!!.build(), null, backgroundHandler)
+                            cameraCaptureSession.setRepeatingRequest(captureRequestBuilder!!.build(), null, backgroundHandler)
                         } catch (e: CameraAccessException) {
                             e.printStackTrace()
                         }
