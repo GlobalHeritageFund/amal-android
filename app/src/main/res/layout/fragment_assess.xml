@@ -19,7 +19,8 @@
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="@string/name" />
+            android:text="@string/name"
+            android:labelFor="@+id/name_field"/>
 
         <EditText
             android:id="@+id/name_field"
@@ -42,7 +43,8 @@
         <RadioGroup xmlns:android="http://schemas.android.com/apk/res/android"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal">
+            android:orientation="horizontal"
+            android:id="@+id/category_radio_group">
             <RadioButton android:id="@+id/radio_overall"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -65,7 +67,8 @@
         <RadioGroup xmlns:android="http://schemas.android.com/apk/res/android"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal">
+            android:orientation="horizontal"
+            android:id="@+id/condition_radio_group">
             <RadioButton android:id="@+id/radio_condition_1"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -96,23 +99,21 @@
         <CheckBox android:id="@+id/checkbox_hazards"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/hazards"
-            android:onClick="onCheckboxClicked"/>
+            android:text="@string/hazards"/>
         <CheckBox android:id="@+id/checkbox_safety"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/safety_personal_hazard"
-            android:onClick="onCheckboxClicked"/>
+            android:text="@string/safety_personal_hazard"/>
         <CheckBox android:id="@+id/checkbox_intervention"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/intervention_recommended"
-            android:onClick="onCheckboxClicked"/>
+            android:text="@string/intervention_recommended"/>
 
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="@string/notes" />
+            android:text="@string/notes"
+            android:labelFor="@+id/notes"/>
 
         <EditText
             android:id="@+id/notes"
@@ -129,6 +130,13 @@
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:text="Coordinates"
+            android:labelFor="@+id/notes"/>
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textSize="16sp"
             android:text="45.38, 75.7" />
 
 

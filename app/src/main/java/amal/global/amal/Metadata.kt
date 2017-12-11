@@ -11,6 +11,7 @@ data class Metadata internal constructor(
         public var hazards: Boolean = false,
         public var safetyHazards: Boolean = false,
         public var interventionRequired: Boolean = false,
+        public var notes: String = "",
         public var latitude: Double = 0.0,
         public var longitude: Double = 0.0,
         public var firebaseImageKey: String = "",
@@ -25,6 +26,7 @@ data class Metadata internal constructor(
         jsonObject.put("hazards", hazards)
         jsonObject.put("safetyHazards", safetyHazards)
         jsonObject.put("interventionRequired", interventionRequired)
+        jsonObject.put("notes", notes)
         jsonObject.put("latitude", latitude)
         jsonObject.put("longitude", longitude)
         jsonObject.put("firebaseImageKey", firebaseImageKey)
@@ -43,6 +45,7 @@ data class Metadata internal constructor(
                     jsonObject.getBoolean("hazards"),
                     jsonObject.getBoolean("safetyHazards"),
                     jsonObject.getBoolean("interventionRequired"),
+                    jsonObject.getString("notes"),
                     jsonObject.getDouble("latitude"),
                     jsonObject.getDouble("longitude"),
                     jsonObject.getString("firebaseImageKey"),
