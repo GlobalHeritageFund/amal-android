@@ -1,7 +1,5 @@
 package amal.global.amal
 
-import android.graphics.Bitmap
-import android.graphics.BitmapFactory
 import android.os.Bundle
 import android.support.v4.app.Fragment
 import android.text.Editable
@@ -56,6 +54,7 @@ class AssessFragment : Fragment() {
                 else -> ""
             }
             image?.metadata?.category = string
+            image?.saveMetaData()
         })
 
         conditionRadioGroup = bind(R.id.condition_radio_group)
@@ -66,7 +65,7 @@ class AssessFragment : Fragment() {
             4 -> conditionRadioGroup.check(R.id.radio_condition_4)
             5 -> conditionRadioGroup.check(R.id.radio_condition_5)
         }
-        categoryRadioGroup.setOnCheckedChangeListener({ radioGroup, checkedID ->
+        conditionRadioGroup.setOnCheckedChangeListener({ radioGroup, checkedID ->
             val value = when (checkedID) {
                 R.id.radio_condition_1 -> 1
                 R.id.radio_condition_2 -> 2
@@ -76,24 +75,28 @@ class AssessFragment : Fragment() {
                 else -> 0
             }
             image?.metadata?.conditionNumber = value
+            image?.saveMetaData()
         })
 
         hazardsCheckBox = bind(R.id.checkbox_hazards)
         hazardsCheckBox.isChecked = image?.metadata?.hazards ?: false
         hazardsCheckBox.setOnCheckedChangeListener({ buttonView, isChecked ->
             image?.metadata?.hazards = isChecked
+            image?.saveMetaData()
         })
 
         safetyHazardsCheckBox = bind(R.id.checkbox_safety)
         safetyHazardsCheckBox.isChecked = image?.metadata?.safetyHazards ?: false
         safetyHazardsCheckBox.setOnCheckedChangeListener({ buttonView, isChecked ->
             image?.metadata?.safetyHazards = isChecked
+            image?.saveMetaData()
         })
 
         interventionCheckBox = bind(R.id.checkbox_intervention)
         interventionCheckBox.isChecked = image?.metadata?.interventionRequired ?: false
         interventionCheckBox.setOnCheckedChangeListener({ buttonView, isChecked ->
             image?.metadata?.interventionRequired = isChecked
+            image?.saveMetaData()
         })
 
 
