@@ -4,6 +4,8 @@ import android.Manifest
 import android.content.Context
 import android.content.pm.PackageManager
 import android.graphics.ImageFormat
+import android.graphics.Matrix
+import android.graphics.Rect
 import android.graphics.SurfaceTexture
 import android.hardware.camera2.CameraAccessException
 import android.hardware.camera2.CameraCaptureSession
@@ -33,15 +35,8 @@ import android.view.ViewGroup
 import android.widget.Button
 import android.widget.Toast
 
-import java.io.File
 import java.io.FileNotFoundException
-import java.io.FileOutputStream
 import java.io.IOException
-import java.io.OutputStream
-import java.nio.ByteBuffer
-import java.util.ArrayList
-import java.util.Arrays
-
 
 class CaptureFragment : Fragment() {
 
@@ -49,7 +44,6 @@ class CaptureFragment : Fragment() {
     private lateinit var takePictureButton: Button
     private var imageDimension = Size(640, 480)
     private var cameraDevice: CameraDevice? = null
-    private var captureRequestBuilder: CaptureRequest.Builder? = null
     private var cameraCaptureSession: CameraCaptureSession? = null
     private var backgroundHandler: Handler? = null
     private var backgroundThread: HandlerThread? = null
@@ -136,13 +130,18 @@ class CaptureFragment : Fragment() {
             val texture = textureView.surfaceTexture
             texture.setDefaultBufferSize(imageDimension.width, imageDimension.height)
             val surface = Surface(texture)
-            captureRequestBuilder = cameraDevice?.createCaptureRequest(CameraDevice.TEMPLATE_PREVIEW)
+            val captureRequestBuilder = cameraDevice?.createCaptureRequest(CameraDevice.TEMPLATE_PREVIEW)
             captureRequestBuilder?.addTarget(surface)
             cameraDevice?.createCaptureSession(listOf(surface), object : CameraCaptureSession.StateCallback() {
                 override fun onConfigured(lCameraCaptureSession: CameraCaptureSession) {
                     if (cameraDevice != null) {
                         cameraCaptureSession = lCameraCaptureSession
-                        updatePreview()
+                        captureRequestBuilder?.set(CaptureRequest.CONTROL_MODE, CameraMetadata.CONTROL_MODE_AUTO)
+                        try {
+                            cameraCaptureSession?.setRepeatingRequest(captureRequestBuilder!!.build(), null, backgroundHandler)
+                        } catch (e: CameraAccessException) {
+                            e.printStackTrace()
+                        }
                     }
                 }
 
@@ -150,15 +149,6 @@ class CaptureFragment : Fragment() {
                     Toast.makeText(activity, "Configuration change", Toast.LENGTH_SHORT).show()
                 }
             }, null)
-        } catch (e: CameraAccessException) {
-            e.printStackTrace()
-        }
-    }
-
-    fun updatePreview() {
-        captureRequestBuilder?.set(CaptureRequest.CONTROL_MODE, CameraMetadata.CONTROL_MODE_AUTO)
-        try {
-            cameraCaptureSession?.setRepeatingRequest(captureRequestBuilder!!.build(), null, backgroundHandler)
         } catch (e: CameraAccessException) {
             e.printStackTrace()
         }
