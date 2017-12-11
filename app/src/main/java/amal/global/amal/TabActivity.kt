@@ -63,7 +63,11 @@ class TabActivity : AppCompatActivity(), GalleryDelegate, ReportsDelegate, Choos
         uploader.upload()
 
         uploader.promise.then {
-          Log.d("asdF", "report upload done!")
+            supportFragmentManager
+                    .beginTransaction()
+                    .replace(R.id.content, ReportsFragment().also { it.delegate = this })
+                    .commit()
+
         }.catch { error ->
             Log.e("asdf", error.message)
         }
