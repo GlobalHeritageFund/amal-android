@@ -8,11 +8,11 @@ class CurrentUser(var context: Context) {
 
     val preferenceName = "MyPreferences"
 
-    val tokenKey = "AMALDeviceToken"
-
     val preferences: SharedPreferences by lazy {
         context.getSharedPreferences(preferenceName, Context.MODE_PRIVATE)
     }
+
+    val tokenKey = "AMALDeviceToken"
 
     var token: String
         get() {
@@ -26,6 +26,18 @@ class CurrentUser(var context: Context) {
         set(value) {
             val editor = preferences.edit()
             editor.putString(tokenKey, value)
+            editor.apply()
+        }
+
+    val onboardingKey = "AMALOnboardingComplete"
+
+    var onboardingComplete: Boolean
+        get() {
+            return preferences.getBoolean(onboardingKey, true)
+        }
+        set(value) {
+            val editor = preferences.edit()
+            editor.putBoolean("onboardingKey", value)
             editor.apply()
         }
 

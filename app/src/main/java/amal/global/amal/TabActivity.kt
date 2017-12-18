@@ -5,6 +5,9 @@ import android.support.design.widget.BottomNavigationView
 import android.support.v4.app.Fragment
 import android.support.v7.app.AppCompatActivity
 import android.util.Log
+import android.content.Intent
+
+
 
 class TabActivity : AppCompatActivity(), GalleryDelegate, ReportsDelegate, ChooseImagesFragmentDelegate, NewReportFragmentDelegate {
 
@@ -31,8 +34,16 @@ class TabActivity : AppCompatActivity(), GalleryDelegate, ReportsDelegate, Choos
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
+
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_tab)
+
+        if (!CurrentUser(this).onboardingComplete) {
+            val onboarding = Intent(this, OnboardingActivity::class.java)
+            startActivity(onboarding)
+            finish()
+            return
+        }
 
         val navigation = findViewById<BottomNavigationView>(R.id.navigation)
         navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener)
