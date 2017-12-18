@@ -16,20 +16,20 @@
         android:layout_alignParentBottom="true"
         android:id="@+id/navigation">
 
-        <com.gc.materialdesign.views.ButtonFlat
+        <Button
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="0.5"
-            android:text="Skip"
-            android:id="@+id/skip"
+            android:text="@string/skip"
+            android:id="@+id/skipButton"
             />
 
-        <com.gc.materialdesign.views.ButtonFlat
+        <Button
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="0.5"
-            android:text="Next"
-            android:id="@+id/next"
+            android:text="@string/next"
+            android:id="@+id/nextButton"
             />
 
     </LinearLayout>

@@ -21,9 +21,10 @@
     <string name="intervention_recommended">Intervention Recommended</string>
     <string name="notes">Notes</string>
     <string name="new_report">New</string>
-    <string name="next">Next</string>
     <string name="assessor_email">Assessor Email</string>
     <string name="title">Title</string>
     <string name="upload">Upload</string>
     <string name="report_thumbnail">Report Thumbnail</string>
+    <string name="next">Next</string>
+    <string name="skip">Skip</string>
 </resources>
