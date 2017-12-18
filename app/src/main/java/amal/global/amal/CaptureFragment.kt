@@ -31,14 +31,13 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
 import android.widget.Toast
+import kotlinx.android.synthetic.main.fragment_capture.*
 
 import java.io.FileNotFoundException
 import java.io.IOException
 
 class CaptureFragment : Fragment() {
 
-    private lateinit var textureView: TextureView
-    private lateinit var takePictureButton: Button
     private var imageDimension = Size(640, 480)
     private var cameraDevice: CameraDevice? = null
     private var backgroundHandler: Handler? = null
@@ -87,10 +86,8 @@ class CaptureFragment : Fragment() {
 
     override fun onViewCreated(view: View?, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        textureView =  bind(R.id.texture)
         textureView.surfaceTextureListener = textureListener
-        takePictureButton = bind(R.id.btn_take_picture)
-        takePictureButton.setOnClickListener { takePicture() }
+        shutterButton.setOnClickListener { takePicture() }
     }
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
