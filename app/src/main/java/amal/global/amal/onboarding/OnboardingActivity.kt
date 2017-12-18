@@ -1,5 +1,8 @@
-package amal.global.amal
+package amal.global.amal.onboarding
 
+import amal.global.amal.CurrentUser
+import amal.global.amal.R
+import amal.global.amal.TabActivity
 import android.support.v7.app.AppCompatActivity
 import android.content.Intent
 import android.os.Bundle
@@ -18,6 +21,14 @@ class OnboardingActivity : AppCompatActivity() {
 
         this.skipButton.setOnClickListener({ view ->
             finishOnboarding()
+        })
+
+        this.nextButton.setOnClickListener({ view ->
+            if (pager.currentItem == 2) {
+                finishOnboarding()
+            } else {
+                pager.setCurrentItem(pager.currentItem + 1, true)
+            }
         })
 
     }

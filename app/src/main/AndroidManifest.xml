@@ -23,7 +23,7 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".OnboardingActivity"
+            android:name=".onboarding.OnboardingActivity"
             android:label="@string/title_activity_main">
         </activity>
     </application>
