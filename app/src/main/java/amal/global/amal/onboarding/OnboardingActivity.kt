@@ -9,6 +9,8 @@ import android.os.Bundle
 import android.support.v4.app.Fragment
 import kotlinx.android.synthetic.main.activity_onboarding.*
 import android.support.v4.app.FragmentStatePagerAdapter
+import android.support.v4.view.ViewPager
+import android.view.View
 
 class OnboardingActivity : AppCompatActivity() {
 
@@ -48,6 +50,22 @@ class OnboardingActivity : AppCompatActivity() {
         })
 
         this.pager.adapter = adapter
+
+        this.pager.addOnPageChangeListener(object : ViewPager.OnPageChangeListener {
+            override fun onPageSelected(position: Int) {
+                if(position == 2){
+                    skipButton.setVisibility(View.GONE);
+                    nextButton.setText("Done");
+                } else {
+                    skipButton.setVisibility(View.VISIBLE);
+                    nextButton.setText("Next");
+                }
+            }
+
+            override fun onPageScrollStateChanged(state: Int) { }
+
+            override fun onPageScrolled(position: Int, positionOffset: Float, positionOffsetPixels: Int) { }
+        })
     }
 
     private fun finishOnboarding() {
