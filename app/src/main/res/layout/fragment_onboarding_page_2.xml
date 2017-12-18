@@ -1,22 +1,38 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical" android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:padding="16dp"
-    android:gravity="center_horizontal">
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:orientation="vertical" >
 
-    <TextView
+    <ImageView
+        android:scaleType="centerCrop"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="PAge 2!"
-        android:textSize="48sp"
-        android:layout_marginTop="50dp"/>
+        android:layout_gravity="top"
+        android:src="@mipmap/img_bg_intro_2" />
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textSize="24sp"
-        android:layout_marginTop="20dp"
-        android:text="You seem to be a new user."/>
 
-</LinearLayout>
+    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        android:orientation="vertical" android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:padding="16dp"
+        android:gravity="center_horizontal">
+
+        <ImageView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:srcCompat="@mipmap/img_feature_intro" />
+
+        <TextView
+            android:textColor="@color/white"
+            android:textAlignment="center"
+            android:layout_width="wrap_content"
+            android:layout_height="142dp"
+            android:layout_marginTop="20dp"
+            android:text="Support emergency management efforts by sharing photos and notes."
+            android:textSize="24sp" />
+
+    </LinearLayout>
+
+</FrameLayout>
