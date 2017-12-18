@@ -54,11 +54,11 @@ class OnboardingActivity : AppCompatActivity() {
         this.pager.addOnPageChangeListener(object : ViewPager.OnPageChangeListener {
             override fun onPageSelected(position: Int) {
                 if(position == 2){
-                    skipButton.setVisibility(View.GONE);
-                    nextButton.setText("Done");
+                    skipButton.visibility = View.GONE
+                    nextButton.text = "Done"
                 } else {
-                    skipButton.setVisibility(View.VISIBLE);
-                    nextButton.setText("Next");
+                    skipButton.visibility = View.VISIBLE
+                    nextButton.text = "Next";
                 }
             }
 
