@@ -24,7 +24,9 @@
         </activity>
         <activity
             android:name=".onboarding.OnboardingActivity"
-            android:label="@string/title_activity_main">
+            android:label="@string/title_activity_main"
+            android:theme="@style/Theme.Design.Light.NoActionBar"
+            >
         </activity>
     </application>
 
