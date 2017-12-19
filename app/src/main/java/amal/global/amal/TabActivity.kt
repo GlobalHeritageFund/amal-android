@@ -10,7 +10,12 @@ import android.content.Intent
 
 
 
-class TabActivity : AppCompatActivity(), GalleryDelegate, ReportsDelegate, ChooseImagesFragmentDelegate, NewReportFragmentDelegate {
+class TabActivity : AppCompatActivity(),
+        GalleryDelegate,
+        ReportsDelegate,
+        ChooseImagesFragmentDelegate,
+        NewReportFragmentDelegate,
+        CaptureDelegate {
 
     private val mOnNavigationItemSelectedListener = BottomNavigationView.OnNavigationItemSelectedListener { item ->
         var fragment: Fragment = when (item.itemId) {
@@ -18,7 +23,7 @@ class TabActivity : AppCompatActivity(), GalleryDelegate, ReportsDelegate, Choos
                 GalleryFragment().also { it.delegate = this }
             }
             R.id.navigation_capture -> {
-                CaptureFragment()
+                CaptureFragment().also { it.delegate = this }
             }
             R.id.navigation_report -> {
                 ReportsFragment().also { it.delegate = this }
@@ -67,6 +72,10 @@ class TabActivity : AppCompatActivity(), GalleryDelegate, ReportsDelegate, Choos
         fragment.report.images = images
         fragment.delegate = this
         pushFragment(fragment)
+    }
+
+    override fun settingsButtonTapped(fragment: CaptureFragment) {
+        //show settings screen
     }
 
     override fun uploadReport(fragment: NewReportFragment, report: ReportDraft) {

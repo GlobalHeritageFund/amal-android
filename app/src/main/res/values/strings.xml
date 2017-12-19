@@ -27,4 +27,5 @@
     <string name="report_thumbnail">Report Thumbnail</string>
     <string name="next">Next</string>
     <string name="skip">Skip</string>
+    <string name="settings_button">Settings Button</string>
 </resources>

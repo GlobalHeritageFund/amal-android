@@ -36,6 +36,10 @@ import kotlinx.android.synthetic.main.fragment_capture.*
 import java.io.FileNotFoundException
 import java.io.IOException
 
+interface CaptureDelegate {
+    fun settingsButtonTapped(fragment: CaptureFragment)
+}
+
 class CaptureFragment : Fragment() {
 
     private var imageDimension = Size(640, 480)
@@ -43,6 +47,8 @@ class CaptureFragment : Fragment() {
     private var backgroundHandler: Handler? = null
     private var backgroundThread: HandlerThread? = null
     private var lastLocation: Location? = null
+
+    var delegate: CaptureDelegate? = null
 
     private val cameraManager by lazy {
         activity.getSystemService(Context.CAMERA_SERVICE) as CameraManager
@@ -87,7 +93,8 @@ class CaptureFragment : Fragment() {
     override fun onViewCreated(view: View?, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         textureView.surfaceTextureListener = textureListener
-        shutterButton.setOnClickListener { takePicture() }
+        shutterButton.setOnClickListener({ takePicture() })
+        settingsButton.setOnClickListener({ delegate?.settingsButtonTapped(this) })
     }
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
