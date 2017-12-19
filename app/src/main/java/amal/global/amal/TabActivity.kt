@@ -75,7 +75,14 @@ class TabActivity : AppCompatActivity(),
     }
 
     override fun settingsButtonTapped(fragment: CaptureFragment) {
-        //show settings screen
+        val fragment = SettingsFragment()
+        supportFragmentManager
+                .beginTransaction()
+                .setCustomAnimations(R.anim.enter, R.anim.exit, R.anim.pop_enter, R.anim.pop_exit)
+                .replace(R.id.content, fragment)
+                .addToBackStack(null)
+                .commit()
+
     }
 
     override fun uploadReport(fragment: NewReportFragment, report: ReportDraft) {
