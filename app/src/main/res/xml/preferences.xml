@@ -3,25 +3,32 @@
     xmlns:android="http://schemas.android.com/apk/res/android">
 
     <android.support.v7.preference.PreferenceCategory
-        android:title="Category 1">
+        android:title="Amal Preferences">
 
-        <android.support.v7.preference.SwitchPreferenceCompat
-            android:key="key1"
-            android:title="Switch Preference"
-            android:summary="Switch Summary"
-            android:defaultValue="true" />
+        <Preference
+            android:title="About Amal"
+            android:summary="AMAL is a mobile and web application designed for the rapid impact assessment of damaged heritage areas, buildings, or artifacts.">
+        </Preference>
 
-        <android.support.v7.preference.EditTextPreference
-            android:key="key2"
-            android:title="EditText Preference"
-            android:summary="EditText Summary"
-            android:dialogMessage="Dialog Message"
-            android:defaultValue="Default value" />
-        <android.support.v7.preference.CheckBoxPreference
-            android:key="key3"
-            android:title="CheckBox Preference"
-            android:summary="CheckBox Summary"
-            android:defaultValue="true"/>
+        <Preference
+            android:key="versionPreference"
+            android:title="Version" >
+        </Preference>
+
+        <Preference
+            android:title="Amal Website"
+            android:summary="Go to the Amal website in your web browser.">
+            <intent android:action="android.intent.action.VIEW"
+                android:data="http://amal.global" />
+        </Preference>
+
+        <Preference
+            android:title="Privacy Policy"
+            android:summary="Go to the privacy policy in your web browser.">
+            <intent android:action="android.intent.action.VIEW"
+                android:data="http://amal.global/privacy" />
+        </Preference>
+
     </android.support.v7.preference.PreferenceCategory>
 
 </android.support.v7.preference.PreferenceScreen>
