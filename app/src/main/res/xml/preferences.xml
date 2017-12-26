@@ -29,6 +29,13 @@
                 android:data="https://globalheritagefund.org/index.php/news-resources/library/privacy-policy/" />
         </Preference>
 
+        <Preference
+            android:title="Terms of Service"
+            android:summary="Go to the terms of service in your web browser.">
+            <intent android:action="android.intent.action.VIEW"
+                android:data="http://amal.global/terms-of-service/" />
+        </Preference>
+
     </android.support.v7.preference.PreferenceCategory>
 
 </android.support.v7.preference.PreferenceScreen>
