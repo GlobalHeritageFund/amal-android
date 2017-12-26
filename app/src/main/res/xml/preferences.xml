@@ -26,7 +26,7 @@
             android:title="Privacy Policy"
             android:summary="Go to the privacy policy in your web browser.">
             <intent android:action="android.intent.action.VIEW"
-                android:data="http://amal.global/privacy" />
+                android:data="https://globalheritagefund.org/index.php/news-resources/library/privacy-policy/" />
         </Preference>
 
     </android.support.v7.preference.PreferenceCategory>
