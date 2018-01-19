@@ -37,7 +37,7 @@ class CurrentUser(var context: Context) {
         }
         set(value) {
             val editor = preferences.edit()
-            editor.putBoolean("onboardingKey", value)
+            editor.putBoolean(onboardingKey, value)
             editor.apply()
         }
 
