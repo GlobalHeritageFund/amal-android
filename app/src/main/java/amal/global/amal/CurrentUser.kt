@@ -33,7 +33,7 @@ class CurrentUser(var context: Context) {
 
     var onboardingComplete: Boolean
         get() {
-            return preferences.getBoolean(onboardingKey, true)
+            return preferences.getBoolean(onboardingKey, false)
         }
         set(value) {
             val editor = preferences.edit()
