@@ -1,6 +1,7 @@
 package amal.global.amal
 
 import android.content.Context
+import android.graphics.Bitmap
 import android.support.v7.widget.RecyclerView
 import android.util.Log
 import android.view.View
@@ -61,7 +62,11 @@ class ReportsAdapter(context: Context, var reports: List<Report> = listOf()) : R
 
         semaphore.acquirePromise()
                 .flatMap {
-                    report.images.first().loadThumbnail()
+                    if (report.images.isEmpty()) {
+                        return@flatMap Promise<Bitmap>(kotlin.Error("No Image"))
+                    } else {
+                        return@flatMap report.images.first().loadThumbnail()
+                    }
                 }
                 .then { thumbnail ->
                     holder.imageView.post({
