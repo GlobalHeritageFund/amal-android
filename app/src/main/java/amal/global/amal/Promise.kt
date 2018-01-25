@@ -39,6 +39,10 @@ class Promise<T> private constructor(state: State<T>) {
         }
     }
 
+    constructor(error: kotlin.Error) : this(State.Rejected(error))
+
+    constructor(value: T) : this(State.Fulfilled(value))
+
     fun fulfill(value: T) {
         update(State.Fulfilled(value))
     }
