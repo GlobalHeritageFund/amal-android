@@ -131,7 +131,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="Coordinates"
-            android:labelFor="@+id/notes"/>
+            android:labelFor="@+id/coordinates_text_view"/>
 
         <TextView
             android:layout_width="match_parent"
