@@ -57,17 +57,16 @@ class CaptureFragment : Fragment() {
     private var textureListener: TextureView.SurfaceTextureListener = object : TextureView.SurfaceTextureListener {
         override fun onSurfaceTextureAvailable(surface: SurfaceTexture, width: Int, height: Int) {
             openCamera()
+            transformTexture(width, height)
         }
 
-        override fun onSurfaceTextureSizeChanged(surface: SurfaceTexture, width: Int, height: Int) {
-            // Transform you image captured size according to the surface width and height
-        }
+        override fun onSurfaceTextureSizeChanged(surface: SurfaceTexture, width: Int, height: Int) { }
 
         override fun onSurfaceTextureDestroyed(surface: SurfaceTexture): Boolean {
             return false
         }
 
-        override fun onSurfaceTextureUpdated(surface: SurfaceTexture) {}
+        override fun onSurfaceTextureUpdated(surface: SurfaceTexture) { }
     }
 
     private val stateCallback = object : CameraDevice.StateCallback() {
@@ -83,6 +82,23 @@ class CaptureFragment : Fragment() {
         override fun onError(camera: CameraDevice, error: Int) {
             closeCamera()
         }
+    }
+
+    fun transformTexture(width: Int, height: Int) {
+        val matrix = Matrix()
+        val rotation = activity.windowManager.defaultDisplay.rotation
+        val textureRectF = RectF(0.0f, 0.0f, width.toFloat(), height.toFloat())
+        val previewRectF = RectF(0.0f, 0.0f, textureView.height.toFloat(), textureView.width.toFloat())
+        val centerX = textureRectF.centerX()
+        val centerY = textureRectF.centerY()
+        if (rotation == Surface.ROTATION_90 || rotation == Surface.ROTATION_270) {
+            previewRectF.offset(centerX - previewRectF.centerX(), centerY - previewRectF.centerY());
+            matrix.setRectToRect(textureRectF, previewRectF, Matrix.ScaleToFit.FILL);
+            val scale = Math.max(width.toFloat() / width, height.toFloat() / width);
+            matrix.postScale(scale, scale, centerX, centerY);
+            matrix.postRotate(90.toFloat() * (rotation - 2), centerX, centerY);
+        }
+        textureView.setTransform(matrix)
     }
 
     override fun onCreateView(inflater: LayoutInflater?, container: ViewGroup?,
@@ -108,7 +124,8 @@ class CaptureFragment : Fragment() {
             imageDimension = cameraManager
                     .getCameraCharacteristics(cameraId)
                     .get(CameraCharacteristics.SCALER_STREAM_CONFIGURATION_MAP)
-                    .getOutputSizes(SurfaceTexture::class.java)[0]
+                    .getOutputSizes(SurfaceTexture::class.java)
+                    .first()
 
             val permissions = arrayOf(
                     Manifest.permission.CAMERA,
