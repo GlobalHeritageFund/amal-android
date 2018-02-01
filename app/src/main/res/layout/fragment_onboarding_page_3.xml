@@ -22,15 +22,16 @@
         <ImageView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginTop="50dp"
             app:srcCompat="@mipmap/img_logo_ghf" />
 
         <TextView
-            android:textColor="@color/white"
-            android:textAlignment="center"
             android:layout_width="wrap_content"
             android:layout_height="142dp"
-            android:layout_marginTop="20dp"
-            android:text="Brought to you by UNESCO, ICOMOS, ICCROM and the Prince Claus Fund."
+            android:layout_marginTop="220dp"
+            android:text="With the support of ARC-WH, ICOMOS, ICCROM and the Prince Claus Fund."
+            android:textAlignment="center"
+            android:textColor="@color/white"
             android:textSize="24sp" />
 
     </LinearLayout>

@@ -22,15 +22,16 @@
         <ImageView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginTop="40dp"
             app:srcCompat="@mipmap/img_logo" />
 
         <TextView
-            android:textColor="@color/white"
-            android:textAlignment="center"
             android:layout_width="wrap_content"
             android:layout_height="142dp"
-            android:layout_marginTop="20dp"
+            android:layout_marginTop="150dp"
             android:text="A damage assessment tool for cultural heritage."
+            android:textAlignment="center"
+            android:textColor="@color/white"
             android:textSize="24sp" />
 
     </LinearLayout>
