@@ -15,6 +15,9 @@ import android.widget.EditText
 import com.google.firebase.database.DatabaseReference
 import com.google.firebase.storage.StorageMetadata
 import com.google.firebase.storage.StorageReference
+import org.json.JSONArray
+import org.json.JSONException
+import org.json.JSONObject
 import java.io.File
 import java.util.concurrent.Semaphore
 
@@ -108,4 +111,41 @@ fun Semaphore.acquirePromise(): Promise<Unit> {
         this.acquire()
         fulfill(Unit)
     })
+}
+
+@Throws(JSONException::class)
+fun fixJSON(json: Any?): Any? {
+    return if (json === JSONObject.NULL) {
+        null
+    } else if (json is JSONObject) {
+        toMap(json)
+    } else if (json is JSONArray) {
+        toList(json)
+    } else {
+        json
+    }
+}
+
+@Throws(JSONException::class)
+fun toList(array: JSONArray): List<*> {
+    val list = ArrayList<Any>()
+    for (i in 0 until array.length()) {
+        fixJSON(array.get(i))?.let {
+           list.add(it)
+        }
+    }
+    return list
+}
+
+@Throws(JSONException::class)
+fun toMap(value: JSONObject): Map<String, Any> {
+    val map = HashMap<String, Any>()
+    val keys = value.keys()
+    while (keys.hasNext()) {
+        val key = keys.next() as String
+        fixJSON(value.get(key))?.let {
+            map.put(key, it)
+        }
+    }
+    return map
 }

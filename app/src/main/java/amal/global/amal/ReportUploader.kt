@@ -65,7 +65,8 @@ class ReportUploader (val reportDraft: ReportDraft) {
 
         return Promise.all<Unit>(sequenceOf<Promise<Unit>>(
                 imageReference.putFilePromise(Uri.fromFile(File(image.filePath)), metadata),
-                reference.child("imageRef").setValuePromise(imageReference.path)
+                reference.child("imageRef").setValuePromise(imageReference.path),
+                reference.child("settings").setValuePromise(image.metadata.toMap())
         )).map { Unit }
     }
 }

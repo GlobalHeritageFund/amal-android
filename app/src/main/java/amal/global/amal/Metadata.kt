@@ -1,7 +1,9 @@
 package amal.global.amal
 
 import org.json.JSONObject
-
+import amal.global.amal.R.string.`object`
+import org.json.JSONArray
+import org.json.JSONException
 
 data class Metadata internal constructor(
         public var name: String = "",
@@ -26,7 +28,7 @@ data class Metadata internal constructor(
         return "%.4f, %.4f".format(latitude, longitude)
     }
 
-    fun toJSON(): String {
+    fun toJSONObject(): JSONObject {
         val jsonObject = JSONObject()
         jsonObject.put("name", name)
         jsonObject.put("category", category)
@@ -40,8 +42,18 @@ data class Metadata internal constructor(
         jsonObject.put("longitude", longitude)
         jsonObject.put("firebaseImageKey", firebaseImageKey)
         jsonObject.put("localIdentifier", localIdentifier)
-        return jsonObject.toString(4)
+        return jsonObject
     }
+
+    fun toMap(): Map<String, Any> {
+        return toMap(toJSONObject())
+    }
+
+    fun toJSON(): String {
+        return toJSONObject().toString(4)
+    }
+
+
 
     companion object {
         fun fromJSON(string: String): Metadata {
