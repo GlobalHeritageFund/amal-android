@@ -21,12 +21,12 @@ import org.json.JSONObject
 import java.io.File
 import java.util.concurrent.Semaphore
 
-fun <T : View> Fragment.bind(@IdRes res : Int) : T {
+fun <T : View> Fragment.bind(@IdRes res: Int): T {
     @Suppress("UNCHECKED_CAST")
     return view!!.findViewById<T>(res)
 }
 
-fun <T : View> View.bind(@IdRes res : Int) : T {
+fun <T : View> View.bind(@IdRes res: Int): T {
     @Suppress("UNCHECKED_CAST")
     return findViewById<T>(res)
 }
@@ -97,12 +97,18 @@ fun StorageReference.getBytesPromise(maxDownloadSizeBytes: Long): Promise<ByteAr
         val task = this.getBytes(maxDownloadSizeBytes)
 
         task.addOnCompleteListener({ task ->
-            fulfill(task.result)
+            val exception = task.exception
+            if (task.isSuccessful) {
+                fulfill(task.result)
+            } else if (exception != null) {
+                reject(Error(exception.message))
+            }
         })
 
         task.addOnFailureListener({ exception ->
             reject(Error(exception.message))
         })
+
     })
 }
 
@@ -131,7 +137,7 @@ fun toList(array: JSONArray): List<*> {
     val list = ArrayList<Any>()
     for (i in 0 until array.length()) {
         fixJSON(array.get(i))?.let {
-           list.add(it)
+            list.add(it)
         }
     }
     return list
