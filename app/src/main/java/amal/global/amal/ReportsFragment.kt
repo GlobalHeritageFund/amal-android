@@ -17,7 +17,7 @@ class ReportsFragment : Fragment() {
 
     lateinit var listView: RecyclerView
 
-    override fun onCreateView(inflater: LayoutInflater?, container: ViewGroup?,
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
         return inflater?.inflate(R.layout.fragment_reports, container, false)
     }
@@ -25,14 +25,14 @@ class ReportsFragment : Fragment() {
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
 
-        activity.setTitle(R.string.title_report)
+        activity?.setTitle(R.string.title_report)
 
         listView = bind(R.id.report_list)
 
         listView.setLayoutManager(LinearLayoutManager(activity));
 
 
-        listView.adapter = ReportsAdapter(context)
+        listView.adapter = ReportsAdapter(context!!)
 
         view?.findViewById<FloatingActionButton>(R.id.new_report_button)?.setOnClickListener({
             delegate?.newReportTapped(this)

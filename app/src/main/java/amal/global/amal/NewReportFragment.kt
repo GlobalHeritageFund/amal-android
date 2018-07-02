@@ -21,7 +21,7 @@ class NewReportFragment: Fragment() {
 
     var delegate: NewReportFragmentDelegate? = null
 
-    override fun onCreateView(inflater: LayoutInflater?, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         setHasOptionsMenu(true)
         return inflater?.inflate(R.layout.fragment_new_report, container, false)
     }
@@ -33,10 +33,10 @@ class NewReportFragment: Fragment() {
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
-        activity.setTitle(R.string.title_report)
+        activity?.setTitle(R.string.title_report)
     }
 
-    override fun onViewCreated(view: View?, savedInstanceState: Bundle?) {
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
         titleField = bind(R.id.report_title_field)

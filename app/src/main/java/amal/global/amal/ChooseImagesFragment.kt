@@ -20,10 +20,10 @@ class ChooseImagesFragment: Fragment() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        adapter = GalleryAdapter(activity)
+        adapter = GalleryAdapter(activity!!)
     }
 
-    override fun onCreateView(inflater: LayoutInflater?, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         setHasOptionsMenu(true)
         return inflater?.inflate(R.layout.fragment_gallery, container, false)
     }
@@ -33,7 +33,7 @@ class ChooseImagesFragment: Fragment() {
         inflater.inflate(R.menu.menu_choose_images, menu)
     }
 
-    override fun onViewCreated(view: View?, savedInstanceState: Bundle?) {
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
         gridView = bind(R.id.gallery_gridview)

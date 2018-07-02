@@ -17,7 +17,7 @@ internal class SettingsFragment: PreferenceFragmentCompat() {
         val versionPreference = findPreference("versionPreference")
 
         try {
-            val pInfo = activity.packageManager.getPackageInfo(activity.packageName, 0)
+            val pInfo = activity!!.packageManager.getPackageInfo(activity!!.packageName, 0)
             val version = pInfo.versionName
             versionPreference.summary = version
         } catch (e: PackageManager.NameNotFoundException) {

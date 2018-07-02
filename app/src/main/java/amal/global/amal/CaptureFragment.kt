@@ -51,7 +51,7 @@ class CaptureFragment : Fragment() {
     var delegate: CaptureDelegate? = null
 
     private val cameraManager by lazy {
-        activity.getSystemService(Context.CAMERA_SERVICE) as CameraManager
+        activity!!.getSystemService(Context.CAMERA_SERVICE) as CameraManager
     }
 
     private var textureListener: TextureView.SurfaceTextureListener = object : TextureView.SurfaceTextureListener {
@@ -86,14 +86,20 @@ class CaptureFragment : Fragment() {
 
     fun transformTexture(width: Int, height: Int) {
         val matrix = Matrix()
-        val rotation = activity.windowManager.defaultDisplay.rotation
-        val textureRectF = RectF(0.0f, 0.0f, width.toFloat(), height.toFloat())
-        val previewRectF = RectF(0.0f, 0.0f, textureView.height.toFloat(), textureView.width.toFloat())
-        val centerX = textureRectF.centerX()
-        val centerY = textureRectF.centerY()
+
+        val rotation = activity!!.windowManager.defaultDisplay.rotation
         if (rotation == Surface.ROTATION_90 || rotation == Surface.ROTATION_270) {
+
+            val textureRectF = RectF(0.0f, 0.0f, width.toFloat(), height.toFloat())
+            val previewRectF = RectF(0.0f, 0.0f, textureView.height.toFloat(), textureView.width.toFloat())
+
+            val centerX = textureRectF.centerX()
+            val centerY = textureRectF.centerY()
+
             previewRectF.offset(centerX - previewRectF.centerX(), centerY - previewRectF.centerY());
-            matrix.setRectToRect(textureRectF, previewRectF, Matrix.ScaleToFit.FILL);
+
+            matrix.setRectToRect(textureRectF, previewRectF, Matrix.ScaleToFit.START);
+
             val scale = Math.max(width.toFloat() / width, height.toFloat() / width);
             matrix.postScale(scale, scale, centerX, centerY);
             matrix.postRotate(90.toFloat() * (rotation - 2), centerX, centerY);
@@ -101,12 +107,12 @@ class CaptureFragment : Fragment() {
         textureView.setTransform(matrix)
     }
 
-    override fun onCreateView(inflater: LayoutInflater?, container: ViewGroup?,
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
         return inflater?.inflate(R.layout.fragment_capture, container, false)
     }
 
-    override fun onViewCreated(view: View?, savedInstanceState: Bundle?) {
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         textureView.surfaceTextureListener = textureListener
         shutterButton.setOnClickListener({ takePicture() })
@@ -115,7 +121,7 @@ class CaptureFragment : Fragment() {
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
-        activity.setTitle(R.string.title_capture)
+        activity!!.setTitle(R.string.title_capture)
     }
 
     fun openCamera() {
@@ -132,8 +138,8 @@ class CaptureFragment : Fragment() {
                     Manifest.permission.WRITE_EXTERNAL_STORAGE,
                     Manifest.permission.ACCESS_FINE_LOCATION
             )
-            if (permissions.all({ ActivityCompat.checkSelfPermission(activity, it) != PackageManager.PERMISSION_GRANTED })) {
-                ActivityCompat.requestPermissions(activity, permissions, requestCameraPermission)
+            if (permissions.all({ ActivityCompat.checkSelfPermission(activity!!, it) != PackageManager.PERMISSION_GRANTED })) {
+                ActivityCompat.requestPermissions(activity!!, permissions, requestCameraPermission)
                 return
             }
             cameraManager.openCamera(cameraId, stateCallback, null)
@@ -171,7 +177,7 @@ class CaptureFragment : Fragment() {
     }
 
     private fun beginListeningForLocation() {
-        val locationManager = context.getSystemService(Context.LOCATION_SERVICE) as LocationManager
+        val locationManager = context!!.getSystemService(Context.LOCATION_SERVICE) as LocationManager
 
         val locationListener = object : LocationListener {
             override fun onLocationChanged(location: Location) {
@@ -185,7 +191,7 @@ class CaptureFragment : Fragment() {
             override fun onProviderDisabled(provider: String) {}
         }
 
-        if (context.checkSelfPermission(Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
+        if (context!!.checkSelfPermission(Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
             locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0f, locationListener)
             lastLocation = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER)
         }
@@ -229,7 +235,7 @@ class CaptureFragment : Fragment() {
             val captureBuilder = cameraDevice!!.createCaptureRequest(CameraDevice.TEMPLATE_STILL_CAPTURE)
             captureBuilder.addTarget(reader.surface)
             captureBuilder.set(CaptureRequest.CONTROL_MODE, CameraMetadata.CONTROL_MODE_AUTO)
-            captureBuilder.set(CaptureRequest.JPEG_ORIENTATION, orientationFor(activity.windowManager.defaultDisplay.rotation))
+            captureBuilder.set(CaptureRequest.JPEG_ORIENTATION, orientationFor(activity!!.windowManager.defaultDisplay.rotation))
 
             val metadata = Metadata()
             metadata.latitude = lastLocation?.latitude ?: 0.0
@@ -242,7 +248,7 @@ class CaptureFragment : Fragment() {
                     val buffer = image?.planes?.firstOrNull()?.buffer
                     val bytes = ByteArray(buffer!!.capacity())
                     buffer.get(bytes)
-                    PhotoStorage(activity).savePhotoLocally(bytes, metadata)
+                    PhotoStorage(activity!!).savePhotoLocally(bytes, metadata)
                 } catch (e: FileNotFoundException) {
                     e.printStackTrace()
                 } catch (e: IOException) {

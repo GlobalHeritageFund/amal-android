@@ -23,12 +23,12 @@ class AssessFragment : Fragment() {
     lateinit var notesField: EditText
     lateinit var coordinatesTextView: TextView
 
-    override fun onCreateView(inflater: LayoutInflater?, container: ViewGroup?,
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
         return inflater?.inflate(R.layout.fragment_assess, container, false)
     }
 
-    override fun onViewCreated(view: View?, savedInstanceState: Bundle?) {
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
         imageView = bind(R.id.image_view)

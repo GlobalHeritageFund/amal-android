@@ -20,20 +20,20 @@ class GalleryFragment : Fragment() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        imageAdapter = GalleryAdapter(activity)
+        imageAdapter = GalleryAdapter(activity!!)
     }
 
-    override fun onCreateView(inflater: LayoutInflater?, container: ViewGroup?,
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
         return inflater?.inflate(R.layout.fragment_gallery, container, false)
     }
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
-        activity.setTitle(R.string.title_assess)
+        activity?.setTitle(R.string.title_assess)
     }
 
-    override fun onViewCreated(view: View?, savedInstanceState: Bundle?) {
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
         val gridview = getView()?.findViewById<GridView>(R.id.gallery_gridview)
