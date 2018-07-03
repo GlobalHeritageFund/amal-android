@@ -66,6 +66,10 @@ class TabActivity : AppCompatActivity(),
         pushFragment(ChooseImagesFragment().also { it.delegate = this })
     }
 
+    override fun tappedReport(report: Report, reportsFragment: ReportsFragment) {
+        TODO("not implemented")
+    }
+
     override fun choseImages(fragment: ChooseImagesFragment, images: List<LocalImage>) {
         val fragment = NewReportFragment()
         fragment.report.deviceToken = CurrentUser(this).token

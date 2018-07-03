@@ -6,6 +6,7 @@ import android.net.Uri
 import android.support.annotation.IdRes
 import android.support.annotation.LayoutRes
 import android.support.v4.app.Fragment
+import android.support.v7.widget.RecyclerView
 import android.text.Editable
 import android.text.TextWatcher
 import android.view.LayoutInflater
@@ -109,6 +110,25 @@ fun StorageReference.getBytesPromise(maxDownloadSizeBytes: Long): Promise<ByteAr
             reject(Error(exception.message))
         })
 
+    })
+}
+
+interface OnItemClickListener {
+    fun onItemClicked(position: Int, view: View)
+}
+
+fun RecyclerView.addOnItemClickListener(onClickListener: OnItemClickListener) {
+    this.addOnChildAttachStateChangeListener(object: RecyclerView.OnChildAttachStateChangeListener {
+        override fun onChildViewDetachedFromWindow(view: View?) {
+            view?.setOnClickListener(null)
+        }
+
+        override fun onChildViewAttachedToWindow(view: View?) {
+            view?.setOnClickListener({
+                val holder = getChildViewHolder(view)
+                onClickListener.onItemClicked(holder.adapterPosition, view)
+            })
+        }
     })
 }
 

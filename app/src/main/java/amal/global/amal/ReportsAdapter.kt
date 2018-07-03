@@ -14,7 +14,6 @@ import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.database.ValueEventListener
 import java.util.concurrent.Semaphore
 
-
 class ReportsAdapter(context: Context, var reports: List<Report> = listOf()) : RecyclerView.Adapter<ReportsAdapter.ReportViewHolder>() {
 
     inner class ReportViewHolder(view: View) : RecyclerView.ViewHolder(view) {
