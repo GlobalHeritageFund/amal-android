@@ -23,9 +23,9 @@ class ReportDetailFragment : Fragment() {
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
 
-        activity?.setTitle(report.title)
+        activity?.title = report.title
 
-        recyclerView.setLayoutManager(LinearLayoutManager(activity));
+        recyclerView.layoutManager = LinearLayoutManager(activity);
 
         recyclerView.adapter = adapter
 
