@@ -3,10 +3,13 @@ package amal.global.amal
 import android.os.Bundle
 import android.support.v4.app.Fragment
 import android.support.v7.widget.LinearLayoutManager
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
+import android.view.*
 import kotlinx.android.synthetic.main.fragment_report_detail.*
+
+interface ReportDetailFragmentDelegate {
+    fun webReportTapped(reportDetailFragment: ReportDetailFragment)
+    fun pdfReportTapped(reportDetailFragment: ReportDetailFragment)
+}
 
 class ReportDetailFragment : Fragment() {
 
@@ -14,10 +17,18 @@ class ReportDetailFragment : Fragment() {
 
     lateinit var adapter: ReportDetailAdapter
 
+    var delegate: ReportDetailFragmentDelegate? = null
+
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
         adapter = ReportDetailAdapter(report)
+        setHasOptionsMenu(true)
         return inflater?.inflate(R.layout.fragment_report_detail, container, false)
+    }
+
+    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
+        super.onCreateOptionsMenu(menu, inflater)
+        inflater.inflate(R.menu.menu_report_detail, menu)
     }
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
@@ -35,7 +46,21 @@ class ReportDetailFragment : Fragment() {
                 print(image.metadata.name)
             }
         })
+    }
 
+    override fun onOptionsItemSelected(item: MenuItem?): Boolean {
+        when (item!!.getItemId()) {
+            R.id.menu_item_pdf_report -> {
+                delegate?.pdfReportTapped(this)
+                return true
+            }
+            R.id.menu_item_web_report -> {
+                delegate?.webReportTapped(this)
+                return true
+            }
+            else ->
+                return super.onOptionsItemSelected(item)
+        }
     }
 
 }

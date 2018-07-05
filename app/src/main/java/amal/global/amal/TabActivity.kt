@@ -15,6 +15,7 @@ class TabActivity : AppCompatActivity(),
         ReportsDelegate,
         ChooseImagesFragmentDelegate,
         NewReportFragmentDelegate,
+        ReportDetailFragmentDelegate,
         CaptureDelegate {
 
     private val mOnNavigationItemSelectedListener = BottomNavigationView.OnNavigationItemSelectedListener { item ->
@@ -69,6 +70,7 @@ class TabActivity : AppCompatActivity(),
     override fun tappedReport(report: Report, reportsFragment: ReportsFragment) {
         val fragment = ReportDetailFragment()
         fragment.report = report
+        fragment.delegate = this
         pushFragment(fragment)
     }
 
@@ -108,7 +110,15 @@ class TabActivity : AppCompatActivity(),
 
     }
 
-    fun pushFragment(fragment: Fragment) {
+    override fun pdfReportTapped(reportDetailFragment: ReportDetailFragment) {
+        TODO("not implemented")
+    }
+
+    override fun webReportTapped(reportDetailFragment: ReportDetailFragment) {
+        TODO("not implemented")
+    }
+
+    private fun pushFragment(fragment: Fragment) {
         supportFragmentManager
                 .beginTransaction()
                 .setCustomAnimations(R.anim.enter, R.anim.exit, R.anim.pop_enter, R.anim.pop_exit)
