@@ -67,7 +67,9 @@ class TabActivity : AppCompatActivity(),
     }
 
     override fun tappedReport(report: Report, reportsFragment: ReportsFragment) {
-        TODO("not implemented")
+        val fragment = ReportDetailFragment()
+        fragment.report = report
+        pushFragment(fragment)
     }
 
     override fun choseImages(fragment: ChooseImagesFragment, images: List<LocalImage>) {
