@@ -90,7 +90,6 @@ class TabActivity : AppCompatActivity(),
                 .replace(R.id.content, fragment)
                 .addToBackStack(null)
                 .commit()
-
     }
 
     override fun uploadReport(fragment: NewReportFragment, report: ReportDraft) {
@@ -111,11 +110,15 @@ class TabActivity : AppCompatActivity(),
     }
 
     override fun pdfReportTapped(reportDetailFragment: ReportDetailFragment) {
-        TODO("not implemented")
+        reportDetailFragment.report.fetchPDFURL().then({ uri ->
+            val browserIntent = Intent(Intent.ACTION_VIEW, uri)
+            startActivity(browserIntent)
+        })
     }
 
     override fun webReportTapped(reportDetailFragment: ReportDetailFragment) {
-        TODO("not implemented")
+        val browserIntent = Intent(Intent.ACTION_VIEW, reportDetailFragment.report.webURL)
+        startActivity(browserIntent)
     }
 
     private fun pushFragment(fragment: Fragment) {
