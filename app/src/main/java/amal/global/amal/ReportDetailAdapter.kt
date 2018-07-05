@@ -23,7 +23,7 @@ class ReportDetailAdapter(var report: Report) : RecyclerView.Adapter<SubtitleVie
         val image = report.images[position]
 
         holder.title.text = image.metadata.name
-//        holder.subtitle.text = if (count == 1) "1 item" else count.toString() + " items"
+        holder.subtitle.text = image.metadata.coordinatesString()
 
         semaphore.acquirePromise()
                 .flatMap {
