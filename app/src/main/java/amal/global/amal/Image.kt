@@ -12,6 +12,7 @@ interface Image {
     fun loadFullSize() : Promise<Bitmap>
     var metadata: Metadata
 }
+
 data class LocalImage internal constructor(
         var filePath: String,
         var settingsPath: String,
