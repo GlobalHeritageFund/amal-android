@@ -2,8 +2,10 @@ package amal.global.amal
 
 import org.json.JSONObject
 import amal.global.amal.R.string.`object`
+import android.util.Log
 import org.json.JSONArray
 import org.json.JSONException
+import java.security.InvalidParameterException
 
 data class Metadata internal constructor(
         public var name: String = "",
@@ -53,9 +55,9 @@ data class Metadata internal constructor(
         return toJSONObject().toString(4)
     }
 
-
-
     companion object {
+
+        //from a string on disk
         fun fromJSON(string: String): Metadata {
             val jsonObject = JSONObject(string)
             return Metadata(
@@ -71,6 +73,24 @@ data class Metadata internal constructor(
                     jsonObject.getDouble("longitude"),
                     jsonObject.getString("firebaseImageKey"),
                     jsonObject.getString("localIdentifier")
+            )
+        }
+
+        //from a hashmap in firebase
+        fun fromJSON(map: HashMap<String, Any>): Metadata? {
+            return Metadata(
+                    map.get("name") as? String ?: throw InvalidParameterException(),
+                    map.get("category") as? String ?: throw InvalidParameterException(),
+                    (map.get("levelOfDamage") as? Long)?.toInt() ?: throw InvalidParameterException(),
+                    (map.get("conditionNumber") as? Long)?.toInt() ?: throw InvalidParameterException(),
+                    map.get("hazards") as? Boolean ?: throw InvalidParameterException(),
+                    map.get("safetyHazards") as? Boolean ?: throw InvalidParameterException(),
+                    map.get("interventionRequired") as? Boolean ?: throw InvalidParameterException(),
+                    map.get("notes") as? String ?: throw InvalidParameterException(),
+                    map.get("latitude") as? Double ?: throw InvalidParameterException(),
+                    map.get("longitude") as? Double ?: throw InvalidParameterException(),
+                    map.get("firebaseImageKey") as? String ?: throw InvalidParameterException(),
+                    map.get("localIdentifier") as? String ?: throw InvalidParameterException()
             )
         }
     }

@@ -55,8 +55,9 @@ data class RemoteImage(val remoteStorageLocation: String, override var metadata:
     companion object {
         fun fromJSON(map: HashMap<String, Any>): RemoteImage? {
             val remoteStorageLocation = map["imageRef"] as? String ?: return null
-            //parse metadata
-            return RemoteImage(remoteStorageLocation, Metadata())
+            val metadataObj = map["settings"] as? HashMap<String, Any> ?: hashMapOf<String, Any>()
+            val metadata = Metadata.fromJSON(metadataObj)
+            return RemoteImage(remoteStorageLocation, metadata ?: Metadata())
         }
     }
 
