@@ -40,6 +40,7 @@ class ReportUploader (val reportDraft: ReportDraft) {
                 }
                 .map {
                     return@map Report(
+                            reportReference.key,
                             listOf(),
                             reportDraft.deviceToken,
                             reportDraft.creationDate,
