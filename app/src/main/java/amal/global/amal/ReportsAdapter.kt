@@ -14,13 +14,8 @@ import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.database.ValueEventListener
 import java.util.concurrent.Semaphore
 
-class ReportsAdapter(context: Context, var reports: List<Report> = listOf()) : RecyclerView.Adapter<ReportsAdapter.ReportViewHolder>() {
+class ReportsAdapter(context: Context, var reports: List<Report> = listOf()) : RecyclerView.Adapter<SubtitleViewHolder>() {
 
-    inner class ReportViewHolder(view: View) : RecyclerView.ViewHolder(view) {
-        var title = view.bind<TextView>(R.id.report_cell_title)
-        var subtitle = view.bind<TextView>(R.id.report_cell_subtitle)
-        var imageView = view.bind<ImageView>(R.id.report_cell_image)
-    }
 
     val semaphore = Semaphore(3)
 
@@ -46,13 +41,12 @@ class ReportsAdapter(context: Context, var reports: List<Report> = listOf()) : R
         })
     }
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ReportViewHolder {
-        val itemView = parent.inflate(R.layout.report_item_row, false)
-
-        return ReportViewHolder(itemView)
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): SubtitleViewHolder {
+        val itemView = parent.inflate(R.layout.subtitle_row, false)
+        return SubtitleViewHolder(itemView)
     }
 
-    override fun onBindViewHolder(holder: ReportViewHolder, position: Int) {
+    override fun onBindViewHolder(holder: SubtitleViewHolder, position: Int) {
         val report = reports[position]
         holder.title.text = report.title
 
