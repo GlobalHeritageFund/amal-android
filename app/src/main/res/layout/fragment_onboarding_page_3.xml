@@ -14,10 +14,11 @@
 
     <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:app="http://schemas.android.com/apk/res-auto"
-        android:orientation="vertical" android:layout_width="match_parent"
+        android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:padding="16dp"
-        android:gravity="center_horizontal">
+        android:gravity="center_horizontal"
+        android:orientation="vertical"
+        android:padding="16dp">
 
         <ImageView
             android:layout_width="match_parent"
@@ -32,7 +33,8 @@
             android:text="With the support of ARC-WH, ICOMOS, ICCROM and the Prince Claus Fund."
             android:textAlignment="center"
             android:textColor="@color/white"
-            android:textSize="24sp" />
+            android:textSize="20sp"
+            android:lineSpacingExtra="10dp"/>
 
     </LinearLayout>
 
