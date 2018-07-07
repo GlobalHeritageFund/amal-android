@@ -62,12 +62,8 @@ data class RemoteImage(val remoteStorageLocation: String, override var metadata:
     }
 
     override fun loadFullSize(): Promise<Bitmap> {
-        return FirebaseStorage.getInstance()
-                .getReference(remoteStorageLocation)
-                .getBytesPromise(Long.MAX_VALUE)
-                .flatMap { byteArray ->
-                    byteArray.decodeBitmap()
-                }
+        return ImageFetcher().fetchImage(FirebaseStorage.getInstance()
+                .getReference(remoteStorageLocation))
     }
 
     override fun loadThumbnail(): Promise<Bitmap> {
