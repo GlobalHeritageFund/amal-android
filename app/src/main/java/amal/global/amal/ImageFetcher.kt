@@ -12,7 +12,7 @@ import java.security.MessageDigest
 class ImageFetcher(val context: Context) {
 
     private val memoryCache = ImageMemoryCache(context)
-    
+
     private val diskCache = ImageDiskCache(context)
 
     fun fetchImage(firebaseReference: StorageReference): Promise<Bitmap> {
