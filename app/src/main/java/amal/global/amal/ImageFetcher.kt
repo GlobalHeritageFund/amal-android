@@ -30,7 +30,7 @@ object ImageMemoryCache {
 
     private val cache = object: LruCache<String, Bitmap>(cacheSize) {
         override fun sizeOf(key: String?, bitmap: Bitmap?): Int {
-            return bitmap?.let { it.rowBytes * it.height } ?: 0
+            return bitmap?.let { it.allocationByteCount } ?: 0
         }
     }
 
