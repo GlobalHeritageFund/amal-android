@@ -54,7 +54,7 @@ class ReportsAdapter(var context: Context, var reports: List<Report> = listOf())
                     if (report.images.isEmpty()) {
                         return@flatMap Promise<Bitmap>(kotlin.Error("No Image"))
                     } else {
-                        return@flatMap report.images.first().loadThumbnail()
+                        return@flatMap report.images.first().loadThumbnail(context)
                     }
                 }
                 .then { thumbnail ->

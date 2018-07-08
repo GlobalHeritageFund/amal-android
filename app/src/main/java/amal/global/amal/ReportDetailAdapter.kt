@@ -6,7 +6,7 @@ import android.support.v7.widget.RecyclerView
 import android.view.ViewGroup
 import java.util.concurrent.Semaphore
 
-class ReportDetailAdapter(var report: Report) : RecyclerView.Adapter<SubtitleViewHolder>() {
+class ReportDetailAdapter(val context: Context, var report: Report) : RecyclerView.Adapter<SubtitleViewHolder>() {
 
     val semaphore = Semaphore(3)
 
@@ -27,7 +27,7 @@ class ReportDetailAdapter(var report: Report) : RecyclerView.Adapter<SubtitleVie
 
         semaphore.acquirePromise()
                 .flatMap {
-                    return@flatMap image.loadThumbnail()
+                    return@flatMap image.loadThumbnail(context!!)
                 }
                 .then { thumbnail: Bitmap ->
                     holder.imageView.post({

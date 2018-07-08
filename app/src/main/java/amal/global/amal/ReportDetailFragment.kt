@@ -21,7 +21,7 @@ class ReportDetailFragment : Fragment() {
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
-        adapter = ReportDetailAdapter(report)
+        adapter = ReportDetailAdapter(context!!, report)
         setHasOptionsMenu(true)
         return inflater?.inflate(R.layout.fragment_report_detail, container, false)
     }

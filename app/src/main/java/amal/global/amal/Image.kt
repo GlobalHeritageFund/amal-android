@@ -1,5 +1,6 @@
 package amal.global.amal
 
+import android.content.Context
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.os.storage.StorageManager
@@ -8,8 +9,8 @@ import java.io.File
 import kotlin.collections.HashMap
 
 interface Image {
-    fun loadThumbnail() : Promise<Bitmap>
-    fun loadFullSize() : Promise<Bitmap>
+    fun loadThumbnail(context: Context) : Promise<Bitmap>
+    fun loadFullSize(context: Context) : Promise<Bitmap>
     var metadata: Metadata
 }
 
@@ -40,12 +41,12 @@ data class LocalImage internal constructor(
         File(this.filePath)
     }
 
-    override fun loadFullSize(): Promise<Bitmap> {
+    override fun loadFullSize(context: Context): Promise<Bitmap> {
         return file.decodeBitmap()
     }
 
-    override fun loadThumbnail(): Promise<Bitmap> {
-        return loadFullSize().flatMap { fullBitmap ->
+    override fun loadThumbnail(context: Context): Promise<Bitmap> {
+        return loadFullSize(context).flatMap { fullBitmap ->
             fullBitmap.scale(200, 200, true)
         }
     }
@@ -61,13 +62,13 @@ data class RemoteImage(val remoteStorageLocation: String, override var metadata:
         }
     }
 
-    override fun loadFullSize(): Promise<Bitmap> {
-        return ImageFetcher().fetchImage(FirebaseStorage.getInstance()
+    override fun loadFullSize(context: Context): Promise<Bitmap> {
+        return ImageFetcher(context).fetchImage(FirebaseStorage.getInstance()
                 .getReference(remoteStorageLocation))
     }
 
-    override fun loadThumbnail(): Promise<Bitmap> {
-        return loadFullSize().flatMap { fullBitmap ->
+    override fun loadThumbnail(context: Context): Promise<Bitmap> {
+        return loadFullSize(context).flatMap { fullBitmap ->
             fullBitmap.scale(200, 200, true)
         }
     }

@@ -1,14 +1,17 @@
 package amal.global.amal
 
+import android.content.Context
 import android.graphics.Bitmap
+import android.graphics.BitmapFactory
 import android.util.LruCache
 import com.google.firebase.storage.StorageReference
 
-class ImageFetcher() {
+class ImageFetcher(val context: Context) {
 
-    val cache = ImageMemoryCache
+    private val memoryCache = ImageMemoryCache(context)
+    
     fun fetchImage(firebaseReference: StorageReference): Promise<Bitmap> {
-        cache.get(firebaseReference.toString())?.let {
+        memoryCache.get(firebaseReference.toString())?.let {
             return@fetchImage Promise(it)
         }
         return firebaseReference
@@ -17,12 +20,12 @@ class ImageFetcher() {
                     byteArray.decodeBitmap()
                 }
                 .then { bitmap ->
-                    cache.set(firebaseReference.toString(), bitmap)
+                    memoryCache.set(firebaseReference.toString(), bitmap)
                 }
     }
 }
 
-object ImageMemoryCache {
+class ImageMemoryCache(context: Context) {
 
     private val maxMemory = Runtime.getRuntime().maxMemory().toInt()
 

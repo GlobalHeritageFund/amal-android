@@ -33,7 +33,7 @@ public class GalleryAdapter(private val context: Context) : BaseAdapter() {
 
         semaphore.acquirePromise()
                 .flatMap {
-                    image.loadThumbnail()
+                    image.loadThumbnail(context!!)
                 }
                 .then({ thumbnail ->
                     galleryCell.post {
