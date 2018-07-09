@@ -22,9 +22,9 @@ data class Metadata internal constructor(
         public var localIdentifier: String = ""
 ) {
 
-    fun coordinatesString(): String? {
+    fun coordinatesString(): String {
         if (latitude == 0.0 && longitude == 0.0) {
-            return null
+            return "No coordinates found"
         }
 
         return "%.4f, %.4f".format(latitude, longitude)
