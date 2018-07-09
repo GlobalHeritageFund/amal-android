@@ -164,7 +164,7 @@ fun toList(array: JSONArray): List<*> {
 }
 
 @Throws(JSONException::class)
-fun toMap(value: JSONObject): Map<String, Any> {
+fun toMap(value: JSONObject): HashMap<String, Any> {
     val map = HashMap<String, Any>()
     val keys = value.keys()
     while (keys.hasNext()) {

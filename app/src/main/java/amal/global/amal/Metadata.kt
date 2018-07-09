@@ -58,19 +58,7 @@ data class Metadata internal constructor(
         //from a string on disk
         fun fromJSON(string: String): Metadata {
             val jsonObject = JSONObject(string)
-            return Metadata(
-                    jsonObject.getString("name"),
-                    jsonObject.getString("category"),
-                    jsonObject.getInt("levelOfDamage"),
-                    jsonObject.getInt("conditionNumber"),
-                    jsonObject.getBoolean("hazards"),
-                    jsonObject.getBoolean("safetyHazards"),
-                    jsonObject.getBoolean("interventionRequired"),
-                    jsonObject.getString("notes"),
-                    jsonObject.getDouble("latitude"),
-                    jsonObject.getDouble("longitude"),
-                    jsonObject.getString("localIdentifier")
-            )
+            return this.fromJSON(toMap(jsonObject)) ?: Metadata()
         }
 
         //from a hashmap in firebase
