@@ -66,10 +66,10 @@ class ImageDiskCache(val context: Context) {
         val snapshot = cache.get(filename)
         if (snapshot == null) {
             val editor = cache.edit(filename)
-            val outputStream = editor.newOutputStream(0)
-            bitmap.compress(Bitmap.CompressFormat.JPEG, 100, outputStream)
-            editor.commit()
-            outputStream.close()
+            editor.newOutputStream(0).use({ outputStream ->
+                bitmap.compress(Bitmap.CompressFormat.JPEG, 100, outputStream)
+                editor.commit()
+            })
         } else {
             snapshot.getInputStream(0).close()
         }
