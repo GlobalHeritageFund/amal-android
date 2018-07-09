@@ -5,14 +5,13 @@ import android.os.Bundle
 import android.view.*
 import android.widget.AdapterView
 import android.widget.GridView
+import kotlinx.android.synthetic.main.fragment_gallery.*
 
 interface ChooseImagesFragmentDelegate {
     fun choseImages(fragment: ChooseImagesFragment, images: List<LocalImage>)
 }
 
 class ChooseImagesFragment: Fragment() {
-
-    lateinit var gridView: GridView
 
     lateinit var adapter: GalleryAdapter
 
@@ -35,8 +34,6 @@ class ChooseImagesFragment: Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
-        gridView = bind(R.id.gallery_gridview)
 
         gridView.adapter = adapter
 

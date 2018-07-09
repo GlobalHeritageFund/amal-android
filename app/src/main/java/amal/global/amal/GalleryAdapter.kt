@@ -4,6 +4,7 @@ import android.content.Context
 import android.view.View
 import android.view.ViewGroup
 import android.widget.BaseAdapter
+import kotlinx.android.synthetic.main.cell_gallery.view.*
 import java.util.concurrent.Semaphore
 
 public class GalleryAdapter(private val context: Context) : BaseAdapter() {

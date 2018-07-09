@@ -7,6 +7,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.AdapterView
 import android.widget.GridView
+import kotlinx.android.synthetic.main.fragment_gallery.*
 
 public interface GalleryDelegate {
     public fun imageTapped(fragment: GalleryFragment, image: LocalImage)
@@ -25,7 +26,7 @@ class GalleryFragment : Fragment() {
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
-        return inflater?.inflate(R.layout.fragment_gallery, container, false)
+        return inflater.inflate(R.layout.fragment_gallery, container, false)
     }
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
@@ -36,10 +37,9 @@ class GalleryFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        val gridview = getView()?.findViewById<GridView>(R.id.gallery_gridview)
-        gridview?.adapter = imageAdapter
+        gridView.adapter = imageAdapter
 
-        gridview?.onItemClickListener = AdapterView.OnItemClickListener { parent, view, position, id ->
+        gridView.onItemClickListener = AdapterView.OnItemClickListener { parent, view, position, id ->
             val image = imageAdapter?.getItem(position) as LocalImage
             delegate?.imageTapped(this, image)
         }
