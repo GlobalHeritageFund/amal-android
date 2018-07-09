@@ -18,7 +18,6 @@ data class Metadata internal constructor(
         public var notes: String = "",
         public var latitude: Double = 0.0,
         public var longitude: Double = 0.0,
-        public var firebaseImageKey: String = "",
         public var localIdentifier: String = ""
 ) {
 
@@ -42,7 +41,6 @@ data class Metadata internal constructor(
         jsonObject.put("notes", notes)
         jsonObject.put("latitude", latitude)
         jsonObject.put("longitude", longitude)
-        jsonObject.put("firebaseImageKey", firebaseImageKey)
         jsonObject.put("localIdentifier", localIdentifier)
         return jsonObject
     }
@@ -71,7 +69,6 @@ data class Metadata internal constructor(
                     jsonObject.getString("notes"),
                     jsonObject.getDouble("latitude"),
                     jsonObject.getDouble("longitude"),
-                    jsonObject.getString("firebaseImageKey"),
                     jsonObject.getString("localIdentifier")
             )
         }
@@ -91,7 +88,6 @@ data class Metadata internal constructor(
                         parser.fetch("notes"),
                         parser.fetch("latitude"),
                         parser.fetch("longitude"),
-                        parser.fetch("firebaseImageKey"),
                         parser.fetch("localIdentifier")
                 )
             } catch(e: Exception) {
