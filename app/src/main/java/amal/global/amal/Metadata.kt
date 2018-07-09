@@ -79,21 +79,23 @@ data class Metadata internal constructor(
         //from a hashmap in firebase
         fun fromJSON(map: HashMap<String, Any>): Metadata? {
             try {
+                val parser = Parser(map)
                 return Metadata(
-                        map.get("name") as? String ?: throw InvalidParameterException(),
-                        map.get("category") as? String ?: throw InvalidParameterException(),
-                        (map.get("levelOfDamage") as? Long)?.toInt() ?: throw InvalidParameterException(),
-                        (map.get("conditionNumber") as? Long)?.toInt() ?: throw InvalidParameterException(),
-                        map.get("hazards") as? Boolean ?: throw InvalidParameterException(),
-                        map.get("safetyHazards") as? Boolean ?: throw InvalidParameterException(),
-                        map.get("interventionRequired") as? Boolean ?: throw InvalidParameterException(),
-                        map.get("notes") as? String ?: throw InvalidParameterException(),
-                        map.get("latitude") as? Double ?: throw InvalidParameterException(),
-                        map.get("longitude") as? Double ?: throw InvalidParameterException(),
-                        map.get("firebaseImageKey") as? String ?: throw InvalidParameterException(),
-                        map.get("localIdentifier") as? String ?: throw InvalidParameterException()
+                        parser.fetch("name"),
+                        parser.fetch("category"),
+                        (parser.fetch<Long>("levelOfDamage")).toInt(),
+                        (parser.fetch<Long>("conditionNumber")).toInt(),
+                        parser.fetch("hazards"),
+                        parser.fetch("safetyHazards"),
+                        parser.fetch("interventionRequired"),
+                        parser.fetch("notes"),
+                        parser.fetch("latitude"),
+                        parser.fetch("longitude"),
+                        parser.fetch("firebaseImageKey"),
+                        parser.fetch("localIdentifier")
                 )
             } catch(e: Exception) {
+                Log.d("amallog", e.message)
                 return null
             }
         }
