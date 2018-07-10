@@ -52,6 +52,10 @@ class PhotoStorage internal constructor(internal var context: Context) {
                 .filter { file ->
                     file.extension == "jpg" || file.extension == "jpeg"
                 }
+                .sortedBy { file ->
+                    file.lastModified()
+                }
+                .reversed()
                 .map { file ->
                     LocalImage.convenience(file.absolutePath, file.absolutePath.replaceAfterLast(".", "json"))
                 }
