@@ -3,8 +3,8 @@
     android:layout_width="match_parent" android:layout_height="match_parent">
     <ImageView
         android:id="@+id/contentImageView"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_width="90dp"
+        android:layout_height="90dp"
         android:contentDescription="" />
     <ImageView
         android:id="@+id/selectionStateImageView"
