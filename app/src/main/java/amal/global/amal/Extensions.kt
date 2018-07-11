@@ -20,7 +20,6 @@ import org.json.JSONArray
 import org.json.JSONException
 import org.json.JSONObject
 import java.io.File
-import java.util.concurrent.Semaphore
 
 fun <T : View> Fragment.bind(@IdRes res: Int): T {
     @Suppress("UNCHECKED_CAST")
@@ -132,12 +131,6 @@ fun RecyclerView.addOnItemClickListener(onClickListener: OnItemClickListener) {
     })
 }
 
-fun Semaphore.acquirePromise(): Promise<Unit> {
-    return Promise<Unit>({ fulfill, reject ->
-        this.acquire()
-        fulfill(Unit)
-    })
-}
 
 @Throws(JSONException::class)
 fun fixJSON(json: Any?): Any? {

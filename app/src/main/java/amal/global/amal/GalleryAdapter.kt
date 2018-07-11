@@ -6,14 +6,10 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.BaseAdapter
 import kotlinx.android.synthetic.main.cell_gallery.view.*
-import java.lang.reflect.Type
-import java.util.concurrent.Semaphore
 
 public class GalleryAdapter(private val context: Context) : BaseAdapter() {
 
     private val images: List<Image> = PhotoStorage(context).fetchImages()
-
-    private val semaphore = Semaphore(3)
 
     private var selectedImages = mutableListOf<Int>()
 
@@ -34,22 +30,7 @@ public class GalleryAdapter(private val context: Context) : BaseAdapter() {
 
         val image = getItem(position) as Image
 
-        (image as? LocalImage)?.let {
-            GlideApp.with(context)
-                    .load(it.file)
-                    .centerCrop()
-                    .into(galleryCell.contentImageView)
-        }
-//        semaphore.acquirePromise()
-//                .flatMap {
-//                    image.loadThumbnail(context!!)
-//                }
-//                .then({ thumbnail ->
-//                    galleryCell.post {
-//                        galleryCell.contentImageView.setImageBitmap(thumbnail)
-//                    }
-//                    semaphore.release()
-//                })
+        image.load(context).centerCrop().into(galleryCell.contentImageView)
 
         galleryCell.selectionStateImageView.visibility = if (selectedImages.contains(position)) View.VISIBLE else View.INVISIBLE
         return galleryCell

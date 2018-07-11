@@ -114,12 +114,7 @@ class AssessFragment : Fragment() {
     }
 
     private fun updateImage() {
-        image?.loadFullSize(context!!)?.then { bitmap ->
-            imageView.post({
-                imageView.setImageBitmap(bitmap)
-            })
-
-        }
+        image?.load(context!!)?.into(imageView)
     }
 
 }

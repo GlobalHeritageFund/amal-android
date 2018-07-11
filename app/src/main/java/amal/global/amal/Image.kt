@@ -3,14 +3,15 @@ package amal.global.amal
 import android.content.Context
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
+import android.graphics.drawable.Drawable
 import android.os.storage.StorageManager
 import com.google.firebase.storage.FirebaseStorage
+import com.google.firebase.storage.StorageReference
 import java.io.File
 import kotlin.collections.HashMap
 
 interface Image {
-    fun loadThumbnail(context: Context) : Promise<Bitmap>
-    fun loadFullSize(context: Context) : Promise<Bitmap>
+    fun load(context: Context) : GlideRequest<Drawable>
     var metadata: Metadata
 }
 
@@ -41,14 +42,8 @@ data class LocalImage internal constructor(
         File(this.filePath)
     }
 
-    override fun loadFullSize(context: Context): Promise<Bitmap> {
-        return file.decodeBitmap()
-    }
-
-    override fun loadThumbnail(context: Context): Promise<Bitmap> {
-        return loadFullSize(context).flatMap { fullBitmap ->
-            fullBitmap.scale(200, 200, true)
-        }
+    override fun load(context: Context): GlideRequest<Drawable> {
+        return GlideApp.with(context).load(file)
     }
 }
 
@@ -62,14 +57,10 @@ data class RemoteImage(val remoteStorageLocation: String, override var metadata:
         }
     }
 
-    override fun loadFullSize(context: Context): Promise<Bitmap> {
-        return ImageFetcher(context).fetchImage(FirebaseStorage.getInstance()
-                .getReference(remoteStorageLocation))
-    }
+    val firebaseReference: StorageReference
+        get() = FirebaseStorage.getInstance().getReference(remoteStorageLocation)
 
-    override fun loadThumbnail(context: Context): Promise<Bitmap> {
-        return loadFullSize(context).flatMap { fullBitmap ->
-            fullBitmap.scale(200, 200, true)
-        }
+    override fun load(context: Context): GlideRequest<Drawable> {
+        return GlideApp.with(context).load(firebaseReference)
     }
 }

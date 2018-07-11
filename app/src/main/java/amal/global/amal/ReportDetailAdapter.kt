@@ -1,14 +1,10 @@
 package amal.global.amal
 
 import android.content.Context
-import android.graphics.Bitmap
 import android.support.v7.widget.RecyclerView
 import android.view.ViewGroup
-import java.util.concurrent.Semaphore
 
 class ReportDetailAdapter(val context: Context, var report: Report) : RecyclerView.Adapter<SubtitleViewHolder>() {
-
-    val semaphore = Semaphore(3)
 
     init {
     }
@@ -25,16 +21,7 @@ class ReportDetailAdapter(val context: Context, var report: Report) : RecyclerVi
         holder.title.text = image.metadata.name
         holder.subtitle.text = image.metadata.coordinatesString()
 
-        semaphore.acquirePromise()
-                .flatMap {
-                    return@flatMap image.loadThumbnail(context!!)
-                }
-                .then { thumbnail: Bitmap ->
-                    holder.imageView.post({
-                        holder.imageView.setImageBitmap(thumbnail)
-                    })
-                    semaphore.release()
-                }
+        image.load(context).centerCrop().into(holder.imageView)
     }
 
     override fun getItemCount(): Int {

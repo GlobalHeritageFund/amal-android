@@ -9,11 +9,8 @@ import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.database.ValueEventListener
-import java.util.concurrent.Semaphore
 
 class ReportsAdapter(var context: Context, var reports: List<Report> = listOf()) : RecyclerView.Adapter<SubtitleViewHolder>() {
-
-    val semaphore = Semaphore(3)
 
     init {
         val reference = FirebaseDatabase.getInstance().reference.child("reports")
@@ -49,20 +46,7 @@ class ReportsAdapter(var context: Context, var reports: List<Report> = listOf())
         val count = report.images.count()
         holder.subtitle.text = if (count == 1) "1 item" else count.toString() + " items"
 
-        semaphore.acquirePromise()
-                .flatMap {
-                    if (report.images.isEmpty()) {
-                        return@flatMap Promise<Bitmap>(kotlin.Error("No Image"))
-                    } else {
-                        return@flatMap report.images.first().loadThumbnail(context)
-                    }
-                }
-                .then { thumbnail ->
-                    holder.imageView.post({
-                        holder.imageView.setImageBitmap(thumbnail)
-                    })
-                    semaphore.release()
-                }
+        report.images.firstOrNull()?.let { it.load(context)?.centerCrop().into(holder.imageView) }
     }
 
     override fun getItemCount(): Int {
