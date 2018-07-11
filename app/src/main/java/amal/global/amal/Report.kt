@@ -42,6 +42,8 @@ data class Report internal constructor(
 
     companion object {
         fun fromJSON(id: String, map: HashMap<String, Any>): Report? {
+            val uploadComplete = (map["uploadComplete"] as? Boolean) ?: false
+            if (!uploadComplete) { return null }
             val deviceToken = map["authorDeviceToken"] as? String ?: return null
             val creationDate = map["creationDate"] as? Double ?: return null
             val title = map["title"] as? String ?: return null
