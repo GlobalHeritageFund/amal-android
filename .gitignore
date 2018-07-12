@@ -46,8 +46,11 @@ captures/
 # External native build folder generated in Android Studio 2.2 and later
 .externalNativeBuild
 
-# Google Services (e.g. APIs or Firebase)
+# Secret Keys
 google-services.json
+app/src/release/res/values/google_maps_api.xml
+app/src/debug/res/values/google_maps_api.xml
+
 
 # Freeline
 freeline.py
