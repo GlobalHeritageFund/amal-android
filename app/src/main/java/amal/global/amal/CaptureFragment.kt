@@ -7,6 +7,7 @@ import android.location.Location
 import android.location.LocationListener
 import android.location.LocationManager
 import android.os.Bundle
+import android.support.v4.app.ActivityCompat
 import android.support.v4.app.Fragment
 import android.view.*
 import com.wonderkiln.camerakit.*
@@ -44,6 +45,18 @@ class CaptureFragment : Fragment() {
         activity!!.setTitle(R.string.title_capture)
     }
 
+    override fun onResume() {
+        super.onResume()
+        cameraView.start()
+        requestLocationPermission()
+        beginListeningForLocation()
+    }
+
+    override fun onPause() {
+        cameraView.stop()
+        super.onPause()
+    }
+
     override fun onOptionsItemSelected(item: MenuItem?): Boolean {
         when (item!!.getItemId()) {
             R.id.menu_item_settings -> {
@@ -52,6 +65,14 @@ class CaptureFragment : Fragment() {
             }
             else ->
                 return super.onOptionsItemSelected(item)
+        }
+    }
+
+    private fun requestLocationPermission() {
+        val permission = Manifest.permission.ACCESS_FINE_LOCATION
+        val permissionStatus = ActivityCompat.checkSelfPermission(activity!!, permission)
+        if (permissionStatus != PackageManager.PERMISSION_GRANTED) {
+            ActivityCompat.requestPermissions(activity!!, arrayOf(permission), 200)
         }
     }
 
@@ -94,17 +115,6 @@ class CaptureFragment : Fragment() {
             override fun onVideo(video: CameraKitVideo) { }
         })
         cameraView.captureImage()
-    }
-
-    override fun onResume() {
-        super.onResume()
-        cameraView.start()
-        beginListeningForLocation()
-    }
-
-    override fun onPause() {
-        cameraView.stop()
-        super.onPause()
     }
 
 }
