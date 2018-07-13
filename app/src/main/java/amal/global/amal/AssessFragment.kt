@@ -3,11 +3,13 @@ package amal.global.amal
 import android.os.Bundle
 import android.support.v4.app.Fragment
 import android.text.Editable
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.*
+import kotlinx.android.synthetic.main.fragment_assess.*
+import com.google.android.gms.maps.model.LatLng
+import com.google.android.gms.maps.model.MarkerOptions
 
 class AssessFragment : Fragment() {
 
@@ -39,6 +41,13 @@ class AssessFragment : Fragment() {
             image?.metadata?.name = editable.toString()
             image?.saveMetaData()
         }
+
+        val bundle = savedInstanceState?.getBundle("MapViewBundleKey") ?: savedInstanceState
+        mapView.onCreate(bundle)
+
+        mapView.getMapAsync({ map ->
+            map.addMarker(MarkerOptions().position(LatLng(0.0, 0.0)).title("Marker"))
+        })
 
         categoryRadioGroup = bind(R.id.category_radio_group)
         when (image?.metadata?.category ?: "") {
@@ -117,4 +126,34 @@ class AssessFragment : Fragment() {
         image?.load(context!!)?.into(imageView)
     }
 
+    // MapView needs to have all of these forwarded manually
+    override fun onDestroy() {
+        mapView.onDestroy()
+        super.onDestroy()
+    }
+
+    override fun onLowMemory() {
+        super.onLowMemory()
+        mapView.onLowMemory()
+    }
+
+    override fun onPause() {
+        mapView.onPause()
+        super.onPause()
+    }
+
+    override fun onResume() {
+        super.onResume()
+        mapView.onResume()
+    }
+
+    override fun onStart() {
+        super.onStart()
+        mapView.onStart()
+    }
+
+    override fun onStop() {
+        mapView.onStop()
+        super.onStop()
+    }
 }
