@@ -7,6 +7,8 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.*
+import com.google.android.gms.maps.CameraUpdateFactory
+import com.google.android.gms.maps.model.CameraPosition
 import kotlinx.android.synthetic.main.fragment_assess.*
 import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.MarkerOptions
@@ -46,7 +48,18 @@ class AssessFragment : Fragment() {
         mapView.onCreate(bundle)
 
         mapView.getMapAsync({ map ->
-            map.addMarker(MarkerOptions().position(LatLng(0.0, 0.0)).title("Marker"))
+            image?.metadata?.let {
+                if (!it.hasCoordinates) {
+                    return@getMapAsync
+                }
+                val coordinate = LatLng(it.latitude, it.longitude)
+                val marker = MarkerOptions()
+                        .position(coordinate)
+                        .title("Marker")
+                map.addMarker(marker)
+                val cameraPosition = CameraPosition.builder().target(coordinate).zoom(12.0f).build()
+                map.moveCamera(CameraUpdateFactory.newCameraPosition(cameraPosition))
+            }
         })
 
         categoryRadioGroup = bind(R.id.category_radio_group)

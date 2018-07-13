@@ -22,12 +22,14 @@ data class Metadata internal constructor(
 ) {
 
     fun coordinatesString(): String {
-        if (latitude == 0.0 && longitude == 0.0) {
-            return "No coordinates found"
+        if (hasCoordinates) {
+            return "%.4f, %.4f".format(latitude, longitude)
         }
-
-        return "%.4f, %.4f".format(latitude, longitude)
+        return "No coordinates found"
     }
+
+    val hasCoordinates: Boolean
+        get() = !(latitude == 0.0 && longitude == 0.0)
 
     fun toJSONObject(): JSONObject {
         val jsonObject = JSONObject()
