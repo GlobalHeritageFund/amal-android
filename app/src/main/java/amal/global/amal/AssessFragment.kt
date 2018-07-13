@@ -48,6 +48,7 @@ class AssessFragment : Fragment() {
         mapView.onCreate(bundle)
 
         mapView.getMapAsync({ map ->
+            map.uiSettings.setAllGesturesEnabled(false)
             image?.metadata?.let {
                 if (!it.hasCoordinates) {
                     return@getMapAsync
