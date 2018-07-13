@@ -13,9 +13,15 @@ import kotlinx.android.synthetic.main.fragment_assess.*
 import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.MarkerOptions
 
+interface AssessDelegate {
+    fun mapTapped(fragment: AssessFragment)
+}
+
 class AssessFragment : Fragment() {
 
     var image: LocalImage? = null
+
+    var delegate: AssessDelegate? = null
 
     lateinit var mapView: MapView
 
@@ -29,7 +35,6 @@ class AssessFragment : Fragment() {
 
         explicitlyBindMapViewSoItDoesntGetDeallocatedForOnDestroy()
 
-
         nameField.afterTextChanged { editable: Editable? ->
             image?.metadata?.name = editable.toString()
             image?.saveMetaData()
@@ -42,10 +47,15 @@ class AssessFragment : Fragment() {
             mapView.requestLayout()
         }
 
+
         val bundle = savedInstanceState?.getBundle("MapViewBundleKey") ?: savedInstanceState
         mapView.onCreate(bundle)
 
         mapView.getMapAsync({ map ->
+            map.setOnMapClickListener {
+                delegate?.mapTapped(this@AssessFragment)
+            }
+
             map.uiSettings.setAllGesturesEnabled(false)
             image?.metadata?.let {
                 if (!it.hasCoordinates) {

@@ -16,6 +16,7 @@ class TabActivity : AppCompatActivity(),
         ChooseImagesFragmentDelegate,
         NewReportFragmentDelegate,
         ReportDetailFragmentDelegate,
+        AssessDelegate,
         CaptureDelegate {
 
     private val mOnNavigationItemSelectedListener = BottomNavigationView.OnNavigationItemSelectedListener { item ->
@@ -58,7 +59,7 @@ class TabActivity : AppCompatActivity(),
     }
 
     override fun imageTapped(fragment: GalleryFragment, image: LocalImage) {
-        val assessFragment = AssessFragment()
+        val assessFragment = AssessFragment().also { it.delegate = this }
         assessFragment.image = image
         pushFragment(assessFragment)
     }
@@ -119,6 +120,10 @@ class TabActivity : AppCompatActivity(),
     override fun webReportTapped(reportDetailFragment: ReportDetailFragment) {
         val browserIntent = Intent(Intent.ACTION_VIEW, reportDetailFragment.report.webURL)
         startActivity(browserIntent)
+    }
+
+    override fun mapTapped(fragment: AssessFragment) {
+        // show the full screen map
     }
 
     private fun pushFragment(fragment: Fragment) {
