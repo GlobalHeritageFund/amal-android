@@ -15,6 +15,7 @@ import com.google.android.gms.maps.model.MarkerOptions
 
 interface AssessDelegate {
     fun mapTapped(fragment: AssessFragment)
+    fun editLocationTapped(fragment: AssessFragment)
 }
 
 class AssessFragment : Fragment() {
@@ -41,12 +42,12 @@ class AssessFragment : Fragment() {
         }
 
         val hasCoordinates = image?.metadata?.hasCoordinates ?: false
+
         if (!hasCoordinates) {
             val layout = mapView.layoutParams
             layout.height = 0
             mapView.requestLayout()
         }
-
 
         val bundle = savedInstanceState?.getBundle("MapViewBundleKey") ?: savedInstanceState
         mapView.onCreate(bundle)
@@ -133,6 +134,12 @@ class AssessFragment : Fragment() {
         }
 
         coordinatesTextView.text = image?.metadata?.coordinatesString()
+
+        editLocationButton.text = if (hasCoordinates) "Edit Location" else "Set Location"
+
+        editLocationButton.setOnClickListener({ view ->
+            delegate?.editLocationTapped(this)
+        })
 
         updateImage()
     }

@@ -128,6 +128,10 @@ class TabActivity : AppCompatActivity(),
         pushFragment(map)
     }
 
+    override fun editLocationTapped(fragment: AssessFragment) {
+        TODO("not implemented")
+    }
+
     private fun pushFragment(fragment: Fragment) {
         supportFragmentManager
                 .beginTransaction()

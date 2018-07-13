@@ -137,8 +137,13 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:textSize="16sp"
-            android:id="@+id/coordinatesTextView"
-            android:text="45.38, 75.7" />
+            android:id="@+id/coordinatesTextView" />
+
+        <Button
+            android:id="@+id/editLocationButton"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Edit Location" />
 
 
     </LinearLayout>
