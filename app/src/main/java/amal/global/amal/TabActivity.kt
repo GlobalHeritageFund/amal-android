@@ -123,7 +123,9 @@ class TabActivity : AppCompatActivity(),
     }
 
     override fun mapTapped(fragment: AssessFragment) {
-        // show the full screen map
+        val map = MapFragment()
+        map.images = listOf(fragment.image!!)
+        pushFragment(map)
     }
 
     private fun pushFragment(fragment: Fragment) {
