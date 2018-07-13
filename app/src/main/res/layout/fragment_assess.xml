@@ -11,7 +11,7 @@
         android:layout_height="wrap_content">
 
         <ImageView
-            android:id="@+id/image_view"
+            android:id="@+id/imageView"
             android:layout_width="match_parent"
             android:layout_height="200dp"
             android:contentDescription="@string/image_thumb" />
@@ -20,10 +20,10 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="@string/name"
-            android:labelFor="@+id/name_field"/>
+            android:labelFor="@+id/nameField"/>
 
         <EditText
-            android:id="@+id/name_field"
+            android:id="@+id/nameField"
             android:layout_height="wrap_content"
             android:hint="@string/name"
             android:inputType="textPersonName"
@@ -44,16 +44,16 @@
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
-            android:id="@+id/category_radio_group">
-            <RadioButton android:id="@+id/radio_overall"
+            android:id="@+id/categoryRadioGroup">
+            <RadioButton android:id="@+id/radioOverall"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/overall_area"/>
-            <RadioButton android:id="@+id/radio_site"
+            <RadioButton android:id="@+id/radioSite"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/site_building"/>
-            <RadioButton android:id="@+id/radio_object"
+            <RadioButton android:id="@+id/radioObject"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/object"/>
@@ -68,24 +68,24 @@
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
-            android:id="@+id/condition_radio_group">
-            <RadioButton android:id="@+id/radio_condition_1"
+            android:id="@+id/conditionRadioGroup">
+            <RadioButton android:id="@+id/radioCondition1"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="1"/>
-            <RadioButton android:id="@+id/radio_condition_2"
+            <RadioButton android:id="@+id/radioCondition2"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="2"/>
-            <RadioButton android:id="@+id/radio_condition_3"
+            <RadioButton android:id="@+id/radioCondition3"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="3"/>
-            <RadioButton android:id="@+id/radio_condition_4"
+            <RadioButton android:id="@+id/radioCondition4"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="4"/>
-            <RadioButton android:id="@+id/radio_condition_5"
+            <RadioButton android:id="@+id/radioCondition5"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="5"/>
@@ -96,15 +96,15 @@
             android:layout_height="wrap_content"
             android:text="@string/assess" />
 
-        <CheckBox android:id="@+id/checkbox_hazards"
+        <CheckBox android:id="@+id/hazardsCheckBox"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/hazards"/>
-        <CheckBox android:id="@+id/checkbox_safety"
+        <CheckBox android:id="@+id/safetyHazardsCheckBox"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/safety_personal_hazard"/>
-        <CheckBox android:id="@+id/checkbox_intervention"
+        <CheckBox android:id="@+id/interventionCheckBox"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/intervention_recommended"/>
@@ -113,10 +113,10 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="@string/notes"
-            android:labelFor="@+id/notes"/>
+            android:labelFor="@+id/notesField"/>
 
         <EditText
-            android:id="@+id/notes"
+            android:id="@+id/notesField"
             android:inputType="textMultiLine"
             android:lines="8"
             android:minLines="6"
@@ -131,13 +131,13 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="Coordinates"
-            android:labelFor="@+id/coordinates_text_view"/>
+            android:labelFor="@+id/coordinatesTextView"/>
 
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:textSize="16sp"
-            android:id="@+id/coordinates_text_view"
+            android:id="@+id/coordinatesTextView"
             android:text="45.38, 75.7" />
 
 
