@@ -3,6 +3,7 @@ package amal.global.amal
 import org.json.JSONObject
 import amal.global.amal.R.string.`object`
 import android.util.Log
+import com.google.android.gms.maps.model.LatLng
 import org.json.JSONArray
 import org.json.JSONException
 import java.security.InvalidParameterException
@@ -30,6 +31,9 @@ data class Metadata internal constructor(
 
     val hasCoordinates: Boolean
         get() = !(latitude == 0.0 && longitude == 0.0)
+
+    val coordinate: LatLng
+        get() = LatLng(latitude, longitude)
 
     fun toJSONObject(): JSONObject {
         val jsonObject = JSONObject()

@@ -34,7 +34,7 @@ class MapFragment : Fragment() {
         mapView.getMapAsync({ map ->
             val coordinates: List<LatLng> = images
                     .filter { it.metadata.hasCoordinates }
-                    .map({ LatLng(it.metadata.latitude, it.metadata.longitude) })
+                    .map({ it.metadata.coordinate })
 
             coordinates.forEach { coordinate ->
                 val marker = MarkerOptions()

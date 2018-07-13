@@ -62,12 +62,11 @@ class AssessFragment : Fragment() {
                 if (!it.hasCoordinates) {
                     return@getMapAsync
                 }
-                val coordinate = LatLng(it.latitude, it.longitude)
                 val marker = MarkerOptions()
-                        .position(coordinate)
+                        .position(it.coordinate)
                         .title("Marker")
                 map.addMarker(marker)
-                val cameraPosition = CameraPosition.builder().target(coordinate).zoom(12.0f).build()
+                val cameraPosition = CameraPosition.builder().target(it.coordinate).zoom(12.0f).build()
                 map.moveCamera(CameraUpdateFactory.newCameraPosition(cameraPosition))
             }
         })
