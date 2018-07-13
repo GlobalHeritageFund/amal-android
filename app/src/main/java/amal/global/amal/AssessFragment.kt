@@ -8,6 +8,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.*
 import com.google.android.gms.maps.CameraUpdateFactory
+import com.google.android.gms.maps.MapView
 import com.google.android.gms.maps.model.CameraPosition
 import kotlinx.android.synthetic.main.fragment_assess.*
 import com.google.android.gms.maps.model.LatLng
@@ -17,6 +18,7 @@ class AssessFragment : Fragment() {
 
     var image: LocalImage? = null
 
+    lateinit var mapView: MapView
     lateinit var imageView: ImageView
     lateinit var nameField: EditText
     lateinit var categoryRadioGroup: RadioGroup
@@ -34,6 +36,8 @@ class AssessFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+        explicitlyBindMapViewSoItDoesntGetDeallocatedForOnDestroy()
 
         imageView = bind(R.id.image_view)
 
@@ -138,6 +142,10 @@ class AssessFragment : Fragment() {
 
     private fun updateImage() {
         image?.load(context!!)?.into(imageView)
+    }
+
+    fun explicitlyBindMapViewSoItDoesntGetDeallocatedForOnDestroy() {
+        mapView = bind(R.id.mapView)
     }
 
     // MapView needs to have all of these forwarded manually
