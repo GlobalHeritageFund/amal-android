@@ -35,6 +35,13 @@ class AssessFragment : Fragment() {
             image?.saveMetaData()
         }
 
+        val hasCoordinates = image?.metadata?.hasCoordinates ?: false
+        if (!hasCoordinates) {
+            val layout = mapView.layoutParams
+            layout.height = 0
+            mapView.requestLayout()
+        }
+
         val bundle = savedInstanceState?.getBundle("MapViewBundleKey") ?: savedInstanceState
         mapView.onCreate(bundle)
 
