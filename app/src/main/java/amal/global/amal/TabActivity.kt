@@ -8,8 +8,6 @@ import android.support.v7.app.AppCompatActivity
 import android.util.Log
 import android.content.Intent
 
-
-
 class TabActivity : AppCompatActivity(),
         GalleryDelegate,
         ReportsDelegate,
@@ -129,7 +127,9 @@ class TabActivity : AppCompatActivity(),
     }
 
     override fun editLocationTapped(fragment: AssessFragment) {
-        TODO("not implemented")
+        val editLocation = EditLocationFragment()
+        editLocation.image = fragment.image
+        pushFragment(editLocation)
     }
 
     private fun pushFragment(fragment: Fragment) {
