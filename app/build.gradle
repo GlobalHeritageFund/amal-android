@@ -28,6 +28,7 @@ dependencies {
     implementation 'com.android.support:appcompat-v7:27.+'
     implementation 'com.android.support:preference-v7:27.+'
     implementation 'com.android.support:design:27.+'
+    compile "com.android.support:exifinterface:27.+"
 
     //firebase
     implementation 'com.google.firebase:firebase-database:11.0.4'
