@@ -32,6 +32,7 @@ class ImageImporter(val activity: Activity, val requestCode: Int, val intent: In
             metadata.latitude = doubleArray[0]
             metadata.longitude = doubleArray[1]
         }
+        metadata.date = exifInterface.getTimeStamp()
         return metadata
     }
 
