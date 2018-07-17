@@ -62,6 +62,24 @@ class TabActivity : AppCompatActivity(),
         pushFragment(assessFragment)
     }
 
+    override fun importButtonTapped(fragment: GalleryFragment) {
+        val intent = Intent()
+        intent.type = "image/*"
+        intent.action = Intent.ACTION_GET_CONTENT
+        startActivityForResult(Intent.createChooser(intent, "Select images"), ImageImporter.imageImportRequestCode)
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, intent: Intent?) {
+        if (resultCode != RESULT_OK ) { return }
+        val importer = ImageImporter()
+        if (importer.importImage(this, requestCode, intent)) {
+            val galleryFragment = supportFragmentManager.fragments.first { it is GalleryFragment } as GalleryFragment
+            galleryFragment.updateData()
+            return
+        }
+        super.onActivityResult(requestCode, resultCode, intent)
+    }
+
     override fun newReportTapped(reportsFragment: ReportsFragment) {
         pushFragment(ChooseImagesFragment().also { it.delegate = this })
     }

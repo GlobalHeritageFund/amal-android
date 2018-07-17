@@ -9,7 +9,7 @@ import kotlinx.android.synthetic.main.cell_gallery.view.*
 
 public class GalleryAdapter(private val context: Context) : BaseAdapter() {
 
-    private val images: List<Image> = PhotoStorage(context).fetchImages()
+    private var images: List<Image> = PhotoStorage(context).fetchImages()
 
     private var selectedImages = mutableListOf<Int>()
 
@@ -47,6 +47,11 @@ public class GalleryAdapter(private val context: Context) : BaseAdapter() {
             selectedImages.add(position)
         }
         notifyDataSetChanged()
+    }
+
+    fun reloadData() {
+        images = PhotoStorage(context).fetchImages()
+        selectedImages = mutableListOf()
     }
 
 }

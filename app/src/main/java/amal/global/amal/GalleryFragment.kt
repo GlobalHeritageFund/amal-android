@@ -2,15 +2,13 @@ package amal.global.amal
 
 import android.os.Bundle
 import android.support.v4.app.Fragment
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
+import android.view.*
 import android.widget.AdapterView
-import android.widget.GridView
 import kotlinx.android.synthetic.main.fragment_gallery.*
 
-public interface GalleryDelegate {
-    public fun imageTapped(fragment: GalleryFragment, image: LocalImage)
+interface GalleryDelegate {
+    fun imageTapped(fragment: GalleryFragment, image: LocalImage)
+    fun importButtonTapped(fragment: GalleryFragment)
 }
 
 class GalleryFragment : Fragment() {
@@ -26,6 +24,7 @@ class GalleryFragment : Fragment() {
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
+        setHasOptionsMenu(true)
         return inflater.inflate(R.layout.fragment_gallery, container, false)
     }
 
@@ -44,5 +43,27 @@ class GalleryFragment : Fragment() {
             delegate?.imageTapped(this, image)
         }
     }
+
+    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
+        super.onCreateOptionsMenu(menu, inflater)
+        inflater.inflate(R.menu.menu_gallery, menu)
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem?): Boolean {
+        return when (item!!.getItemId()) {
+            R.id.menu_item_import-> {
+                delegate?.importButtonTapped(this)
+                true
+            }
+            else ->
+                super.onOptionsItemSelected(item)
+        }
+    }
+
+    fun updateData() {
+        imageAdapter?.reloadData()
+        imageAdapter?.notifyDataSetChanged()
+    }
+
 }
 
