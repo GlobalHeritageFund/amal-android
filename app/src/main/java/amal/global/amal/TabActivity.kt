@@ -66,13 +66,12 @@ class TabActivity : AppCompatActivity(),
         val intent = Intent()
         intent.type = "image/*"
         intent.action = Intent.ACTION_GET_CONTENT
-        startActivityForResult(Intent.createChooser(intent, "Select images"), ImageImporter.imageImportRequestCode)
+        startActivityForResult(intent, ImageImporter.imageImportRequestCode)
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, intent: Intent?) {
         if (resultCode != RESULT_OK ) { return }
-        val importer = ImageImporter()
-        if (importer.importImage(this, requestCode, intent)) {
+        if (ImageImporter(this, requestCode, intent).importImage()) {
             val galleryFragment = supportFragmentManager.fragments.first { it is GalleryFragment } as GalleryFragment
             galleryFragment.updateData()
             return
