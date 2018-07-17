@@ -64,13 +64,11 @@ data class Metadata internal constructor(
 
     companion object {
 
-        //from a string on disk
         fun fromJSON(string: String): Metadata {
             val jsonObject = JSONObject(string)
             return this.fromJSON(toMap(jsonObject)) ?: Metadata()
         }
 
-        //from a hashmap in firebase
         fun fromJSON(map: HashMap<String, Any>): Metadata? {
             try {
                 val parser = Parser(map)
@@ -85,11 +83,11 @@ data class Metadata internal constructor(
                         parser.fetch("notes"),
                         parser.fetch("latitude"),
                         parser.fetch("longitude"),
-                        parser.fetchOptional("date"),
+                        parser.fetchOptional<Long>("date")?.let { Date(it) },
                         parser.fetch("localIdentifier")
                 )
             } catch(e: Exception) {
-                Log.d("amallog", e.message)
+                Log.d("asdf", e.message)
                 return null
             }
         }
