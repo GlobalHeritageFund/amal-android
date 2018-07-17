@@ -8,6 +8,7 @@ import android.os.storage.StorageManager
 import com.google.firebase.storage.FirebaseStorage
 import com.google.firebase.storage.StorageReference
 import java.io.File
+import java.util.*
 import kotlin.collections.HashMap
 
 interface Image {
@@ -41,6 +42,9 @@ data class LocalImage internal constructor(
     val file: File by lazy {
         File(this.filePath)
     }
+
+    val date: Date
+        get() = metadata.date ?: Date(File(filePath).lastModified())
 
     override fun load(context: Context): GlideRequest<Drawable> {
         return GlideApp.with(context).load(file)
