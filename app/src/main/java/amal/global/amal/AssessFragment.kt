@@ -87,24 +87,25 @@ class AssessFragment : Fragment() {
             image?.saveMetaData()
         })
 
-        when (image?.metadata?.conditionNumber ?: 0) {
-            1 -> conditionRadioGroup.check(R.id.radioCondition1)
-            2 -> conditionRadioGroup.check(R.id.radioCondition2)
-            3 -> conditionRadioGroup.check(R.id.radioCondition3)
-            4 -> conditionRadioGroup.check(R.id.radioCondition4)
-            5 -> conditionRadioGroup.check(R.id.radioCondition5)
-        }
-        conditionRadioGroup.setOnCheckedChangeListener({ radioGroup, checkedID ->
-            val value = when (checkedID) {
-                R.id.radioCondition1 -> 1
-                R.id.radioCondition2 -> 2
-                R.id.radioCondition3 -> 3
-                R.id.radioCondition4 -> 4
-                R.id.radioCondition5 -> 5
-                else -> 0
-            }
-            image?.metadata?.conditionNumber = value
-            image?.saveMetaData()
+        val conditionButtons = listOf(
+                conditionButton0,
+                conditionButton1,
+                conditionButton2,
+                conditionButton3,
+                conditionButton4,
+                conditionButton5
+        )
+
+        conditionButtons.forEach({ it.isSelected = false })
+        conditionButtons[image?.metadata?.conditionNumber ?: 0].isSelected = true
+
+        conditionButtons.withIndex().forEach({ indexedValue ->
+            indexedValue.value.setOnClickListener({ _ ->
+                conditionButtons.forEach({ it.isSelected = false })
+                indexedValue.value.isSelected = true
+                image?.metadata?.conditionNumber = indexedValue.index
+                image?.saveMetaData()
+            })
         })
 
         hazardsCheckBox.isChecked = image?.metadata?.hazards ?: false

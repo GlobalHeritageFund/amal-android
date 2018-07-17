@@ -64,32 +64,92 @@
             android:layout_height="wrap_content"
             android:text="@string/condition" />
 
-        <RadioGroup xmlns:android="http://schemas.android.com/apk/res/android"
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
+        <LinearLayout
             android:orientation="horizontal"
-            android:id="@+id/conditionRadioGroup">
-            <RadioButton android:id="@+id/radioCondition1"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="1"/>
-            <RadioButton android:id="@+id/radioCondition2"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="2"/>
-            <RadioButton android:id="@+id/radioCondition3"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="3"/>
-            <RadioButton android:id="@+id/radioCondition4"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="4"/>
-            <RadioButton android:id="@+id/radioCondition5"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="5"/>
-        </RadioGroup>
+            android:layout_width="match_parent"
+            android:layout_height="40dp"
+            android:id="@+id/conditionButtonsLayout">
+
+            <Space
+                android:layout_width="0dp"
+                android:layout_height="1dp"
+                android:layout_weight="1" >
+            </Space>
+
+            <Button
+                android:id="@+id/conditionButton0"
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:background="@drawable/damage_button_0"/>
+
+            <Space
+                android:layout_width="0dp"
+                android:layout_height="1dp"
+                android:layout_weight="1" >
+            </Space>
+
+
+            <Button
+                android:id="@+id/conditionButton1"
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:background="@drawable/damage_button_1"/>
+
+            <Space
+                android:layout_width="0dp"
+                android:layout_height="1dp"
+                android:layout_weight="1" >
+            </Space>
+
+            <Button
+                android:id="@+id/conditionButton2"
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:background="@drawable/damage_button_2"/>
+
+            <Space
+                android:layout_width="0dp"
+                android:layout_height="1dp"
+                android:layout_weight="1" >
+            </Space>
+
+            <Button
+                android:id="@+id/conditionButton3"
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:background="@drawable/damage_button_3"/>
+
+            <Space
+                android:layout_width="0dp"
+                android:layout_height="1dp"
+                android:layout_weight="1" >
+            </Space>
+
+            <Button
+                android:id="@+id/conditionButton4"
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:background="@drawable/damage_button_4"/>
+
+            <Space
+                android:layout_width="0dp"
+                android:layout_height="1dp"
+                android:layout_weight="1" >
+            </Space>
+
+            <Button
+                android:id="@+id/conditionButton5"
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:background="@drawable/damage_button_5"/>
+
+            <Space
+                android:layout_width="0dp"
+                android:layout_height="1dp"
+                android:layout_weight="1" >
+            </Space>
+
+        </LinearLayout>
 
         <TextView
             android:layout_width="match_parent"
