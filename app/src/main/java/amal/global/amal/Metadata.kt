@@ -7,6 +7,7 @@ import com.google.android.gms.maps.model.LatLng
 import org.json.JSONArray
 import org.json.JSONException
 import java.security.InvalidParameterException
+import java.util.*
 
 data class Metadata internal constructor(
         public var name: String = "",
@@ -19,6 +20,7 @@ data class Metadata internal constructor(
         public var notes: String = "",
         public var latitude: Double = 0.0,
         public var longitude: Double = 0.0,
+        public var date: Date? = null,
         public var localIdentifier: String = ""
 ) {
 
@@ -47,6 +49,7 @@ data class Metadata internal constructor(
         jsonObject.put("notes", notes)
         jsonObject.put("latitude", latitude)
         jsonObject.put("longitude", longitude)
+        jsonObject.put("date", date?.time)
         jsonObject.put("localIdentifier", localIdentifier)
         return jsonObject
     }
@@ -82,6 +85,7 @@ data class Metadata internal constructor(
                         parser.fetch("notes"),
                         parser.fetch("latitude"),
                         parser.fetch("longitude"),
+                        parser.fetchOptional("date"),
                         parser.fetch("localIdentifier")
                 )
             } catch(e: Exception) {
