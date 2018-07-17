@@ -5,6 +5,7 @@ import android.graphics.BitmapFactory
 import android.net.Uri
 import android.support.annotation.IdRes
 import android.support.annotation.LayoutRes
+import android.support.media.ExifInterface
 import android.support.v4.app.Fragment
 import android.support.v7.widget.RecyclerView
 import android.text.Editable
@@ -20,6 +21,10 @@ import org.json.JSONArray
 import org.json.JSONException
 import org.json.JSONObject
 import java.io.File
+import java.text.ParsePosition
+import java.text.SimpleDateFormat
+import java.util.*
+import java.util.regex.Pattern
 
 fun <T : View> Fragment.bind(@IdRes res: Int): T {
     @Suppress("UNCHECKED_CAST")
@@ -167,4 +172,25 @@ fun toMap(value: JSONObject): HashMap<String, Any> {
         }
     }
     return map
+}
+
+fun ExifInterface.getTimeStamp(): Date? {
+    val formatter = SimpleDateFormat("yyyy:MM:dd HH:mm:ss")
+    formatter.setTimeZone(TimeZone.getTimeZone("UTC"))
+
+
+    val dateTimeString = this.getAttribute(ExifInterface.TAG_DATETIME)
+    val nonZeroTimePattern = Pattern.compile(".*[1-9].*")
+
+    if (dateTimeString == null || !nonZeroTimePattern.matcher(dateTimeString).matches())
+        return null
+
+    val pos = ParsePosition(0)
+    try {
+        // The exif field is in local time. Parsing it as if it is UTC will yield time
+        // since 1/1/1970 local time
+        return formatter.parse(dateTimeString, pos)
+    } catch (e: IllegalArgumentException) {
+        return null
+    }
 }
