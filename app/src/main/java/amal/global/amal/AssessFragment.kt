@@ -96,13 +96,13 @@ class AssessFragment : Fragment() {
                 conditionButton5
         )
 
-        conditionButtons.forEach({ it.isSelected = false })
-        conditionButtons[image?.metadata?.conditionNumber ?: 0].isSelected = true
+        conditionButtons.forEach({ it.isActivated = false })
+        conditionButtons[image?.metadata?.conditionNumber ?: 0].isActivated = true
 
         conditionButtons.withIndex().forEach({ indexedValue ->
             indexedValue.value.setOnClickListener({ _ ->
-                conditionButtons.forEach({ it.isSelected = false })
-                indexedValue.value.isSelected = true
+                conditionButtons.forEach({ it.isActivated = false })
+                indexedValue.value.isActivated = true
                 image?.metadata?.conditionNumber = indexedValue.index
                 image?.saveMetaData()
             })
