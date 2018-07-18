@@ -6,6 +6,7 @@ import android.text.Editable
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Button
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.MapView
 import com.google.android.gms.maps.model.CameraPosition
@@ -25,6 +26,27 @@ class AssessFragment : Fragment() {
     var delegate: AssessDelegate? = null
 
     lateinit var mapView: MapView
+
+    val conditionButtons: List<Button>
+        get() {
+            return listOf(
+                    conditionButton0,
+                    conditionButton1,
+                    conditionButton2,
+                    conditionButton3,
+                    conditionButton4,
+                    conditionButton5
+            )
+        }
+
+    val conditionLabels = listOf(
+            "Condition unknown.",
+            "No damage, good condition.",
+            "Minor damage, fair condition.",
+            "Moderate damage, poor condition.",
+            "Severe damage, very bad condition.",
+            "Collapsed, destroyed."
+    )
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
@@ -87,22 +109,11 @@ class AssessFragment : Fragment() {
             image?.saveMetaData()
         })
 
-        val conditionButtons = listOf(
-                conditionButton0,
-                conditionButton1,
-                conditionButton2,
-                conditionButton3,
-                conditionButton4,
-                conditionButton5
-        )
-
-        conditionButtons.forEach({ it.isActivated = false })
-        conditionButtons[image?.metadata?.conditionNumber ?: 0].isActivated = true
+        activateConditionButtonAtIndex(image?.metadata?.conditionNumber ?: 0)
 
         conditionButtons.withIndex().forEach({ indexedValue ->
             indexedValue.value.setOnClickListener({ _ ->
-                conditionButtons.forEach({ it.isActivated = false })
-                indexedValue.value.isActivated = true
+                activateConditionButtonAtIndex(indexedValue.index)
                 image?.metadata?.conditionNumber = indexedValue.index
                 image?.saveMetaData()
             })
@@ -142,6 +153,12 @@ class AssessFragment : Fragment() {
         })
 
         updateImage()
+    }
+
+    fun activateConditionButtonAtIndex(index: Int) {
+        conditionButtons.forEach({ it.isActivated = false })
+        conditionButtons[index].isActivated = true
+        conditionDescription.text = conditionLabels[index]
     }
 
     private fun updateImage() {

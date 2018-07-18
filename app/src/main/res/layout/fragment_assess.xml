@@ -152,6 +152,12 @@
         </LinearLayout>
 
         <TextView
+            android:id="@+id/conditionDescription"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textAlignment="center"/>
+
+        <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="@string/assess" />
