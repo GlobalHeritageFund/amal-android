@@ -91,7 +91,7 @@ class CaptureFragment : Fragment() {
             override fun onProviderDisabled(provider: String) {}
         }
 
-        if (context!!.checkSelfPermission(Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
+        if (ActivityCompat.checkSelfPermission(context!!, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
             locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0f, locationListener)
             lastLocation = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER)
         }
