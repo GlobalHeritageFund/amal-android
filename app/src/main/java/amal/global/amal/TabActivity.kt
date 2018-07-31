@@ -109,6 +109,10 @@ class TabActivity : AppCompatActivity(),
     }
 
     override fun uploadReport(fragment: NewReportFragment, report: ReportDraft) {
+        upload(report)
+    }
+
+    fun upload(report: ReportDraft) {
         val uploader = ReportUploader(report)
 
         uploader.upload()
