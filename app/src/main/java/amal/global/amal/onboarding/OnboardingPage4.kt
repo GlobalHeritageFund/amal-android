@@ -12,8 +12,8 @@ import kotlinx.android.synthetic.main.fragment_onboarding_page_4.*
 
 
 class OnboardingPage4 : Fragment() {
-    private val tosUri = Uri.parse("http://amal.global/terms-of-service/")
-    private val privacyUri = Uri.parse("https://globalheritagefund.org/index.php/news-resources/library/privacy-policy/")
+    private val tosUrl = "http://amal.global/terms-of-service/"
+    private val privacyUrl = "https://globalheritagefund.org/index.php/news-resources/library/privacy-policy/"
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         return inflater.inflate(
@@ -25,12 +25,12 @@ class OnboardingPage4 : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        tos.setOnClickListener { launchWebBrowser(tosUri) }
-        privacy.setOnClickListener { launchWebBrowser(privacyUri) }
+        tos.setOnClickListener { launchWebBrowser(tosUrl) }
+        privacy.setOnClickListener { launchWebBrowser(privacyUrl) }
     }
 
-    private fun launchWebBrowser(uri: Uri) {
-        val browserIntent = Intent(Intent.ACTION_VIEW, uri)
+    private fun launchWebBrowser(url: String) {
+        val browserIntent = Intent(Intent.ACTION_VIEW, Uri.parse(url))
         startActivity(browserIntent)
     }
 }
