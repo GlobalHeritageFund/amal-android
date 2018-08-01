@@ -12,7 +12,7 @@ interface SettingsFragmentDelegate {
 
 class SettingsFragment: PreferenceFragmentCompat() {
 
-    var delegate: SettingsFragmentDelegate?
+    var delegate: SettingsFragmentDelegate? = null
 
     private val currentUser: CurrentUser
         get() = CurrentUser(this.context!!)
@@ -49,7 +49,8 @@ class SettingsFragment: PreferenceFragmentCompat() {
             e.printStackTrace()
         }
 
-        authPreference.title = if (currentUser.isLoggedIn ) "Sign Out" else "Sign In"
-
+        val email = currentUser.email ?: ""
+        authPreference.title = if (currentUser.isLoggedIn) "Sign Out" else "Sign In"
+        authPreference.summary = if (currentUser.isLoggedIn) "Signed in as $email" else ""
     }
 }
