@@ -3,7 +3,7 @@
     xmlns:android="http://schemas.android.com/apk/res/android">
 
     <android.support.v7.preference.PreferenceCategory
-        android:title="Amal Preferences">
+        android:title="About">
 
         <Preference
             android:title="About Amal"
@@ -14,6 +14,10 @@
             android:key="versionPreference"
             android:title="Version" >
         </Preference>
+    </android.support.v7.preference.PreferenceCategory>
+
+    <android.support.v7.preference.PreferenceCategory
+        android:title="Visit">
 
         <Preference
             android:title="Amal Website"
