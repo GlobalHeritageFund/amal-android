@@ -18,6 +18,9 @@ class NewReportFragment: Fragment() {
 
     var delegate: NewReportFragmentDelegate? = null
 
+    private val currentUser: CurrentUser
+        get() = CurrentUser(this.requireContext())
+
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         setHasOptionsMenu(true)
         return inflater?.inflate(R.layout.fragment_new_report, container, false)
@@ -31,6 +34,12 @@ class NewReportFragment: Fragment() {
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
         activity?.setTitle(R.string.title_report)
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        
+        emailField.setText(currentUser.email ?: "")
     }
 
     override fun onOptionsItemSelected(item: MenuItem?): Boolean {
