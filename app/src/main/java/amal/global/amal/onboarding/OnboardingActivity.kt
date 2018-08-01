@@ -20,12 +20,13 @@ class OnboardingActivity : AppCompatActivity() {
                 0 -> OnboardingPage1()
                 1 -> OnboardingPage2()
                 2 -> OnboardingPage3()
+                3 -> OnboardingPage4()
                 else -> null
             }
         }
 
         override fun getCount(): Int {
-            return 3
+            return 4
         }
     }
 
