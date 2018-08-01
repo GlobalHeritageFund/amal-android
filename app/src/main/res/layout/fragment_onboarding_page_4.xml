@@ -9,7 +9,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_gravity="top"
-        android:src="@mipmap/img_bg_intro_3" />
+        android:src="@drawable/onboarding_4_bg" />
 
 
     <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
