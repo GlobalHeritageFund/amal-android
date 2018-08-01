@@ -5,12 +5,17 @@ import android.support.v7.preference.PreferenceFragmentCompat
 import android.content.pm.PackageManager
 import android.support.v7.preference.Preference
 
+interface SettingsFragmentDelegate {
+    fun signOutTapped(fragment: SettingsFragment)
+    fun signInTapped(fragment: SettingsFragment)
+}
 
-internal class SettingsFragment: PreferenceFragmentCompat() {
+class SettingsFragment: PreferenceFragmentCompat() {
+
+    var delegate: SettingsFragmentDelegate?
 
     private val currentUser: CurrentUser
         get() = CurrentUser(this.context!!)
-
 
     private val versionPreference: Preference
         get() = findPreference("versionPreference")
@@ -25,9 +30,9 @@ internal class SettingsFragment: PreferenceFragmentCompat() {
 
         authPreference.onPreferenceClickListener = Preference.OnPreferenceClickListener {
             if (currentUser.isLoggedIn) {
-                currentUser.signOut()
+                delegate?.signOutTapped(this)
             } else {
-                //call delegate and sign in
+                delegate?.signInTapped(this)
             }
             configureView()
             true

@@ -18,8 +18,9 @@ class TabActivity : AppCompatActivity(),
         NewReportFragmentDelegate,
         ReportDetailFragmentDelegate,
         AssessDelegate,
-        CaptureDelegate {
-
+        CaptureDelegate,
+        SettingsFragmentDelegate
+{
     private val mOnNavigationItemSelectedListener = BottomNavigationView.OnNavigationItemSelectedListener { item ->
         var fragment: Fragment = when (item.itemId) {
             R.id.navigation_assess -> {
@@ -107,13 +108,21 @@ class TabActivity : AppCompatActivity(),
     }
 
     override fun settingsButtonTapped(fragment: CaptureFragment) {
-        val fragment = SettingsFragment()
+        val fragment = SettingsFragment().also { it.delegate = this }
         supportFragmentManager
                 .beginTransaction()
                 .setCustomAnimations(R.anim.enter, R.anim.exit, R.anim.pop_enter, R.anim.pop_exit)
                 .replace(R.id.content, fragment)
                 .addToBackStack(null)
                 .commit()
+    }
+
+    override fun signInTapped(fragment: SettingsFragment) {
+        firebaseAuthenticator.start()
+    }
+
+    override fun signOutTapped(fragment: SettingsFragment) {
+        CurrentUser(this).signOut()
     }
 
     override fun uploadReport(fragment: NewReportFragment, report: ReportDraft) {
