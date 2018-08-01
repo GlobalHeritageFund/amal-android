@@ -17,6 +17,14 @@
     </android.support.v7.preference.PreferenceCategory>
 
     <android.support.v7.preference.PreferenceCategory
+        android:title="Account">
+        <Preference
+            android:key="auth"
+            android:title="Log In">
+        </Preference>
+    </android.support.v7.preference.PreferenceCategory>
+
+    <android.support.v7.preference.PreferenceCategory
         android:title="Visit">
 
         <Preference
