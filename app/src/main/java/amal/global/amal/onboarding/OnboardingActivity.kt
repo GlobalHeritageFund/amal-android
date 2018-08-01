@@ -20,13 +20,12 @@ class OnboardingActivity : AppCompatActivity() {
                 0 -> OnboardingPage1()
                 1 -> OnboardingPage2()
                 2 -> OnboardingPage3()
+                3 -> OnboardingPage4()
                 else -> null
             }
         }
 
-        override fun getCount(): Int {
-            return 3
-        }
+        override fun getCount() = 4
     }
 
     val currentUser: CurrentUser by lazy {
@@ -53,7 +52,7 @@ class OnboardingActivity : AppCompatActivity() {
 
         this.pager.addOnPageChangeListener(object : ViewPager.OnPageChangeListener {
             override fun onPageSelected(position: Int) {
-                if(position == 2){
+                if(position == adapter.count - 1){
                     skipButton.visibility = View.GONE
                     nextButton.text = "Done"
                 } else {
