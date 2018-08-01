@@ -139,6 +139,7 @@ class TabActivity : AppCompatActivity(),
         contentView
                 .findViewById<View>(R.id.logInView)
                 .setOnClickListener({
+                    dialog.dismiss()
                     firebaseAuthenticator.onComplete = { upload(report) }
                     firebaseAuthenticator.start()
                 })
