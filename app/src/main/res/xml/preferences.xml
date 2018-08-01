@@ -36,6 +36,13 @@
                 android:data="http://amal.global/terms-of-service/" />
         </Preference>
 
+        <Preference
+            android:title="User Guide"
+            android:summary="Go to the Amal User Guide in your web browser.">
+            <intent android:action="android.intent.action.VIEW"
+                android:data="http://amal.global/guide/" />
+        </Preference>
+
     </android.support.v7.preference.PreferenceCategory>
 
 </android.support.v7.preference.PreferenceScreen>
