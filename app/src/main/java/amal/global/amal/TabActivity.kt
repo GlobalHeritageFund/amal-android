@@ -9,6 +9,7 @@ import android.util.Log
 import android.content.Intent
 import android.support.design.widget.BottomSheetDialog
 import android.view.View
+import com.google.firebase.auth.FirebaseAuth
 
 class TabActivity : AppCompatActivity(),
         GalleryDelegate,
@@ -40,6 +41,8 @@ class TabActivity : AppCompatActivity(),
                 .commit()
         true
     }
+
+    private var firebaseAuthenticator = FirebaseAuthenticator(this)
     
     override fun onCreate(savedInstanceState: Bundle?) {
 
@@ -73,6 +76,9 @@ class TabActivity : AppCompatActivity(),
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, intent: Intent?) {
         if (resultCode != RESULT_OK ) { return }
+        if (firebaseAuthenticator.finalize(requestCode, intent)) {
+            return
+        }
         if (ImageImporter(this, requestCode, intent).importImage()) {
             val galleryFragment = supportFragmentManager.fragments.first { it is GalleryFragment } as GalleryFragment
             galleryFragment.updateData()
@@ -111,6 +117,11 @@ class TabActivity : AppCompatActivity(),
     }
 
     override fun uploadReport(fragment: NewReportFragment, report: ReportDraft) {
+        val auth = FirebaseAuth.getInstance()
+        if (auth.currentUser != null) {
+            upload(report)
+            return
+        }
         val contentView = layoutInflater.inflate(R.layout.publish_action_sheet, null)
 
         val dialog = BottomSheetDialog(this)
@@ -118,13 +129,21 @@ class TabActivity : AppCompatActivity(),
 
         contentView
                 .findViewById<View>(R.id.logInView)
-                .setOnClickListener({ /* log in */ })
+                .setOnClickListener({
+                    firebaseAuthenticator.onComplete = { upload(report) }
+                    firebaseAuthenticator.start()
+                })
         contentView
                 .findViewById<View>(R.id.publishAnonymouslyView)
-                .setOnClickListener({ upload(report) })
+                .setOnClickListener({
+                    upload(report)
+                    dialog.dismiss()
+                })
         contentView
                 .findViewById<View>(R.id.cancelView)
-                .setOnClickListener({ dialog.dismiss() })
+                .setOnClickListener({
+                    dialog.dismiss()
+                })
 
         dialog.show()
     }
