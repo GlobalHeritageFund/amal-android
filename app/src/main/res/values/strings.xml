@@ -35,4 +35,10 @@
     <string name="publish_anonymously">Publish Anonymously</string>
     <string name="log_in">Log in</string>
     <string name="icon">icon</string>
+    <string name="agree_title">By using this application, you agree to our</string>
+    <string name="tos"><u>Terms of Service</u></string>
+    <string name="privacy"><u>Privacy Policy</u></string>
+    <string name="and">&amp;</string>
+    <string name="caution">CAUTION</string>
+    <string name="never_asses">Never assess a site that has not been cleared by first responders.</string>
 </resources>
