@@ -13,7 +13,7 @@ import java.security.InvalidParameterException
 class ImageImporter(val activity: Activity, val requestCode: Int, val intent: Intent?) {
 
     companion object {
-        const val imageImportRequestCode = 123
+        const val imageImportRequestCode = 23632
     }
 
     private val isValid: Boolean
