@@ -91,19 +91,14 @@ class TabActivity : AppCompatActivity(),
     }
 
     override fun importButtonTapped(fragment: GalleryFragment) {
-        val intent = Intent()
-        intent.type = "image/*"
-        intent.action = Intent.ACTION_GET_CONTENT
-        startActivityForResult(intent, ImageImporter.imageImportRequestCode)
+        val imageImporter = ImageImporter(this, {
+            fragment.updateData()
+        })
+        registerAndStartIntentRequest(imageImporter)
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, intent: Intent?) {
         if (finalizeIntentRequest(requestCode, resultCode, intent)) {
-            return
-        }
-        if (ImageImporter(this, requestCode, intent).importImage()) {
-            val galleryFragment = supportFragmentManager.fragments.first { it is GalleryFragment } as GalleryFragment
-            galleryFragment.updateData()
             return
         }
         super.onActivityResult(requestCode, resultCode, intent)
