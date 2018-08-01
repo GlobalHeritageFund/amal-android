@@ -5,6 +5,7 @@ import android.support.v4.app.Fragment
 import android.view.*
 import android.widget.EditText
 import android.widget.TextView
+import kotlinx.android.synthetic.main.fragment_new_report.*
 import java.util.*
 
 interface NewReportFragmentDelegate {
@@ -12,10 +13,6 @@ interface NewReportFragmentDelegate {
 }
 
 class NewReportFragment: Fragment() {
-
-    lateinit var titleField: EditText
-    lateinit var dateLabel: TextView
-    lateinit var emailField: EditText
 
     var report = ReportDraft()
 
@@ -34,15 +31,6 @@ class NewReportFragment: Fragment() {
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
         activity?.setTitle(R.string.title_report)
-    }
-
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
-
-        titleField = bind(R.id.report_title_field)
-        dateLabel = bind(R.id.report_creation_date)
-        emailField = bind(R.id.report_assessor_email)
-
     }
 
     override fun onOptionsItemSelected(item: MenuItem?): Boolean {
