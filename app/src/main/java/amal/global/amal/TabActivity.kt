@@ -7,6 +7,8 @@ import android.support.v4.app.Fragment
 import android.support.v7.app.AppCompatActivity
 import android.util.Log
 import android.content.Intent
+import android.support.design.widget.BottomSheetDialog
+import android.view.View
 
 class TabActivity : AppCompatActivity(),
         GalleryDelegate,
@@ -38,7 +40,7 @@ class TabActivity : AppCompatActivity(),
                 .commit()
         true
     }
-
+    
     override fun onCreate(savedInstanceState: Bundle?) {
 
         super.onCreate(savedInstanceState)
@@ -109,7 +111,22 @@ class TabActivity : AppCompatActivity(),
     }
 
     override fun uploadReport(fragment: NewReportFragment, report: ReportDraft) {
-        upload(report)
+        val contentView = layoutInflater.inflate(R.layout.publish_action_sheet, null)
+
+        val dialog = BottomSheetDialog(this)
+        dialog.setContentView(contentView)
+
+        contentView
+                .findViewById<View>(R.id.logInView)
+                .setOnClickListener({ /* log in */ })
+        contentView
+                .findViewById<View>(R.id.publishAnonymouslyView)
+                .setOnClickListener({ upload(report) })
+        contentView
+                .findViewById<View>(R.id.cancelView)
+                .setOnClickListener({ dialog.dismiss() })
+
+        dialog.show()
     }
 
     fun upload(report: ReportDraft) {
