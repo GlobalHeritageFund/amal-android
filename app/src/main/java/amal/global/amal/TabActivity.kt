@@ -11,6 +11,13 @@ import android.support.design.widget.BottomSheetDialog
 import android.view.View
 import com.google.firebase.auth.FirebaseAuth
 
+interface IntentRequest {
+    val requestCode: Int
+
+    fun start()
+    fun finalize(requestCode: Int, intent: Intent?): Boolean
+}
+
 class TabActivity : AppCompatActivity(),
         GalleryDelegate,
         ReportsDelegate,
@@ -43,8 +50,23 @@ class TabActivity : AppCompatActivity(),
         true
     }
 
-    private var firebaseAuthenticator = FirebaseAuthenticator(this)
-    
+    private var currentIntentRequests = mutableListOf<IntentRequest>()
+
+    fun registerAndStartIntentRequest(intentRequest: IntentRequest) {
+        currentIntentRequests.add(intentRequest)
+        intentRequest.start()
+    }
+
+    fun finalizeIntentRequest(requestCode: Int, resultCode: Int, intent: Intent?): Boolean {
+        val index = currentIntentRequests
+                .indexOfFirst { it.requestCode == requestCode }
+        if (index == -1) { return false }
+        val intentRequest = currentIntentRequests[index]
+        currentIntentRequests.removeAt(index)
+        if (resultCode != RESULT_OK ) { return false }
+        return intentRequest.finalize(requestCode, intent)
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
 
         super.onCreate(savedInstanceState)
@@ -76,8 +98,7 @@ class TabActivity : AppCompatActivity(),
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, intent: Intent?) {
-        if (resultCode != RESULT_OK ) { return }
-        if (firebaseAuthenticator.finalize(requestCode, intent)) {
+        if (finalizeIntentRequest(requestCode, resultCode, intent)) {
             return
         }
         if (ImageImporter(this, requestCode, intent).importImage()) {
@@ -118,8 +139,9 @@ class TabActivity : AppCompatActivity(),
     }
 
     override fun signInTapped(fragment: SettingsFragment) {
-        firebaseAuthenticator.start()
-    }
+    val authenticator = FirebaseAuthenticator(this, { fragment.configureView() })
+    registerAndStartIntentRequest(authenticator)
+}
 
     override fun signOutTapped(fragment: SettingsFragment) {
         CurrentUser(this).signOut()
@@ -140,8 +162,8 @@ class TabActivity : AppCompatActivity(),
                 .findViewById<View>(R.id.logInView)
                 .setOnClickListener({
                     dialog.dismiss()
-                    firebaseAuthenticator.onComplete = { upload(report) }
-                    firebaseAuthenticator.start()
+                    val authenticator = FirebaseAuthenticator(this, { upload(report) })
+                    registerAndStartIntentRequest(authenticator)
                 })
         contentView
                 .findViewById<View>(R.id.publishAnonymouslyView)

@@ -4,14 +4,12 @@ import android.app.Activity
 import android.content.Intent
 import com.firebase.ui.auth.AuthUI
 
-class FirebaseAuthenticator(val activity: Activity) {
-    companion object {
-        const val firebaseAuthResultCode = 7344
-    }
+class FirebaseAuthenticator(val activity: Activity, val onComplete: () -> Unit): IntentRequest {
 
-    var onComplete: () -> Unit = { }
+    override val requestCode: Int
+        get() = 7344
 
-    fun start() {
+    override fun start() {
         activity.startActivityForResult(
                 AuthUI.getInstance()
                         .createSignInIntentBuilder()
@@ -19,13 +17,13 @@ class FirebaseAuthenticator(val activity: Activity) {
                                 AuthUI.IdpConfig.EmailBuilder().build()
                         ))
                         .build(),
-                FirebaseAuthenticator.firebaseAuthResultCode
+                requestCode
         )
 
     }
 
-    fun finalize(requestCode: Int, intent: Intent?): Boolean {
-        val valid = requestCode == FirebaseAuthenticator.firebaseAuthResultCode
+    override fun finalize(requestCode: Int, intent: Intent?): Boolean {
+        val valid = requestCode == requestCode
         if (valid) { onComplete() }
         return valid
     }
