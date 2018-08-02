@@ -6,8 +6,7 @@ import com.firebase.ui.auth.AuthUI
 
 class FirebaseAuthenticator(val activity: Activity, val onComplete: () -> Unit): IntentRequest {
 
-    override val requestCode: Int
-        get() = 7344
+    override val requestCode = 7344
 
     override fun start() {
         activity.startActivityForResult(

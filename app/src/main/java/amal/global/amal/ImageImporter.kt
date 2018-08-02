@@ -12,8 +12,7 @@ import java.security.InvalidParameterException
 
 class ImageImporter(val activity: Activity, val onComplete: () -> Unit): IntentRequest {
 
-    override val requestCode: Int
-        get() = 23632
+    override val requestCode = 23632
 
     override fun start() {
         val intent = Intent()
