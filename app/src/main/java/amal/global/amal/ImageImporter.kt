@@ -43,7 +43,7 @@ class ImageImporter(val activity: Activity, val onComplete: () -> Unit): IntentR
             val outputStream = ByteArrayOutputStream()
             bitmap.compress(Bitmap.CompressFormat.JPEG, 90, outputStream)
             val byteArray = outputStream.toByteArray()
-            PhotoStorage(activity).savePhotoLocally(byteArray, buildMetadata())
+            PhotoStorage(activity.applicationContext).savePhotoLocally(byteArray, buildMetadata())
             onComplete()
             true
         } catch (e: FileNotFoundException) {

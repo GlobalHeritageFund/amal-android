@@ -19,7 +19,7 @@ class ChooseImagesFragment: Fragment() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        adapter = GalleryAdapter(activity!!)
+        adapter = GalleryAdapter(activity!!.applicationContext)
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {

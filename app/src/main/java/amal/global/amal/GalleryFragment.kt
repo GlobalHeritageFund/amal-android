@@ -19,7 +19,7 @@ class GalleryFragment : Fragment() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        imageAdapter = GalleryAdapter(activity!!)
+        imageAdapter = GalleryAdapter(activity!!.applicationContext)
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
