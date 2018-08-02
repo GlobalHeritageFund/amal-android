@@ -50,7 +50,8 @@ class SettingsFragment: PreferenceFragmentCompat() {
         }
 
         val email = currentUser.email ?: ""
-        authPreference.title = if (currentUser.isLoggedIn) "Sign Out" else "Sign In"
-        authPreference.summary = if (currentUser.isLoggedIn) "Signed in as $email" else ""
+        val stringID = if (currentUser.isLoggedIn) R.string.log_out else R.string.log_in
+        authPreference.title = resources.getString(stringID)
+        authPreference.summary = if (currentUser.isLoggedIn) "${resources.getString(R.string.signed_in_as)} $email" else ""
     }
 }

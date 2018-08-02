@@ -41,4 +41,6 @@
     <string name="and">&amp;</string>
     <string name="caution">CAUTION</string>
     <string name="never_asses">Never assess a site that has not been cleared by first responders.</string>
+    <string name="log_out">Log out</string>
+    <string name="signed_in_as">Signed in as</string>
 </resources>
