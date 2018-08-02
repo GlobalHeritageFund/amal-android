@@ -30,17 +30,20 @@ dependencies {
     implementation 'com.android.support:design:27.+'
     compile "com.android.support:exifinterface:27.+"
 
-    //firebase
-    implementation 'com.google.firebase:firebase-database:11.0.4'
-    implementation 'com.google.firebase:firebase-storage:11.0.4'
-    implementation 'com.google.firebase:firebase-auth:11.0.4'
-
     //other
-    implementation 'com.android.support.constraint:constraint-layout:1.0.2'
+    implementation 'com.android.support.constraint:constraint-layout:1.1.2'
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jre7:$kotlin_version"
     implementation 'com.wonderkiln:camerakit:0.12.0'
     implementation 'com.jakewharton:disklrucache:2.0.2'
-    implementation 'com.google.android.gms:play-services-maps:11.0.4'
+    implementation 'com.google.android.gms:play-services-maps:15.0.1'
+    implementation 'com.firebaseui:firebase-ui-auth:4.1.0'
+
+    //firebase
+    implementation 'com.google.firebase:firebase-core:16.0.1'
+    implementation 'com.google.firebase:firebase-database:16.0.1'
+    implementation 'com.google.firebase:firebase-storage:16.0.1'
+    implementation 'com.google.firebase:firebase-auth:16.0.2'
+    implementation "com.google.android.gms:play-services-auth:15.0.1"
 
     //glide
     implementation 'com.github.bumptech.glide:glide:4.7.1'

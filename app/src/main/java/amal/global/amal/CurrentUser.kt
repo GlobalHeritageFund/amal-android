@@ -2,9 +2,20 @@ package amal.global.amal
 
 import android.content.Context
 import android.content.SharedPreferences
+import com.google.firebase.auth.FirebaseAuth
 import java.util.*
 
 class CurrentUser(var context: Context) {
+
+    val isLoggedIn: Boolean
+        get() = FirebaseAuth.getInstance().currentUser != null
+
+    val email: String?
+        get() = FirebaseAuth.getInstance().currentUser?.email ?: ""
+
+    fun signOut() {
+        FirebaseAuth.getInstance().signOut()
+    }
 
     val preferenceName = "MyPreferences"
 

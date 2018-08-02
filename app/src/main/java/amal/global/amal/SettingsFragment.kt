@@ -2,19 +2,44 @@ package amal.global.amal
 
 import android.os.Bundle
 import android.support.v7.preference.PreferenceFragmentCompat
-import android.view.View
 import android.content.pm.PackageManager
-import android.R.attr.versionName
-import android.content.pm.PackageInfo
+import android.support.v7.preference.Preference
 
+interface SettingsFragmentDelegate {
+    fun signOutTapped(fragment: SettingsFragment)
+    fun signInTapped(fragment: SettingsFragment)
+}
 
+class SettingsFragment: PreferenceFragmentCompat() {
 
-internal class SettingsFragment: PreferenceFragmentCompat() {
+    var delegate: SettingsFragmentDelegate? = null
+
+    private val currentUser: CurrentUser
+        get() = CurrentUser(this.context!!)
+
+    private val versionPreference: Preference
+        get() = findPreference("versionPreference")
+
+    private val authPreference: Preference
+        get() = findPreference("auth")
 
     override fun onCreatePreferences(bundle: Bundle?, string: String?) {
         addPreferencesFromResource(R.xml.preferences)
 
-        val versionPreference = findPreference("versionPreference")
+        configureView()
+
+        authPreference.onPreferenceClickListener = Preference.OnPreferenceClickListener {
+            if (currentUser.isLoggedIn) {
+                delegate?.signOutTapped(this)
+            } else {
+                delegate?.signInTapped(this)
+            }
+            configureView()
+            true
+        }
+    }
+
+    fun configureView() {
 
         try {
             val pInfo = activity!!.packageManager.getPackageInfo(activity!!.packageName, 0)
@@ -24,6 +49,9 @@ internal class SettingsFragment: PreferenceFragmentCompat() {
             e.printStackTrace()
         }
 
-
+        val email = currentUser.email ?: ""
+        val stringID = if (currentUser.isLoggedIn) R.string.log_out else R.string.log_in
+        authPreference.title = resources.getString(stringID)
+        authPreference.summary = if (currentUser.isLoggedIn) "${resources.getString(R.string.signed_in_as)} $email" else ""
     }
 }

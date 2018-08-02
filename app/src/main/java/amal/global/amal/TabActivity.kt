@@ -7,6 +7,16 @@ import android.support.v4.app.Fragment
 import android.support.v7.app.AppCompatActivity
 import android.util.Log
 import android.content.Intent
+import android.support.design.widget.BottomSheetDialog
+import android.view.View
+import com.google.firebase.auth.FirebaseAuth
+
+interface IntentRequest {
+    val requestCode: Int
+
+    fun start()
+    fun finalize(requestCode: Int, intent: Intent?): Boolean
+}
 
 class TabActivity : AppCompatActivity(),
         GalleryDelegate,
@@ -15,8 +25,9 @@ class TabActivity : AppCompatActivity(),
         NewReportFragmentDelegate,
         ReportDetailFragmentDelegate,
         AssessDelegate,
-        CaptureDelegate {
-
+        CaptureDelegate,
+        SettingsFragmentDelegate
+{
     private val mOnNavigationItemSelectedListener = BottomNavigationView.OnNavigationItemSelectedListener { item ->
         var fragment: Fragment = when (item.itemId) {
             R.id.navigation_assess -> {
@@ -37,6 +48,23 @@ class TabActivity : AppCompatActivity(),
                 .replace(R.id.content, fragment)
                 .commit()
         true
+    }
+
+    private var currentIntentRequests = mutableListOf<IntentRequest>()
+
+    fun registerAndStartIntentRequest(intentRequest: IntentRequest) {
+        currentIntentRequests.add(intentRequest)
+        intentRequest.start()
+    }
+
+    fun finalizeIntentRequest(requestCode: Int, resultCode: Int, intent: Intent?): Boolean {
+        val index = currentIntentRequests
+                .indexOfFirst { it.requestCode == requestCode }
+        if (index == -1) { return false }
+        val intentRequest = currentIntentRequests[index]
+        currentIntentRequests.removeAt(index)
+        if (resultCode != RESULT_OK ) { return false }
+        return intentRequest.finalize(requestCode, intent)
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -63,17 +91,14 @@ class TabActivity : AppCompatActivity(),
     }
 
     override fun importButtonTapped(fragment: GalleryFragment) {
-        val intent = Intent()
-        intent.type = "image/*"
-        intent.action = Intent.ACTION_GET_CONTENT
-        startActivityForResult(intent, ImageImporter.imageImportRequestCode)
+        val imageImporter = ImageImporter(this, {
+            fragment.updateData()
+        })
+        registerAndStartIntentRequest(imageImporter)
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, intent: Intent?) {
-        if (resultCode != RESULT_OK ) { return }
-        if (ImageImporter(this, requestCode, intent).importImage()) {
-            val galleryFragment = supportFragmentManager.fragments.first { it is GalleryFragment } as GalleryFragment
-            galleryFragment.updateData()
+        if (finalizeIntentRequest(requestCode, resultCode, intent)) {
             return
         }
         super.onActivityResult(requestCode, resultCode, intent)
@@ -99,7 +124,7 @@ class TabActivity : AppCompatActivity(),
     }
 
     override fun settingsButtonTapped(fragment: CaptureFragment) {
-        val fragment = SettingsFragment()
+        val fragment = SettingsFragment().also { it.delegate = this }
         supportFragmentManager
                 .beginTransaction()
                 .setCustomAnimations(R.anim.enter, R.anim.exit, R.anim.pop_enter, R.anim.pop_exit)
@@ -108,7 +133,49 @@ class TabActivity : AppCompatActivity(),
                 .commit()
     }
 
+    override fun signInTapped(fragment: SettingsFragment) {
+    val authenticator = FirebaseAuthenticator(this, { fragment.configureView() })
+    registerAndStartIntentRequest(authenticator)
+}
+
+    override fun signOutTapped(fragment: SettingsFragment) {
+        CurrentUser(this).signOut()
+    }
+
     override fun uploadReport(fragment: NewReportFragment, report: ReportDraft) {
+        val auth = FirebaseAuth.getInstance()
+        if (auth.currentUser != null) {
+            upload(report)
+            return
+        }
+        val contentView = layoutInflater.inflate(R.layout.publish_action_sheet, null)
+
+        val dialog = BottomSheetDialog(this)
+        dialog.setContentView(contentView)
+
+        contentView
+                .findViewById<View>(R.id.logInView)
+                .setOnClickListener({
+                    dialog.dismiss()
+                    val authenticator = FirebaseAuthenticator(this, { upload(report) })
+                    registerAndStartIntentRequest(authenticator)
+                })
+        contentView
+                .findViewById<View>(R.id.publishAnonymouslyView)
+                .setOnClickListener({
+                    upload(report)
+                    dialog.dismiss()
+                })
+        contentView
+                .findViewById<View>(R.id.cancelView)
+                .setOnClickListener({
+                    dialog.dismiss()
+                })
+
+        dialog.show()
+    }
+
+    fun upload(report: ReportDraft) {
         val uploader = ReportUploader(report)
 
         uploader.upload()

@@ -5,6 +5,7 @@ import android.support.v4.app.Fragment
 import android.view.*
 import android.widget.EditText
 import android.widget.TextView
+import kotlinx.android.synthetic.main.fragment_new_report.*
 import java.util.*
 
 interface NewReportFragmentDelegate {
@@ -13,13 +14,12 @@ interface NewReportFragmentDelegate {
 
 class NewReportFragment: Fragment() {
 
-    lateinit var titleField: EditText
-    lateinit var dateLabel: TextView
-    lateinit var emailField: EditText
-
     var report = ReportDraft()
 
     var delegate: NewReportFragmentDelegate? = null
+
+    private val currentUser: CurrentUser
+        get() = CurrentUser(this.requireContext())
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         setHasOptionsMenu(true)
@@ -38,11 +38,8 @@ class NewReportFragment: Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
-        titleField = bind(R.id.report_title_field)
-        dateLabel = bind(R.id.report_creation_date)
-        emailField = bind(R.id.report_assessor_email)
-
+        
+        emailField.setText(currentUser.email ?: "")
     }
 
     override fun onOptionsItemSelected(item: MenuItem?): Boolean {

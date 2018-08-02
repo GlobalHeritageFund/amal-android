@@ -40,7 +40,7 @@ class ReportUploader (val reportDraft: ReportDraft) {
                 }
                 .map {
                     return@map Report(
-                            reportReference.key,
+                            reportReference.key!!,
                             listOf(),
                             reportDraft.deviceToken,
                             reportDraft.creationDate,
@@ -58,7 +58,7 @@ class ReportUploader (val reportDraft: ReportDraft) {
 
     fun uploadImage(image: LocalImage, reference: DatabaseReference): Promise<Unit> {
 
-        val imageReference = imagesDirectory.child(reference.key)
+        val imageReference = imagesDirectory.child(reference.key!!)
 
         val metadata = StorageMetadata.Builder()
                 .setContentType("image/jpeg")

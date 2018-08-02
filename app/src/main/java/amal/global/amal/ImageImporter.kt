@@ -10,45 +10,45 @@ import java.io.FileNotFoundException
 import java.io.InputStream
 import java.security.InvalidParameterException
 
-class ImageImporter(val activity: Activity, val requestCode: Int, val intent: Intent?) {
+class ImageImporter(val activity: Activity, val onComplete: () -> Unit): IntentRequest {
 
-    companion object {
-        const val imageImportRequestCode = 123
+    override val requestCode = 23632
+
+    override fun start() {
+        val intent = Intent()
+        intent.type = "image/*"
+        intent.action = Intent.ACTION_GET_CONTENT
+        activity.startActivityForResult(intent, requestCode)
     }
 
-    private val isValid: Boolean
-        get() = requestCode == ImageImporter.imageImportRequestCode
+    override fun finalize(requestCode: Int, intent: Intent?): Boolean {
+        val imageUri = intent?.data ?: throw InvalidParameterException("imageURI should be non-null.")
 
-    private val imageUri = intent?.data ?: throw InvalidParameterException("imageURI should be non-null.")
-
-    private val inputStream: InputStream
-        get() = activity.contentResolver.openInputStream(imageUri)
-
-    private fun buildMetadata(): Metadata {
-        val metadata = Metadata()
-        val exifInterface = ExifInterface(inputStream)
-        val doubleArray = exifInterface.latLong ?: doubleArrayOf()
-        if (doubleArray.count() == 2) {
-            metadata.latitude = doubleArray[0]
-            metadata.longitude = doubleArray[1]
+        fun buildMetadata(): Metadata {
+            val metadata = Metadata()
+            val inputStream = activity.contentResolver.openInputStream(imageUri)
+            val exifInterface = ExifInterface(inputStream)
+            val doubleArray = exifInterface.latLong ?: doubleArrayOf()
+            if (doubleArray.count() == 2) {
+                metadata.latitude = doubleArray[0]
+                metadata.longitude = doubleArray[1]
+            }
+            metadata.date = exifInterface.getTimeStamp()
+            return metadata
         }
-        metadata.date = exifInterface.getTimeStamp()
-        return metadata
-    }
 
-    fun importImage(): Boolean {
-        if (!isValid) { return false }
         return try {
+            val inputStream = activity.contentResolver.openInputStream(imageUri)
             val bitmap = BitmapFactory.decodeStream(inputStream)
             val outputStream = ByteArrayOutputStream()
             bitmap.compress(Bitmap.CompressFormat.JPEG, 90, outputStream)
             val byteArray = outputStream.toByteArray()
-            PhotoStorage(activity).savePhotoLocally(byteArray, buildMetadata())
+            PhotoStorage(activity.applicationContext).savePhotoLocally(byteArray, buildMetadata())
+            onComplete()
             true
         } catch (e: FileNotFoundException) {
             e.printStackTrace()
             false
         }
-
     }
 }

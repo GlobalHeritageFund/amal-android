@@ -109,7 +109,7 @@ class CaptureFragment : Fragment() {
                 metadata.latitude = lastLocation?.latitude ?: 0.0
                 metadata.longitude = lastLocation?.longitude ?: 0.0
 
-                PhotoStorage(activity!!).savePhotoLocally(image.jpeg, metadata)
+                PhotoStorage(activity!!.applicationContext).savePhotoLocally(image.jpeg, metadata)
             }
 
             override fun onVideo(video: CameraKitVideo) { }
