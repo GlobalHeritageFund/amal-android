@@ -42,10 +42,12 @@ class EditLocationFragment : Fragment() {
 
         mapView.getMapAsync({ map ->
 
-            val marker = MarkerOptions()
-                    .position(coordinateOrNullIsland)
-                    .title("Marker")
-            map.addMarker(marker)
+            if (hasCoordinates) {
+                val marker = MarkerOptions()
+                        .position(coordinateOrNullIsland)
+                        .title("Marker")
+                map.addMarker(marker)
+            }
 
             val cameraPosition = CameraPosition
                     .builder()
