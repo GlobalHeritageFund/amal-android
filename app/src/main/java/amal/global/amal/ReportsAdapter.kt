@@ -23,7 +23,9 @@ class ReportsAdapter(var context: Context, var reports: List<Report> = listOf())
             override fun onDataChange(snapshot: DataSnapshot) {
                 val map = snapshot.value as? HashMap<*, *> ?: hashMapOf<String, Any>()
 
-                reports = map.entries.mapNotNull { entry -> Report.fromJSON(entry.key as String, entry.value as HashMap<String, Any>) }
+                reports = map.entries
+                        .mapNotNull { entry -> Report.fromJSON(entry.key as String, entry.value as HashMap<String, Any>) }
+                        .sortedByDescending { it.creationDate }
                 notifyDataSetChanged()
             }
 
