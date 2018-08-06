@@ -18,17 +18,20 @@ class NewReportFragment: Fragment() {
 
     var delegate: NewReportFragmentDelegate? = null
 
+    var uploadItem: MenuItem? = null
+
     private val currentUser: CurrentUser
         get() = CurrentUser(this.requireContext())
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         setHasOptionsMenu(true)
-        return inflater?.inflate(R.layout.fragment_new_report, container, false)
+        return inflater.inflate(R.layout.fragment_new_report, container, false)
     }
 
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
         super.onCreateOptionsMenu(menu, inflater)
         inflater.inflate(R.menu.menu_new_report, menu)
+        uploadItem = menu.findItem(R.id.uploadReport)
     }
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
@@ -46,8 +49,8 @@ class NewReportFragment: Fragment() {
         report.assessorEmail = emailField.text.toString()
         report.creationDate = Date()
         report.title = titleField.text.toString()
-        when (item!!.getItemId()) {
-            R.id.menu_item_upload_report -> {
+        when (item!!.itemId) {
+            R.id.uploadReport -> {
                 delegate?.uploadReport(this, report)
                 return true
             }
