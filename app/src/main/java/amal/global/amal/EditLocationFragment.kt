@@ -19,11 +19,17 @@ class EditLocationFragment : Fragment() {
     val coordinateOrNullIsland: LatLng
         get() = image?.metadata?.coordinate ?: LatLng(0.0, 0.0)
 
+    val hasCoordinates: Boolean
+        get() = image?.metadata?.hasCoordinates ?: false
+
+    val zoomLevel: Float
+        get() = if (hasCoordinates) 12.0f else 2.0f
+
     lateinit var mapView: MapView
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
-        return inflater?.inflate(R.layout.fragment_edit_location, container, false)
+        return inflater.inflate(R.layout.fragment_edit_location, container, false)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -41,7 +47,11 @@ class EditLocationFragment : Fragment() {
                     .title("Marker")
             map.addMarker(marker)
 
-            val cameraPosition = CameraPosition.builder().target(coordinateOrNullIsland).zoom(12.0f).build()
+            val cameraPosition = CameraPosition
+                    .builder()
+                    .target(coordinateOrNullIsland)
+                    .zoom(zoomLevel)
+                    .build()
             map.moveCamera(CameraUpdateFactory.newCameraPosition(cameraPosition))
 
             map.setOnCameraMoveListener({
