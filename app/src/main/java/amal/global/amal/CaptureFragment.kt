@@ -12,6 +12,8 @@ import android.support.v4.app.Fragment
 import android.view.*
 import com.wonderkiln.camerakit.*
 import kotlinx.android.synthetic.main.fragment_capture.*
+import android.animation.ObjectAnimator
+import kotlinx.coroutines.experimental.launch
 
 
 interface CaptureDelegate {
@@ -32,6 +34,7 @@ class CaptureFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        cameraView.addCameraKitListener(getNewCameraKitListener())
         shutterButton.setOnClickListener({ takePicture() })
     }
 
@@ -98,23 +101,33 @@ class CaptureFragment : Fragment() {
     }
 
     private fun takePicture() {
-        cameraView.addCameraKitListener(object : CameraKitEventListener {
-            override fun onEvent(event: CameraKitEvent) { }
+        cameraView.captureImage()
+    }
 
-            override fun onError(error: CameraKitError) { }
+    private fun animateFlashEmulator() {
+        val anim = ObjectAnimator.ofFloat(flashEmulator, "alpha", 0f, 1f, 0f)
+        anim.duration = 150
+        anim.start()
+    }
 
-            override fun onImage(image: CameraKitImage) {
+    private fun getNewCameraKitListener() = object : CameraKitEventListener {
+        override fun onEvent(event: CameraKitEvent) { }
 
-                val metadata = Metadata()
-                metadata.latitude = lastLocation?.latitude ?: 0.0
-                metadata.longitude = lastLocation?.longitude ?: 0.0
+        override fun onError(error: CameraKitError) { }
 
+        override fun onImage(image: CameraKitImage) {
+            animateFlashEmulator()
+
+            val metadata = Metadata()
+            metadata.latitude = lastLocation?.latitude ?: 0.0
+            metadata.longitude = lastLocation?.longitude ?: 0.0
+
+            launch {
                 PhotoStorage(activity!!.applicationContext).savePhotoLocally(image.jpeg, metadata)
             }
+        }
 
-            override fun onVideo(video: CameraKitVideo) { }
-        })
-        cameraView.captureImage()
+        override fun onVideo(video: CameraKitVideo) { }
     }
 
 }
