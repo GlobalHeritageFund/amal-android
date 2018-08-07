@@ -11,6 +11,13 @@
         android:layout_height="wrap_content"
         android:adjustViewBounds="true" />
 
+    <View
+        android:id="@+id/flashEmulator"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:alpha="0"
+        android:background="#fff"/>
+
     <Button
         android:id="@+id/shutterButton"
         android:layout_width="80dp"
