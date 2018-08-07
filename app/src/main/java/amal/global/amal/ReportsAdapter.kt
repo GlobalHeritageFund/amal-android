@@ -21,10 +21,10 @@ class ReportsAdapter(var context: Context, var reports: List<Report> = listOf())
 
         query.addValueEventListener(object : ValueEventListener {
             override fun onDataChange(snapshot: DataSnapshot) {
-                val map = snapshot.value as? HashMap<*, *> ?: hashMapOf<String, Any>()
+                val map = snapshot.value as? HashMap<String, HashMap<String, Any>> ?: hashMapOf()
 
                 reports = map.entries
-                        .mapNotNull { entry -> Report.fromJSON(entry.key as String, entry.value as HashMap<String, Any>) }
+                        .mapNotNull { entry -> Report.fromJSON(entry.key, entry.value) }
                         .sortedByDescending { it.creationDate }
                 notifyDataSetChanged()
             }
