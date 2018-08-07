@@ -163,7 +163,11 @@ class TabActivity : AppCompatActivity(),
         contentView
                 .findViewById<View>(R.id.publishAnonymouslyView)
                 .setOnClickListener({
+                    fragment.uploadItem?.isEnabled = false
                     upload(report)
+                            .catch {
+                                fragment.uploadItem?.isEnabled = true
+                            }
                     dialog.dismiss()
                 })
         contentView
@@ -175,12 +179,12 @@ class TabActivity : AppCompatActivity(),
         dialog.show()
     }
 
-    fun upload(report: ReportDraft) {
+    fun upload(report: ReportDraft): Promise<Report> {
         val uploader = ReportUploader(report)
 
         uploader.upload()
-
-        uploader.promise.then {
+        
+        return uploader.promise.then {
             supportFragmentManager
                     .beginTransaction()
                     .replace(R.id.content, ReportsFragment().also { it.delegate = this })
@@ -189,7 +193,6 @@ class TabActivity : AppCompatActivity(),
         }.catch { error ->
             Log.e("asdf", error.message)
         }
-
     }
 
     override fun pdfReportTapped(reportDetailFragment: ReportDetailFragment) {
