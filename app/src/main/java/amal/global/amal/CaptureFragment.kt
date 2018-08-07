@@ -34,7 +34,7 @@ class CaptureFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        cameraView.addCameraKitListener(getCameraKitListener())
+        cameraView.addCameraKitListener(getNewCameraKitListener())
         shutterButton.setOnClickListener({ takePicture() })
     }
 
@@ -110,7 +110,7 @@ class CaptureFragment : Fragment() {
         anim.start()
     }
 
-    private fun getCameraKitListener() = object : CameraKitEventListener {
+    private fun getNewCameraKitListener() = object : CameraKitEventListener {
         override fun onEvent(event: CameraKitEvent) { }
 
         override fun onError(error: CameraKitError) { }
