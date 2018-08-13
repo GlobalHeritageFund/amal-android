@@ -155,7 +155,7 @@ class TabActivity : AppCompatActivity(),
                 .then {
                     this.runOnUiThread {
                         val builder = AlertDialog.Builder(this);
-                        builder.setMessage("It worked");
+                        builder.setMessage("You activated the EAMENA database target.");
                         builder.setPositiveButton("OK") { dialog, which -> }
                         builder.show()
                     }
@@ -163,7 +163,7 @@ class TabActivity : AppCompatActivity(),
                 .catch {
                     this.runOnUiThread {
                         val builder = AlertDialog.Builder(this);
-                        builder.setMessage("It did not work");
+                        builder.setMessage("No database target with that passphrase found.");
                         builder.setPositiveButton("OK"
                         ) { dialog, which -> }
                         builder.show()
