@@ -52,4 +52,16 @@ class CurrentUser(var context: Context) {
             editor.apply()
         }
 
+    private val databaseTargetsKey = "AMALDatabaseTargets"
+
+    var databaseTargets: List<String>
+        get() {
+            return preferences.getString(databaseTargetsKey, "").split(",")
+        }
+        set(value) {
+            val editor = preferences.edit()
+            editor.putString(databaseTargetsKey, value.joinToString(","))
+            editor.apply()
+        }
+
 }

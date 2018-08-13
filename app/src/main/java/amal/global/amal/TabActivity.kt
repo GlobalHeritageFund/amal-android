@@ -151,7 +151,7 @@ class TabActivity : AppCompatActivity(),
     }
 
     override fun passphraseEntered(passphrase: String, fragment: PassphraseFormFragment) {
-        PassphraseValidator().validate(passphrase)
+        PassphraseValidator(this).validate(passphrase)
                 .then {
                     this.runOnUiThread {
                         val builder = AlertDialog.Builder(this);
