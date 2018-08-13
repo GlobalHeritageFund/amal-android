@@ -59,4 +59,16 @@
 
     </android.support.v7.preference.PreferenceCategory>
 
+    <android.support.v7.preference.PreferenceCategory
+        android:title="Other">
+
+        <Preference
+            android:key="passphrase"
+            android:title="Enter Passphrase"
+            android:summary="Enter a passphrase to unlock other database targets.">
+        </Preference>
+
+    </android.support.v7.preference.PreferenceCategory>
+
+
 </android.support.v7.preference.PreferenceScreen>

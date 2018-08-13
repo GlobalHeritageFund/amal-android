@@ -142,6 +142,10 @@ class TabActivity : AppCompatActivity(),
         CurrentUser(this).signOut()
     }
 
+    override fun passphraseButtonTapped(fragment: SettingsFragment) {
+
+    }
+
     override fun uploadReport(fragment: NewReportFragment, report: ReportDraft) {
         val auth = FirebaseAuth.getInstance()
         if (auth.currentUser != null) {
