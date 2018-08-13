@@ -7,11 +7,13 @@
 
         <Preference
             android:title="About Amal"
+            android:selectable="false"
             android:summary="AMAL is a mobile and web application designed for the rapid impact assessment of damaged heritage areas, buildings, or artifacts.">
         </Preference>
 
         <Preference
             android:key="versionPreference"
+            android:selectable="false"
             android:title="Version" >
         </Preference>
     </android.support.v7.preference.PreferenceCategory>
