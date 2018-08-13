@@ -1,6 +1,8 @@
 package amal.global.amal
 
 import amal.global.amal.onboarding.OnboardingActivity
+import android.app.Dialog
+import android.content.DialogInterface
 import android.os.Bundle
 import android.support.design.widget.BottomNavigationView
 import android.support.v4.app.Fragment
@@ -8,6 +10,7 @@ import android.support.v7.app.AppCompatActivity
 import android.util.Log
 import android.content.Intent
 import android.support.design.widget.BottomSheetDialog
+import android.support.v7.app.AlertDialog
 import android.view.View
 import com.google.firebase.auth.FirebaseAuth
 
@@ -148,7 +151,24 @@ class TabActivity : AppCompatActivity(),
     }
 
     override fun passphraseEntered(passphrase: String, fragment: PassphraseFormFragment) {
-        
+        PassphraseValidator().validate(passphrase)
+                .then {
+                    this.runOnUiThread {
+                        val builder = AlertDialog.Builder(this);
+                        builder.setMessage("It worked");
+                        builder.setPositiveButton("OK") { dialog, which -> }
+                        builder.show()
+                    }
+                }
+                .catch {
+                    this.runOnUiThread {
+                        val builder = AlertDialog.Builder(this);
+                        builder.setMessage("It did not work");
+                        builder.setPositiveButton("OK"
+                        ) { dialog, which -> }
+                        builder.show()
+                    }
+                }
     }
 
     override fun uploadReport(fragment: NewReportFragment, report: ReportDraft) {
