@@ -26,6 +26,7 @@ class TabActivity : AppCompatActivity(),
         ReportDetailFragmentDelegate,
         AssessDelegate,
         CaptureDelegate,
+        PassphraseFormFragmentDelegate,
         SettingsFragmentDelegate
 {
     private val mOnNavigationItemSelectedListener = BottomNavigationView.OnNavigationItemSelectedListener { item ->
@@ -143,7 +144,11 @@ class TabActivity : AppCompatActivity(),
     }
 
     override fun passphraseButtonTapped(fragment: SettingsFragment) {
+        pushFragment(PassphraseFormFragment().also { it.delegate = this })
+    }
 
+    override fun passphraseEntered(passphrase: String, fragment: PassphraseFormFragment) {
+        
     }
 
     override fun uploadReport(fragment: NewReportFragment, report: ReportDraft) {
