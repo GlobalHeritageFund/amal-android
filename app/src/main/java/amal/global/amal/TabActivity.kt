@@ -138,9 +138,9 @@ class TabActivity : AppCompatActivity(),
     }
 
     override fun signInTapped(fragment: SettingsFragment) {
-    val authenticator = FirebaseAuthenticator(this, { fragment.configureView() })
-    registerAndStartIntentRequest(authenticator)
-}
+        val authenticator = FirebaseAuthenticator(this, { fragment.configureView() })
+        registerAndStartIntentRequest(authenticator)
+    }
 
     override fun signOutTapped(fragment: SettingsFragment) {
         CurrentUser(this).signOut()
