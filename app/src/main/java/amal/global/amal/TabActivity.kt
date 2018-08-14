@@ -1,8 +1,6 @@
 package amal.global.amal
 
 import amal.global.amal.onboarding.OnboardingActivity
-import android.app.Dialog
-import android.content.DialogInterface
 import android.os.Bundle
 import android.support.design.widget.BottomNavigationView
 import android.support.v4.app.Fragment
