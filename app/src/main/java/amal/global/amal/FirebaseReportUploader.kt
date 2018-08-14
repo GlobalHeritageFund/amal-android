@@ -8,7 +8,7 @@ import com.google.firebase.storage.StorageMetadata
 import com.google.firebase.storage.StorageReference
 import java.io.File
 
-class ReportUploader (val reportDraft: ReportDraft) {
+class FirebaseReportUploader (val reportDraft: ReportDraft) {
 
     val promise = Promise<Report>()
 

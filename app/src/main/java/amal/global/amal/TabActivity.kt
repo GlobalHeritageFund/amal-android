@@ -209,7 +209,7 @@ class TabActivity : AppCompatActivity(),
     }
 
     fun upload(report: ReportDraft): Promise<Report> {
-        val uploader = ReportUploader(report)
+        val uploader = FirebaseReportUploader(report)
 
         uploader.upload()
         
