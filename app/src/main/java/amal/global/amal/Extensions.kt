@@ -17,10 +17,14 @@ import android.widget.EditText
 import com.google.firebase.database.DatabaseReference
 import com.google.firebase.storage.StorageMetadata
 import com.google.firebase.storage.StorageReference
+import okhttp3.Call
+import okhttp3.Callback
+import okhttp3.Response
 import org.json.JSONArray
 import org.json.JSONException
 import org.json.JSONObject
 import java.io.File
+import java.io.IOException
 import java.text.ParsePosition
 import java.text.SimpleDateFormat
 import java.util.*
@@ -193,4 +197,35 @@ fun ExifInterface.getTimeStamp(): Date? {
     } catch (e: IllegalArgumentException) {
         return null
     }
+}
+
+fun Call.enqueue(): Promise<Response> {
+    val promise = Promise<Response>()
+
+    this.enqueue(object: Callback {
+        override fun onFailure(call: Call?, e: IOException?) {
+            promise.reject(Error(e?.message ?: "The request unexpectedly failed."))
+        }
+
+        override fun onResponse(call: Call?, response: Response?) {
+            try {
+                if (response == null) {
+                    promise.reject(Error("The response was null."))
+                    return
+                }
+
+                if (!response.isSuccessful) {
+                    promise.reject(Error("Unexpected error code :" + response))
+                    return
+                }
+
+                promise.fulfill(response)
+            } catch (e: Exception) {
+                promise.reject(Error(e.message))
+            }
+        }
+    })
+
+    return promise
+
 }
