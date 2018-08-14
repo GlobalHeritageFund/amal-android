@@ -16,13 +16,11 @@ class ReportUploader (val reportDraft: ReportDraft) {
 
     val storage = FirebaseStorage.getInstance()
 
-    val reportsDirectory: DatabaseReference by lazy {
-        database.reference.child("reports")
-    }
+    private val reportsDirectory: DatabaseReference
+        get() = database.reference.child("reports")
 
-    val imagesDirectory: StorageReference by lazy {
-        storage.reference.child("images")
-    }
+    private val imagesDirectory: StorageReference
+        get() = storage.reference.child("images")
 
     fun upload() {
         val reportReference = reportsDirectory.push()
