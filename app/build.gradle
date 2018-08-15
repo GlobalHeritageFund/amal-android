@@ -51,6 +51,9 @@ dependencies {
     //glide
     implementation 'com.github.bumptech.glide:glide:4.7.1'
     kapt 'com.github.bumptech.glide:compiler:4.7.1'
+
+    //json
+    kapt 'com.squareup.moshi:moshi-kotlin-codegen:1.6.0'
 }
 
 repositories {
