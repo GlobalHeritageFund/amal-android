@@ -3,6 +3,8 @@ package amal.global.amal
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.net.Uri
+import android.os.Parcel
+import android.os.Parcelable
 import android.support.annotation.IdRes
 import android.support.annotation.LayoutRes
 import android.support.media.ExifInterface
@@ -215,7 +217,7 @@ fun Call.enqueue(): Promise<Response> {
                 }
 
                 if (!response.isSuccessful) {
-                    promise.reject(Error("Unexpected error code :" + response))
+                    promise.reject(Error((response.body()?.string() ?: "") + "Unexpected error code :" + response))
                     return
                 }
 
