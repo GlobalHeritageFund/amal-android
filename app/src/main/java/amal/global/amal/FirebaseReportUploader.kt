@@ -6,8 +6,6 @@ import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.storage.FirebaseStorage
 import com.google.firebase.storage.StorageMetadata
 import com.google.firebase.storage.StorageReference
-import com.squareup.moshi.JsonAdapter
-import com.squareup.moshi.Moshi
 import java.io.File
 
 class FirebaseReportUploader (val reportDraft: ReportDraft) {
@@ -64,12 +62,7 @@ class FirebaseReportUploader (val reportDraft: ReportDraft) {
                 .setContentType("image/jpeg")
                 .build()
 
-        val moshi = Moshi.Builder()
-                .add(com.squareup.moshi.kotlin.reflect.KotlinJsonAdapterFactory())
-                .build()
-        val adapter = moshi.adapter(Metadata::class.java)
-
-        val metadataObject = adapter.toJsonValue(image.metadata)
+        val metadataObject = Metadata.jsonAdapter.toJsonValue(image.metadata)
 
         return Promise.all<Unit>(sequenceOf<Promise<Unit>>(
                 imageReference.putFilePromise(Uri.fromFile(File(image.filePath)), metadata),

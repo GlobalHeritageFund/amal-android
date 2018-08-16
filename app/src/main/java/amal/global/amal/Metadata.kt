@@ -1,10 +1,11 @@
 package amal.global.amal
 
-import org.json.JSONObject
-import android.util.Log
 import com.google.android.gms.maps.model.LatLng
+import com.squareup.moshi.JsonAdapter
 import java.util.*
 import com.squareup.moshi.JsonClass
+import com.squareup.moshi.Moshi
+import com.squareup.moshi.kotlin.reflect.KotlinJsonAdapterFactory
 
 @JsonClass(generateAdapter = true)
 data class Metadata internal constructor(
@@ -39,6 +40,13 @@ data class Metadata internal constructor(
         get() = date?.let { Date(it) }
 
     companion object {
+        val jsonAdapter: JsonAdapter<Metadata>
+            get() {
+                val moshi = Moshi.Builder()
+                        .add(KotlinJsonAdapterFactory())
+                        .build()
+                return moshi.adapter(Metadata::class.java)
+            }
 
     }
 }

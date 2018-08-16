@@ -1,8 +1,6 @@
 package amal.global.amal
 
 import android.content.Context
-import com.squareup.moshi.Moshi
-
 import java.io.File
 import java.io.FileNotFoundException
 import java.io.FileOutputStream
@@ -31,12 +29,7 @@ class PhotoStorage internal constructor(internal var context: Context) {
             e.printStackTrace()
         }
 
-        val moshi = Moshi.Builder()
-                .add(com.squareup.moshi.kotlin.reflect.KotlinJsonAdapterFactory())
-                .build()
-        val adapter = moshi.adapter(Metadata::class.java)
-
-        settingsFile.writeText(adapter.toJson(metadata))
+        settingsFile.writeText(Metadata.jsonAdapter.toJson(metadata))
     }
 
     @Throws(IOException::class)
