@@ -53,7 +53,7 @@ data class Report internal constructor(
             val images = imagesMaps
                     .values
                     .filterIsInstance<HashMap<String, Any>>()
-                    .mapNotNull { RemoteImage.fromJSON(it) }
+                    .mapNotNull { RemoteImage.jsonAdapter.fromJsonValue(it) }
             return Report(id, images, deviceToken, Date((creationDate*1000).toLong()), title, assessorEmail)
         }
     }

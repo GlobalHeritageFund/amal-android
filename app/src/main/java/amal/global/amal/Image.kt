@@ -4,9 +4,13 @@ import android.content.Context
 import android.graphics.drawable.Drawable
 import com.google.firebase.storage.FirebaseStorage
 import com.google.firebase.storage.StorageReference
+import com.squareup.moshi.Json
+import com.squareup.moshi.JsonAdapter
+import com.squareup.moshi.JsonClass
+import com.squareup.moshi.Moshi
+import com.squareup.moshi.kotlin.reflect.KotlinJsonAdapterFactory
 import java.io.File
 import java.util.*
-import kotlin.collections.HashMap
 
 interface Image {
     fun load(context: Context) : GlideRequest<Drawable>
@@ -48,16 +52,19 @@ data class LocalImage internal constructor(
     }
 }
 
-data class RemoteImage(val remoteStorageLocation: String, override var metadata: Metadata) : Image {
+@JsonClass(generateAdapter = true)
+data class RemoteImage(
+        @Json(name = "imageRef") val remoteStorageLocation: String,
+        @Json(name = "settings") override var metadata: Metadata
+) : Image {
     companion object {
-        fun fromJSON(map: HashMap<String, Any>): RemoteImage? {
-            val remoteStorageLocation = map["imageRef"] as? String ?: return null
-            val metadataObj = map["settings"] as? HashMap<String, Any> ?: hashMapOf<String, Any>()
-
-
-            val metadata = Metadata.jsonAdapter.fromJsonValue(metadataObj)
-            return RemoteImage(remoteStorageLocation, metadata ?: Metadata())
-        }
+        val jsonAdapter: JsonAdapter<RemoteImage>
+            get() {
+                val moshi = Moshi.Builder()
+                        .add(KotlinJsonAdapterFactory())
+                        .build()
+                return moshi.adapter(RemoteImage::class.java)
+            }
     }
 
     val firebaseReference: StorageReference
