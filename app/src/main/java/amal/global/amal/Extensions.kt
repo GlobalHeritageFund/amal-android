@@ -61,24 +61,6 @@ fun EditText.afterTextChanged(afterTextChanged: (Editable?) -> Unit) {
     })
 }
 
-fun File.decodeBitmap(): Promise<Bitmap> {
-    return Promise<Bitmap>({ fulfill, reject ->
-        fulfill(BitmapFactory.decodeFile(this.path))
-    })
-}
-
-fun ByteArray.decodeBitmap(offset: Int = 0): Promise<Bitmap> {
-    return Promise({ fulfill, reject ->
-        fulfill(BitmapFactory.decodeByteArray(this, offset, this.count()))
-    })
-}
-
-fun Bitmap.scale(dstWidth: Int, dstHeight: Int, filter: Boolean): Promise<Bitmap> {
-    return Promise<Bitmap>({ fulfill, reject ->
-        fulfill(Bitmap.createScaledBitmap(this, dstWidth, dstHeight, filter))
-    })
-}
-
 fun DatabaseReference.setValuePromise(value: Any): Promise<Unit> {
     return Promise<Unit>({ fulfill, reject ->
         this.setValue(value, { databaseError, databaseReference ->
@@ -140,44 +122,6 @@ fun RecyclerView.addOnItemClickListener(onClickListener: OnItemClickListener) {
             })
         }
     })
-}
-
-
-@Throws(JSONException::class)
-fun fixJSON(json: Any?): Any? {
-    return if (json === JSONObject.NULL) {
-        null
-    } else if (json is JSONObject) {
-        toMap(json)
-    } else if (json is JSONArray) {
-        toList(json)
-    } else {
-        json
-    }
-}
-
-@Throws(JSONException::class)
-fun toList(array: JSONArray): List<*> {
-    val list = ArrayList<Any>()
-    for (i in 0 until array.length()) {
-        fixJSON(array.get(i))?.let {
-            list.add(it)
-        }
-    }
-    return list
-}
-
-@Throws(JSONException::class)
-fun toMap(value: JSONObject): HashMap<String, Any> {
-    val map = HashMap<String, Any>()
-    val keys = value.keys()
-    while (keys.hasNext()) {
-        val key = keys.next() as String
-        fixJSON(value.get(key))?.let {
-            map.put(key, it)
-        }
-    }
-    return map
 }
 
 fun ExifInterface.getTimeStamp(): Date? {
