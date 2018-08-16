@@ -62,7 +62,14 @@ data class RemoteImage(val remoteStorageLocation: String, override var metadata:
         fun fromJSON(map: HashMap<String, Any>): RemoteImage? {
             val remoteStorageLocation = map["imageRef"] as? String ?: return null
             val metadataObj = map["settings"] as? HashMap<String, Any> ?: hashMapOf<String, Any>()
-            val metadata = Metadata.fromJSON(metadataObj)
+
+
+            val moshi = Moshi.Builder()
+                    .add(com.squareup.moshi.kotlin.reflect.KotlinJsonAdapterFactory())
+                    .build()
+            val adapter = moshi.adapter(Metadata::class.java)
+
+            val metadata = adapter.fromJsonValue(metadataObj)
             return RemoteImage(remoteStorageLocation, metadata ?: Metadata())
         }
     }
