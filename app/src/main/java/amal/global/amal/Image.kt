@@ -4,6 +4,7 @@ import android.content.Context
 import android.graphics.drawable.Drawable
 import com.google.firebase.storage.FirebaseStorage
 import com.google.firebase.storage.StorageReference
+import com.squareup.moshi.Moshi
 import java.io.File
 import java.util.*
 import kotlin.collections.HashMap
@@ -20,11 +21,15 @@ data class LocalImage internal constructor(
 ) : Image {
     companion object {
         fun convenience(filePath: String, settingsPath: String) : LocalImage {
-            var metadata: Metadata? = null
-            try {
-                metadata = Metadata.fromJSON(File(settingsPath).readText())
+            val metadata = try {
+                val moshi = Moshi.Builder()
+                        .add(com.squareup.moshi.kotlin.reflect.KotlinJsonAdapterFactory())
+                        .build()
+                val adapter = moshi.adapter(Metadata::class.java)
+                adapter.fromJson(File(settingsPath).readText())
             } catch (e: Exception) {
-
+                e.printStackTrace()
+                null
             }
 
             return LocalImage(filePath, settingsPath, metadata ?: Metadata())

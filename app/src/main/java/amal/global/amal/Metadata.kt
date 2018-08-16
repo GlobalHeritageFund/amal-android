@@ -1,14 +1,12 @@
 package amal.global.amal
 
 import org.json.JSONObject
-import amal.global.amal.R.string.`object`
 import android.util.Log
 import com.google.android.gms.maps.model.LatLng
-import org.json.JSONArray
-import org.json.JSONException
-import java.security.InvalidParameterException
 import java.util.*
+import com.squareup.moshi.JsonClass
 
+@JsonClass(generateAdapter = true)
 data class Metadata internal constructor(
         public var name: String = "",
         public var category: String = "",
@@ -37,7 +35,7 @@ data class Metadata internal constructor(
     val coordinate: LatLng
         get() = LatLng(latitude, longitude)
 
-    fun toJSONObject(): JSONObject {
+    private fun toJSONObject(): JSONObject {
         val jsonObject = JSONObject()
         jsonObject.put("name", name)
         jsonObject.put("category", category)
