@@ -12,6 +12,7 @@ android {
         targetSdkVersion 26
         versionCode 8
         versionName "1.0"
+        multiDexEnabled  true
     }
     buildTypes {
         release {
@@ -25,6 +26,7 @@ dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar'])
 
     //support libs
+    compile 'com.android.support:multidex:1.0.0'
     implementation 'com.android.support:appcompat-v7:27.+'
     implementation 'com.android.support:preference-v7:27.+'
     implementation 'com.android.support:design:27.+'
@@ -48,12 +50,14 @@ dependencies {
     implementation 'com.google.firebase:firebase-auth:16.0.2'
     implementation "com.google.android.gms:play-services-auth:15.0.1"
 
+    //json
+    implementation 'com.squareup.moshi:moshi-kotlin:1.6.0'
+    kapt 'com.squareup.moshi:moshi-kotlin-codegen:1.6.0'
+
     //glide
     implementation 'com.github.bumptech.glide:glide:4.7.1'
     kapt 'com.github.bumptech.glide:compiler:4.7.1'
 
-    //json
-    kapt 'com.squareup.moshi:moshi-kotlin-codegen:1.6.0'
 }
 
 repositories {
