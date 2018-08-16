@@ -51,7 +51,7 @@ class GalleryFragment : Fragment() {
 
     override fun onOptionsItemSelected(item: MenuItem?): Boolean {
         return when (item!!.getItemId()) {
-            R.id.menu_item_import-> {
+            R.id.menu_item_import -> {
                 delegate?.importButtonTapped(this)
                 true
             }
