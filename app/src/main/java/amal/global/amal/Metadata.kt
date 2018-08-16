@@ -35,62 +35,10 @@ data class Metadata internal constructor(
     val coordinate: LatLng
         get() = LatLng(latitude, longitude)
 
-    private fun toJSONObject(): JSONObject {
-        val jsonObject = JSONObject()
-        jsonObject.put("name", name)
-        jsonObject.put("category", category)
-        jsonObject.put("levelOfDamage", levelOfDamage)
-        jsonObject.put("conditionNumber", conditionNumber)
-        jsonObject.put("hazards", hazards)
-        jsonObject.put("safetyHazards", safetyHazards)
-        jsonObject.put("interventionRequired", interventionRequired)
-        jsonObject.put("notes", notes)
-        jsonObject.put("latitude", latitude)
-        jsonObject.put("longitude", longitude)
-        jsonObject.put("date", date)
-        jsonObject.put("localIdentifier", localIdentifier)
-        return jsonObject
-    }
-
     val dateValue: Date?
         get() = date?.let { Date(it) }
 
-    fun toMap(): Map<String, Any> {
-        return toMap(toJSONObject())
-    }
-
-    fun toJSON(): String {
-        return toJSONObject().toString(4)
-    }
-
     companion object {
 
-        fun fromJSON(string: String): Metadata {
-            val jsonObject = JSONObject(string)
-            return this.fromJSON(toMap(jsonObject)) ?: Metadata()
-        }
-
-        fun fromJSON(map: HashMap<String, Any>): Metadata? {
-            try {
-                val parser = Parser(map)
-                return Metadata(
-                        parser.fetch("name"),
-                        parser.fetch("category"),
-                        (parser.fetch<Long>("levelOfDamage")).toInt(),
-                        (parser.fetch<Long>("conditionNumber")).toInt(),
-                        parser.fetch("hazards"),
-                        parser.fetch("safetyHazards"),
-                        parser.fetch("interventionRequired"),
-                        parser.fetch("notes"),
-                        parser.fetch("latitude"),
-                        parser.fetch("longitude"),
-                        parser.fetchOptional<Long>("date"),
-                        parser.fetch("localIdentifier")
-                )
-            } catch(e: Exception) {
-                Log.d("asdf", e.message)
-                return null
-            }
-        }
     }
 }
