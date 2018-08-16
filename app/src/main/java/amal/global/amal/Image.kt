@@ -41,7 +41,7 @@ data class LocalImage internal constructor(
     }
 
     val date: Date
-        get() = metadata.date ?: Date(File(filePath).lastModified())
+        get() = metadata.dateValue ?: Date(File(filePath).lastModified())
 
     override fun load(context: Context): GlideRequest<Drawable> {
         return GlideApp.with(context).load(file)

@@ -20,7 +20,7 @@ data class Metadata internal constructor(
         public var notes: String = "",
         public var latitude: Double = 0.0,
         public var longitude: Double = 0.0,
-        public var date: Date? = null,
+        public var date: Long? = null,
         public var localIdentifier: String = ""
 ) {
 
@@ -49,10 +49,13 @@ data class Metadata internal constructor(
         jsonObject.put("notes", notes)
         jsonObject.put("latitude", latitude)
         jsonObject.put("longitude", longitude)
-        jsonObject.put("date", date?.time)
+        jsonObject.put("date", date)
         jsonObject.put("localIdentifier", localIdentifier)
         return jsonObject
     }
+
+    val dateValue: Date?
+        get() = date?.let { Date(it) }
 
     fun toMap(): Map<String, Any> {
         return toMap(toJSONObject())
@@ -83,7 +86,7 @@ data class Metadata internal constructor(
                         parser.fetch("notes"),
                         parser.fetch("latitude"),
                         parser.fetch("longitude"),
-                        parser.fetchOptional<Long>("date")?.let { Date(it) },
+                        parser.fetchOptional<Long>("date"),
                         parser.fetch("localIdentifier")
                 )
             } catch(e: Exception) {
