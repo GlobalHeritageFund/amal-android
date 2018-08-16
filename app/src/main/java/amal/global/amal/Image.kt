@@ -37,7 +37,11 @@ data class LocalImage internal constructor(
     }
 
     fun saveMetaData() {
-        val json = metadata.toJSON()
+        val moshi = Moshi.Builder()
+                .add(com.squareup.moshi.kotlin.reflect.KotlinJsonAdapterFactory())
+                .build()
+        val adapter = moshi.adapter(Metadata::class.java)
+        val json = adapter.toJson(metadata)
         File(settingsPath).writeText(json)
     }
 
