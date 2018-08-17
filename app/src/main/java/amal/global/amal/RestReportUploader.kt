@@ -13,6 +13,8 @@ import java.util.*
 
 class RestReportUploader(val reportDraft: ReportDraft) {
 
+    private val baseURL = "http://herbridge.legiongis.com/"
+
     private val client = OkHttpClient()
 
     val promise = Promise<Report>()
@@ -68,7 +70,7 @@ class RestReportUploader(val reportDraft: ReportDraft) {
         json.put("type", "field_report")
 
         val request = Request.Builder()
-                .url("http://herbridge.legiongis.com/api/reports/")
+                .url("${baseURL}/api/reports/")
                 .post(RequestBody.create(jsonContentType, json.toString()))
                 .build()
 
@@ -90,7 +92,7 @@ class RestReportUploader(val reportDraft: ReportDraft) {
                 .build()
 
         val request = Request.Builder()
-                .url("http://herbridge.legiongis.com/api/images/")
+                .url("${baseURL}api/images/")
                 .method("POST", requestBody)
                 .build()
 
