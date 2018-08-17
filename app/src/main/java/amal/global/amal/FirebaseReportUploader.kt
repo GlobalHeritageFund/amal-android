@@ -41,9 +41,10 @@ class FirebaseReportUploader (val reportDraft: ReportDraft) {
                             reportReference.key!!,
                             listOf(),
                             reportDraft.deviceToken,
-                            reportDraft.creationDate,
+                            reportDraft.creationDate.time.toDouble(),
                             reportDraft.title,
-                            reportDraft.assessorEmail
+                            reportDraft.assessorEmail,
+                            true
                     )
                 }
                 .then { report ->

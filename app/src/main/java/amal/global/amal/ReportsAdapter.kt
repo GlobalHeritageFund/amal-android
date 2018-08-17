@@ -24,8 +24,17 @@ class ReportsAdapter(var context: Context, var reports: List<Report> = listOf())
                 val map = snapshot.value as? HashMap<String, HashMap<String, Any>> ?: hashMapOf()
 
                 reports = map.entries
-                        .mapNotNull { entry -> Report.fromJSON(entry.key, entry.value) }
-                        .sortedByDescending { it.creationDate }
+                        .map {
+                            var value = it.value
+                            value["firebaseID"] = it.key
+                            val imagesMaps = value["images"] as? HashMap<*, *> ?: hashMapOf<String, Any>()
+                            val images = imagesMaps.values.toList()
+                            value["images"] = images
+                            value
+                        }
+                        .mapNotNull { Report.jsonAdapter.fromJsonValue(it) }
+                        .filter { it.uploadComplete }
+                        .sortedByDescending { it.creationDateValue }
                 notifyDataSetChanged()
             }
 
