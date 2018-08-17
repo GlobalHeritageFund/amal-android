@@ -63,7 +63,7 @@ class RestReportUploader(val reportDraft: ReportDraft) {
         val json = JSONObject()
         json.put("title", reportDraft.title)
         json.put("assessor", assessorJSON)
-        json.put("createdAt", Date().time)
+        json.put("createdAt", Date().time/1000)
         json.put("resources", JSONArray(resources))
         json.put("type", "field_report")
 
