@@ -11,6 +11,7 @@ import android.support.design.widget.BottomSheetDialog
 import android.support.v7.app.AlertDialog
 import android.view.View
 import com.google.firebase.auth.FirebaseAuth
+import java.util.*
 
 interface IntentRequest {
     val requestCode: Int
@@ -207,7 +208,10 @@ class TabActivity : AppCompatActivity(),
     }
 
     fun upload(report: ReportDraft): Promise<Report> {
-        val uploader = FirebaseReportUploader(report)
+//        val uploader = FirebaseReportUploader(report)
+
+        var uploader = RestReportUploader(report)
+
 
         uploader.upload()
         

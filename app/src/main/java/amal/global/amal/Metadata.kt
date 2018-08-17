@@ -39,6 +39,30 @@ data class Metadata internal constructor(
     val dateValue: Date?
         get() = date?.let { Date(it) }
 
+    val condition: String
+        get() {
+            return when (conditionNumber) {
+                0 -> "unknown"
+                1 -> "none"
+                2 -> "minor"
+                3 -> "moderate"
+                4 -> "severe"
+                5 -> "collapsed"
+                else -> "unknown"
+            }
+        }
+
+    val type: String
+        get() {
+            return when (category) {
+                "area" -> "area"
+                "site" -> "building"
+                "object"-> "object"
+                else -> "object"
+            }
+
+        }
+
     companion object {
         val jsonAdapter: JsonAdapter<Metadata>
             get() {
