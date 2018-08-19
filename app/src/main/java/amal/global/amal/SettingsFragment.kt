@@ -8,6 +8,7 @@ import android.support.v7.preference.Preference
 interface SettingsFragmentDelegate {
     fun signOutTapped(fragment: SettingsFragment)
     fun signInTapped(fragment: SettingsFragment)
+    fun passphraseButtonTapped(fragment: SettingsFragment)
 }
 
 class SettingsFragment: PreferenceFragmentCompat() {
@@ -23,6 +24,9 @@ class SettingsFragment: PreferenceFragmentCompat() {
     private val authPreference: Preference
         get() = findPreference("auth")
 
+    private val passphrasePreference: Preference
+        get() = findPreference("passphrase")
+
     override fun onCreatePreferences(bundle: Bundle?, string: String?) {
         addPreferencesFromResource(R.xml.preferences)
 
@@ -35,6 +39,11 @@ class SettingsFragment: PreferenceFragmentCompat() {
                 delegate?.signInTapped(this)
             }
             configureView()
+            true
+        }
+
+        passphrasePreference.onPreferenceClickListener = Preference.OnPreferenceClickListener {
+            delegate?.passphraseButtonTapped(this)
             true
         }
     }

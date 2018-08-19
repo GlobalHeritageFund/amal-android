@@ -1,6 +1,8 @@
 package amal.global.amal
 
 import amal.global.amal.onboarding.OnboardingActivity
+import android.app.Dialog
+import android.content.DialogInterface
 import android.os.Bundle
 import android.support.design.widget.BottomNavigationView
 import android.support.v4.app.Fragment
@@ -8,6 +10,7 @@ import android.support.v7.app.AppCompatActivity
 import android.util.Log
 import android.content.Intent
 import android.support.design.widget.BottomSheetDialog
+import android.support.v7.app.AlertDialog
 import android.view.View
 import com.google.firebase.auth.FirebaseAuth
 
@@ -26,6 +29,7 @@ class TabActivity : AppCompatActivity(),
         ReportDetailFragmentDelegate,
         AssessDelegate,
         CaptureDelegate,
+        PassphraseFormFragmentDelegate,
         SettingsFragmentDelegate
 {
     private val mOnNavigationItemSelectedListener = BottomNavigationView.OnNavigationItemSelectedListener { item ->
@@ -140,6 +144,31 @@ class TabActivity : AppCompatActivity(),
 
     override fun signOutTapped(fragment: SettingsFragment) {
         CurrentUser(this).signOut()
+    }
+
+    override fun passphraseButtonTapped(fragment: SettingsFragment) {
+        pushFragment(PassphraseFormFragment().also { it.delegate = this })
+    }
+
+    override fun passphraseEntered(passphrase: String, fragment: PassphraseFormFragment) {
+        PassphraseValidator(this).validate(passphrase)
+                .then {
+                    this.runOnUiThread {
+                        val builder = AlertDialog.Builder(this);
+                        builder.setMessage("You activated the EAMENA database target.");
+                        builder.setPositiveButton("OK") { dialog, which -> }
+                        builder.show()
+                    }
+                }
+                .catch {
+                    this.runOnUiThread {
+                        val builder = AlertDialog.Builder(this);
+                        builder.setMessage("No database target with that passphrase found.");
+                        builder.setPositiveButton("OK"
+                        ) { dialog, which -> }
+                        builder.show()
+                    }
+                }
     }
 
     override fun uploadReport(fragment: NewReportFragment, report: ReportDraft) {

@@ -17,13 +17,13 @@ class CurrentUser(var context: Context) {
         FirebaseAuth.getInstance().signOut()
     }
 
-    val preferenceName = "MyPreferences"
+    private val preferenceName = "MyPreferences"
 
     val preferences: SharedPreferences by lazy {
         context.getSharedPreferences(preferenceName, Context.MODE_PRIVATE)
     }
 
-    val tokenKey = "AMALDeviceToken"
+    private val tokenKey = "AMALDeviceToken"
 
     var token: String
         get() {
@@ -40,7 +40,7 @@ class CurrentUser(var context: Context) {
             editor.apply()
         }
 
-    val onboardingKey = "AMALOnboardingComplete"
+    private val onboardingKey = "AMALOnboardingComplete"
 
     var onboardingComplete: Boolean
         get() {
@@ -49,6 +49,18 @@ class CurrentUser(var context: Context) {
         set(value) {
             val editor = preferences.edit()
             editor.putBoolean(onboardingKey, value)
+            editor.apply()
+        }
+
+    private val databaseTargetsKey = "AMALDatabaseTargets"
+
+    var databaseTargets: List<String>
+        get() {
+            return preferences.getString(databaseTargetsKey, "").split(",")
+        }
+        set(value) {
+            val editor = preferences.edit()
+            editor.putString(databaseTargetsKey, value.joinToString(","))
             editor.apply()
         }
 
