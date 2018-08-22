@@ -48,7 +48,7 @@ data class Report internal constructor(
     }
 
     val creationDateValue: Date
-        get() = Date((creationDate*1000).toLong())
+        get() = Date((creationDate * 1000).toLong())
 
     companion object {
         val jsonAdapter: JsonAdapter<Report>
