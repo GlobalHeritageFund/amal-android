@@ -1,14 +1,13 @@
 package amal.global.amal
 
-import org.json.JSONObject
-import amal.global.amal.R.string.`object`
-import android.util.Log
 import com.google.android.gms.maps.model.LatLng
-import org.json.JSONArray
-import org.json.JSONException
-import java.security.InvalidParameterException
+import com.squareup.moshi.JsonAdapter
 import java.util.*
+import com.squareup.moshi.JsonClass
+import com.squareup.moshi.Moshi
+import com.squareup.moshi.kotlin.reflect.KotlinJsonAdapterFactory
 
+@JsonClass(generateAdapter = true)
 data class Metadata internal constructor(
         public var name: String = "",
         public var category: String = "",
@@ -20,7 +19,7 @@ data class Metadata internal constructor(
         public var notes: String = "",
         public var latitude: Double = 0.0,
         public var longitude: Double = 0.0,
-        public var date: Date? = null,
+        public var date: Long? = null,
         public var localIdentifier: String = ""
 ) {
 
@@ -37,59 +36,41 @@ data class Metadata internal constructor(
     val coordinate: LatLng
         get() = LatLng(latitude, longitude)
 
-    fun toJSONObject(): JSONObject {
-        val jsonObject = JSONObject()
-        jsonObject.put("name", name)
-        jsonObject.put("category", category)
-        jsonObject.put("levelOfDamage", levelOfDamage)
-        jsonObject.put("conditionNumber", conditionNumber)
-        jsonObject.put("hazards", hazards)
-        jsonObject.put("safetyHazards", safetyHazards)
-        jsonObject.put("interventionRequired", interventionRequired)
-        jsonObject.put("notes", notes)
-        jsonObject.put("latitude", latitude)
-        jsonObject.put("longitude", longitude)
-        jsonObject.put("date", date?.time)
-        jsonObject.put("localIdentifier", localIdentifier)
-        return jsonObject
-    }
+    val dateValue: Date?
+        get() = date?.let { Date(it) }
 
-    fun toMap(): Map<String, Any> {
-        return toMap(toJSONObject())
-    }
-
-    fun toJSON(): String {
-        return toJSONObject().toString(4)
-    }
-
-    companion object {
-
-        fun fromJSON(string: String): Metadata {
-            val jsonObject = JSONObject(string)
-            return this.fromJSON(toMap(jsonObject)) ?: Metadata()
-        }
-
-        fun fromJSON(map: HashMap<String, Any>): Metadata? {
-            try {
-                val parser = Parser(map)
-                return Metadata(
-                        parser.fetch("name"),
-                        parser.fetch("category"),
-                        (parser.fetch<Long>("levelOfDamage")).toInt(),
-                        (parser.fetch<Long>("conditionNumber")).toInt(),
-                        parser.fetch("hazards"),
-                        parser.fetch("safetyHazards"),
-                        parser.fetch("interventionRequired"),
-                        parser.fetch("notes"),
-                        parser.fetch("latitude"),
-                        parser.fetch("longitude"),
-                        parser.fetchOptional<Long>("date")?.let { Date(it) },
-                        parser.fetch("localIdentifier")
-                )
-            } catch(e: Exception) {
-                Log.d("asdf", e.message)
-                return null
+    val condition: String
+        get() {
+            return when (conditionNumber) {
+                0 -> "unknown"
+                1 -> "none"
+                2 -> "minor"
+                3 -> "moderate"
+                4 -> "severe"
+                5 -> "collapsed"
+                else -> "unknown"
             }
         }
+
+    val type: String
+        get() {
+            return when (category) {
+                "area" -> "area"
+                "site" -> "building"
+                "object"-> "object"
+                else -> "object"
+            }
+
+        }
+
+    companion object {
+        val jsonAdapter: JsonAdapter<Metadata>
+            get() {
+                val moshi = Moshi.Builder()
+                        .add(KotlinJsonAdapterFactory())
+                        .build()
+                return moshi.adapter(Metadata::class.java)
+            }
+
     }
 }

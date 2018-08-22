@@ -1,15 +1,16 @@
 package amal.global.amal
 
 import android.content.Context
-import android.graphics.Bitmap
-import android.graphics.BitmapFactory
 import android.graphics.drawable.Drawable
-import android.os.storage.StorageManager
 import com.google.firebase.storage.FirebaseStorage
 import com.google.firebase.storage.StorageReference
+import com.squareup.moshi.Json
+import com.squareup.moshi.JsonAdapter
+import com.squareup.moshi.JsonClass
+import com.squareup.moshi.Moshi
+import com.squareup.moshi.kotlin.reflect.KotlinJsonAdapterFactory
 import java.io.File
 import java.util.*
-import kotlin.collections.HashMap
 
 interface Image {
     fun load(context: Context) : GlideRequest<Drawable>
@@ -23,11 +24,11 @@ data class LocalImage internal constructor(
 ) : Image {
     companion object {
         fun convenience(filePath: String, settingsPath: String) : LocalImage {
-            var metadata: Metadata? = null
-            try {
-                metadata = Metadata.fromJSON(File(settingsPath).readText())
+            val metadata = try {
+                Metadata.jsonAdapter.fromJson(File(settingsPath).readText())
             } catch (e: Exception) {
-
+                e.printStackTrace()
+                null
             }
 
             return LocalImage(filePath, settingsPath, metadata ?: Metadata())
@@ -35,7 +36,7 @@ data class LocalImage internal constructor(
     }
 
     fun saveMetaData() {
-        val json = metadata.toJSON()
+        val json = Metadata.jsonAdapter.toJson(metadata)
         File(settingsPath).writeText(json)
     }
 
@@ -44,21 +45,26 @@ data class LocalImage internal constructor(
     }
 
     val date: Date
-        get() = metadata.date ?: Date(File(filePath).lastModified())
+        get() = metadata.dateValue ?: Date(File(filePath).lastModified())
 
     override fun load(context: Context): GlideRequest<Drawable> {
         return GlideApp.with(context).load(file)
     }
 }
 
-data class RemoteImage(val remoteStorageLocation: String, override var metadata: Metadata) : Image {
+@JsonClass(generateAdapter = true)
+data class RemoteImage(
+        @Json(name = "imageRef") val remoteStorageLocation: String,
+        @Json(name = "settings") override var metadata: Metadata
+) : Image {
     companion object {
-        fun fromJSON(map: HashMap<String, Any>): RemoteImage? {
-            val remoteStorageLocation = map["imageRef"] as? String ?: return null
-            val metadataObj = map["settings"] as? HashMap<String, Any> ?: hashMapOf<String, Any>()
-            val metadata = Metadata.fromJSON(metadataObj)
-            return RemoteImage(remoteStorageLocation, metadata ?: Metadata())
-        }
+        val jsonAdapter: JsonAdapter<RemoteImage>
+            get() {
+                val moshi = Moshi.Builder()
+                        .add(KotlinJsonAdapterFactory())
+                        .build()
+                return moshi.adapter(RemoteImage::class.java)
+            }
     }
 
     val firebaseReference: StorageReference

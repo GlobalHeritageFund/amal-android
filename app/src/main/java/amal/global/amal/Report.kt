@@ -2,16 +2,23 @@ package amal.global.amal
 
 import android.net.Uri
 import com.google.firebase.storage.FirebaseStorage
+import com.squareup.moshi.Json
+import com.squareup.moshi.JsonAdapter
+import com.squareup.moshi.JsonClass
+import com.squareup.moshi.Moshi
+import com.squareup.moshi.kotlin.reflect.KotlinJsonAdapterFactory
 import java.util.*
 import kotlin.collections.HashMap
 
+@JsonClass(generateAdapter = true)
 data class Report internal constructor(
         val firebaseID: String,
         val images: List<RemoteImage>,
-        val deviceToken: String,
-        val creationDate: Date,
+        @Json(name="authorDeviceToken") val deviceToken: String,
+        val creationDate: Double,
         val title: String,
-        val assessorEmail: String?
+        val assessorEmail: String?,
+        var uploadComplete: Boolean
 ) {
 
     val webURL: Uri
@@ -40,21 +47,17 @@ data class Report internal constructor(
         })
     }
 
-    companion object {
-        fun fromJSON(id: String, map: HashMap<String, Any>): Report? {
-            val uploadComplete = (map["uploadComplete"] as? Boolean) ?: false
-            if (!uploadComplete) { return null }
-            val deviceToken = map["authorDeviceToken"] as? String ?: return null
-            val creationDate = map["creationDate"] as? Double ?: return null
-            val title = map["title"] as? String ?: return null
-            val assessorEmail = map["assessorEmail"] as? String
+    val creationDateValue: Date
+        get() = Date((creationDate * 1000).toLong())
 
-            val imagesMaps = map["images"] as? HashMap<*, *> ?: hashMapOf<String, Any>()
-            val images = imagesMaps
-                    .values
-                    .filterIsInstance<HashMap<String, Any>>()
-                    .mapNotNull { RemoteImage.fromJSON(it) }
-            return Report(id, images, deviceToken, Date((creationDate*1000).toLong()), title, assessorEmail)
-        }
+    companion object {
+        val jsonAdapter: JsonAdapter<Report>
+            get() {
+                val moshi = Moshi.Builder()
+                        .add(KotlinJsonAdapterFactory())
+                        .build()
+                return moshi.adapter(Report::class.java)
+            }
+
     }
 }

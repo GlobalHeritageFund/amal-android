@@ -1,8 +1,6 @@
 package amal.global.amal
 
 import amal.global.amal.onboarding.OnboardingActivity
-import android.app.Dialog
-import android.content.DialogInterface
 import android.os.Bundle
 import android.support.design.widget.BottomNavigationView
 import android.support.v4.app.Fragment
@@ -13,6 +11,7 @@ import android.support.design.widget.BottomSheetDialog
 import android.support.v7.app.AlertDialog
 import android.view.View
 import com.google.firebase.auth.FirebaseAuth
+import java.util.*
 
 interface IntentRequest {
     val requestCode: Int
@@ -138,9 +137,9 @@ class TabActivity : AppCompatActivity(),
     }
 
     override fun signInTapped(fragment: SettingsFragment) {
-    val authenticator = FirebaseAuthenticator(this, { fragment.configureView() })
-    registerAndStartIntentRequest(authenticator)
-}
+        val authenticator = FirebaseAuthenticator(this, { fragment.configureView() })
+        registerAndStartIntentRequest(authenticator)
+    }
 
     override fun signOutTapped(fragment: SettingsFragment) {
         CurrentUser(this).signOut()
@@ -209,7 +208,10 @@ class TabActivity : AppCompatActivity(),
     }
 
     fun upload(report: ReportDraft): Promise<Report> {
-        val uploader = ReportUploader(report)
+//        val uploader = FirebaseReportUploader(report)
+
+        var uploader = RestReportUploader(report)
+
 
         uploader.upload()
         

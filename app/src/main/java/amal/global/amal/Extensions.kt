@@ -3,6 +3,8 @@ package amal.global.amal
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.net.Uri
+import android.os.Parcel
+import android.os.Parcelable
 import android.support.annotation.IdRes
 import android.support.annotation.LayoutRes
 import android.support.media.ExifInterface
@@ -17,10 +19,14 @@ import android.widget.EditText
 import com.google.firebase.database.DatabaseReference
 import com.google.firebase.storage.StorageMetadata
 import com.google.firebase.storage.StorageReference
+import okhttp3.Call
+import okhttp3.Callback
+import okhttp3.Response
 import org.json.JSONArray
 import org.json.JSONException
 import org.json.JSONObject
 import java.io.File
+import java.io.IOException
 import java.text.ParsePosition
 import java.text.SimpleDateFormat
 import java.util.*
@@ -52,24 +58,6 @@ fun EditText.afterTextChanged(afterTextChanged: (Editable?) -> Unit) {
         override fun afterTextChanged(editable: Editable?) {
             afterTextChanged.invoke(editable)
         }
-    })
-}
-
-fun File.decodeBitmap(): Promise<Bitmap> {
-    return Promise<Bitmap>({ fulfill, reject ->
-        fulfill(BitmapFactory.decodeFile(this.path))
-    })
-}
-
-fun ByteArray.decodeBitmap(offset: Int = 0): Promise<Bitmap> {
-    return Promise({ fulfill, reject ->
-        fulfill(BitmapFactory.decodeByteArray(this, offset, this.count()))
-    })
-}
-
-fun Bitmap.scale(dstWidth: Int, dstHeight: Int, filter: Boolean): Promise<Bitmap> {
-    return Promise<Bitmap>({ fulfill, reject ->
-        fulfill(Bitmap.createScaledBitmap(this, dstWidth, dstHeight, filter))
     })
 }
 
@@ -136,44 +124,6 @@ fun RecyclerView.addOnItemClickListener(onClickListener: OnItemClickListener) {
     })
 }
 
-
-@Throws(JSONException::class)
-fun fixJSON(json: Any?): Any? {
-    return if (json === JSONObject.NULL) {
-        null
-    } else if (json is JSONObject) {
-        toMap(json)
-    } else if (json is JSONArray) {
-        toList(json)
-    } else {
-        json
-    }
-}
-
-@Throws(JSONException::class)
-fun toList(array: JSONArray): List<*> {
-    val list = ArrayList<Any>()
-    for (i in 0 until array.length()) {
-        fixJSON(array.get(i))?.let {
-            list.add(it)
-        }
-    }
-    return list
-}
-
-@Throws(JSONException::class)
-fun toMap(value: JSONObject): HashMap<String, Any> {
-    val map = HashMap<String, Any>()
-    val keys = value.keys()
-    while (keys.hasNext()) {
-        val key = keys.next() as String
-        fixJSON(value.get(key))?.let {
-            map.put(key, it)
-        }
-    }
-    return map
-}
-
 fun ExifInterface.getTimeStamp(): Date? {
     val formatter = SimpleDateFormat("yyyy:MM:dd HH:mm:ss")
     formatter.setTimeZone(TimeZone.getTimeZone("UTC"))
@@ -193,4 +143,35 @@ fun ExifInterface.getTimeStamp(): Date? {
     } catch (e: IllegalArgumentException) {
         return null
     }
+}
+
+fun Call.enqueue(): Promise<Response> {
+    val promise = Promise<Response>()
+
+    this.enqueue(object: Callback {
+        override fun onFailure(call: Call?, e: IOException?) {
+            promise.reject(Error(e?.message ?: "The request unexpectedly failed."))
+        }
+
+        override fun onResponse(call: Call?, response: Response?) {
+            try {
+                if (response == null) {
+                    promise.reject(Error("The response was null."))
+                    return
+                }
+
+                if (!response.isSuccessful) {
+                    promise.reject(Error((response.body()?.string() ?: "") + "Unexpected error code :" + response))
+                    return
+                }
+
+                promise.fulfill(response)
+            } catch (e: Exception) {
+                promise.reject(Error(e.message))
+            }
+        }
+    })
+
+    return promise
+
 }

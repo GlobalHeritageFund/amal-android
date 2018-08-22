@@ -39,6 +39,8 @@ class Promise<T> private constructor(state: State<T>) {
         }
     }
 
+    constructor() : this(State.Pending(mutableSetOf()))
+
     constructor(error: kotlin.Error) : this(State.Rejected(error))
 
     constructor(value: T) : this(State.Fulfilled(value))

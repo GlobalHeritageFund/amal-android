@@ -8,7 +8,7 @@ import com.google.firebase.storage.StorageMetadata
 import com.google.firebase.storage.StorageReference
 import java.io.File
 
-class ReportUploader (val reportDraft: ReportDraft) {
+class FirebaseReportUploader (val reportDraft: ReportDraft) {
 
     val promise = Promise<Report>()
 
@@ -16,13 +16,11 @@ class ReportUploader (val reportDraft: ReportDraft) {
 
     val storage = FirebaseStorage.getInstance()
 
-    val reportsDirectory: DatabaseReference by lazy {
-        database.reference.child("reports")
-    }
+    private val reportsDirectory: DatabaseReference
+        get() = database.reference.child("reports")
 
-    val imagesDirectory: StorageReference by lazy {
-        storage.reference.child("images")
-    }
+    private val imagesDirectory: StorageReference
+        get() = storage.reference.child("images")
 
     fun upload() {
         val reportReference = reportsDirectory.push()
@@ -43,9 +41,10 @@ class ReportUploader (val reportDraft: ReportDraft) {
                             reportReference.key!!,
                             listOf(),
                             reportDraft.deviceToken,
-                            reportDraft.creationDate,
+                            reportDraft.creationDate.time.toDouble(),
                             reportDraft.title,
-                            reportDraft.assessorEmail
+                            reportDraft.assessorEmail,
+                            true
                     )
                 }
                 .then { report ->
@@ -64,10 +63,12 @@ class ReportUploader (val reportDraft: ReportDraft) {
                 .setContentType("image/jpeg")
                 .build()
 
+        val metadataObject = Metadata.jsonAdapter.toJsonValue(image.metadata)
+
         return Promise.all<Unit>(sequenceOf<Promise<Unit>>(
                 imageReference.putFilePromise(Uri.fromFile(File(image.filePath)), metadata),
                 reference.child("imageRef").setValuePromise(imageReference.path),
-                reference.child("settings").setValuePromise(image.metadata.toMap())
+                reference.child("settings").setValuePromise(metadataObject!!)
         )).map { Unit }
     }
 }

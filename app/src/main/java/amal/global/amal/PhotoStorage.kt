@@ -1,7 +1,6 @@
 package amal.global.amal
 
 import android.content.Context
-
 import java.io.File
 import java.io.FileNotFoundException
 import java.io.FileOutputStream
@@ -30,7 +29,7 @@ class PhotoStorage internal constructor(internal var context: Context) {
             e.printStackTrace()
         }
 
-        settingsFile.writeText(metadata.toJSON())
+        settingsFile.writeText(Metadata.jsonAdapter.toJson(metadata))
     }
 
     @Throws(IOException::class)
