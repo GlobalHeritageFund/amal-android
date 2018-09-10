@@ -53,6 +53,7 @@ class NewReportFragment: Fragment() {
         report.assessorEmail = emailField.text.toString()
         report.creationDate = Date()
         report.title = titleField.text.toString()
+        report.uploadToEAMENA = eamenaSwitch.isChecked
         when (item!!.itemId) {
             R.id.uploadReport -> {
                 delegate?.uploadReport(this, report)

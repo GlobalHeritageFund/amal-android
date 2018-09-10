@@ -7,5 +7,6 @@ data class ReportDraft internal constructor(
         var deviceToken: String = "",
         var creationDate: Date = Date(),
         var title: String = "",
-        var assessorEmail: String = ""
+        var assessorEmail: String = "",
+        var uploadToEAMENA: Boolean = false
 )
