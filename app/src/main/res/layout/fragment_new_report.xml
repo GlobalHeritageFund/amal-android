@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <ScrollView
     xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/scroll_view"
+    android:id="@+id/scrollView"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:scrollbars="vertical">
@@ -13,7 +13,9 @@
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="@string/title" />
+            android:text="@string/title"
+            android:labelFor="@id/titleField"
+            />
 
         <EditText
             android:id="@+id/titleField"
@@ -24,16 +26,22 @@
         </EditText>
 
         <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Publish Date"
+            android:labelFor="@id/dateLabel"
+            />
+        <TextView
             android:id="@+id/dateLabel"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Sept 20, 2017, 9:59 AM"
             />
 
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="@string/assessor_email"
+            android:labelFor="@id/emailField"
             />
         <EditText
             android:id="@+id/emailField"
