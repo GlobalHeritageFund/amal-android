@@ -10,7 +10,7 @@ import java.io.File
 
 class FirebaseReportUploader (val reportDraft: ReportDraft) {
 
-    val promise = Promise<Report>()
+    val promise = Promise<ReportInterface>()
 
     val database = FirebaseDatabase.getInstance()
 

@@ -17,7 +17,7 @@ class RestReportUploader(val reportDraft: ReportDraft) {
 
     private val client = OkHttpClient()
 
-    val promise = Promise<Report>()
+    val promise = Promise<ReportInterface>()
 
     private val jpegContentType = MediaType.parse("image/jpeg")
 
@@ -38,7 +38,7 @@ class RestReportUploader(val reportDraft: ReportDraft) {
                 }
     }
 
-    private fun postReport(images: List<HerBridgeImage>): Promise<Report> {
+    private fun postReport(images: List<HerBridgeImage>): Promise<ReportInterface> {
 
         val assessorJSON = JSONObject()
         assessorJSON.put("email", reportDraft.assessorEmail)
@@ -70,13 +70,13 @@ class RestReportUploader(val reportDraft: ReportDraft) {
         json.put("type", "field_report")
 
         val request = Request.Builder()
-                .url("${baseURL}/api/reports/")
+                .url("${baseURL}api/reports/")
                 .post(RequestBody.create(jsonContentType, json.toString()))
                 .build()
 
         return client.newCall(request).enqueue()
                 .map {
-                    Report.jsonAdapter.fromJson(it.body()?.string() ?: "")!!
+                    HerBridgeReport.jsonAdapter.fromJson(it.body()?.string() ?: "")!!
                 }
     }
 
@@ -106,6 +106,20 @@ class RestReportUploader(val reportDraft: ReportDraft) {
     }
 
 }
+
+@JsonClass(generateAdapter = true)
+data class HerBridgeReport(val title: String) : ReportInterface {
+    companion object {
+        val jsonAdapter: JsonAdapter<HerBridgeReport>
+            get() {
+                val moshi = Moshi.Builder()
+                        .add(KotlinJsonAdapterFactory())
+                        .build()
+                return moshi.adapter(HerBridgeReport::class.java)
+            }
+    }
+}
+
 
 @JsonClass(generateAdapter = true)
 data class HerBridgeImage(

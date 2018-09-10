@@ -207,9 +207,9 @@ class TabActivity : AppCompatActivity(),
         dialog.show()
     }
 
-    fun upload(report: ReportDraft): Promise<Report> {
+    fun upload(report: ReportDraft): Promise<ReportInterface> {
 
-        val promise: Promise<Report>
+        val promise: Promise<ReportInterface>
         if (report.uploadToEAMENA) {
             var uploader = RestReportUploader(report)
             uploader.upload()
