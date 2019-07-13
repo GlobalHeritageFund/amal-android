@@ -10,6 +10,10 @@ import com.squareup.moshi.kotlin.reflect.KotlinJsonAdapterFactory
 import java.util.*
 import kotlin.collections.HashMap
 
+interface ReportInterface {
+
+}
+
 @JsonClass(generateAdapter = true)
 data class Report internal constructor(
         val firebaseID: String,
@@ -19,7 +23,7 @@ data class Report internal constructor(
         val title: String,
         val assessorEmail: String?,
         var uploadComplete: Boolean
-) {
+) : ReportInterface {
 
     val webURL: Uri
         get() = Uri.parse("https://app.amal.global/reports/" + this.firebaseID)

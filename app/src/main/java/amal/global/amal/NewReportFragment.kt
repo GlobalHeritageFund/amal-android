@@ -3,9 +3,8 @@ package amal.global.amal
 import android.os.Bundle
 import android.support.v4.app.Fragment
 import android.view.*
-import android.widget.EditText
-import android.widget.TextView
 import kotlinx.android.synthetic.main.fragment_new_report.*
+import java.text.DateFormat
 import java.util.*
 
 interface NewReportFragmentDelegate {
@@ -43,12 +42,18 @@ class NewReportFragment: Fragment() {
         super.onViewCreated(view, savedInstanceState)
         
         emailField.setText(currentUser.email ?: "")
+
+        val date = Date()
+        val dateFormat = DateFormat.getDateTimeInstance(DateFormat.LONG, DateFormat.SHORT)
+        dateLabel.text = dateFormat.format(date)
+
     }
 
     override fun onOptionsItemSelected(item: MenuItem?): Boolean {
         report.assessorEmail = emailField.text.toString()
         report.creationDate = Date()
         report.title = titleField.text.toString()
+        report.uploadToEAMENA = eamenaSwitch.isChecked
         when (item!!.itemId) {
             R.id.uploadReport -> {
                 delegate?.uploadReport(this, report)

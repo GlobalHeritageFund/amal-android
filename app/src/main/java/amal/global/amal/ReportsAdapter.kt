@@ -32,8 +32,8 @@ class ReportsAdapter(var context: Context, var reports: List<Report> = listOf())
                             value["images"] = images
                             value
                         }
+                        .filter { (it["uploadComplete"] as? Boolean) ?: false }
                         .mapNotNull { Report.jsonAdapter.fromJsonValue(it) }
-                        .filter { it.uploadComplete }
                         .sortedByDescending { it.creationDateValue }
                 notifyDataSetChanged()
             }

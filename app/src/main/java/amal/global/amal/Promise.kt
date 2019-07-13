@@ -94,7 +94,11 @@ class Promise<T> private constructor(state: State<T>) {
     public fun then(onSuccess: (T) -> Unit): Promise<T> {
         this.addCallback(
                 { value ->
-                    onSuccess(value)
+                    try {
+                        onSuccess(value)
+                    } catch(e: Exception) {
+
+                    }
                 },
                 { error ->
 
@@ -119,7 +123,11 @@ class Promise<T> private constructor(state: State<T>) {
         return Promise<V>({ fulfill, reject ->
             this.addCallback(
                     { value ->
-                        fulfill(map(value))
+                        try {
+                            fulfill(map(value))
+                        } catch(e: Exception) {
+                            reject(Error(e.message))
+                        }
                     },
                     { error ->
                         reject(error)
@@ -132,9 +140,13 @@ class Promise<T> private constructor(state: State<T>) {
         return Promise<V>({ fulfill, reject ->
             this.addCallback(
                     { value ->
-                        flatMap(value)
-                                .then { value -> fulfill(value) }
-                                .catch { error -> reject(error) }
+                        try {
+                            flatMap(value)
+                                    .then { value -> fulfill(value) }
+                                    .catch { error -> reject(error) }
+                        } catch(e: Exception){
+                            reject(Error(e.message))
+                        }
                     },
                     { error ->
                         reject(error)

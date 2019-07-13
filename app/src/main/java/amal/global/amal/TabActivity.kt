@@ -207,15 +207,20 @@ class TabActivity : AppCompatActivity(),
         dialog.show()
     }
 
-    fun upload(report: ReportDraft): Promise<Report> {
-//        val uploader = FirebaseReportUploader(report)
+    fun upload(report: ReportDraft): Promise<ReportInterface> {
 
-        var uploader = RestReportUploader(report)
+        val promise: Promise<ReportInterface>
+        if (report.uploadToEAMENA) {
+            var uploader = RestReportUploader(report)
+            uploader.upload()
+            promise = uploader.promise
+        } else {
+            var uploader = FirebaseReportUploader(report)
+            uploader.upload()
+            promise = uploader.promise
+        }
 
-
-        uploader.upload()
-        
-        return uploader.promise.then {
+        return promise.then {
             supportFragmentManager
                     .beginTransaction()
                     .replace(R.id.content, ReportsFragment().also { it.delegate = this })
