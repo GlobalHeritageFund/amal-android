@@ -3,6 +3,7 @@ package amal.global.amal
 import com.google.android.gms.maps.model.LatLng
 import com.squareup.moshi.JsonAdapter
 import java.util.*
+import com.squareup.moshi.Json
 import com.squareup.moshi.JsonClass
 import com.squareup.moshi.Moshi
 import com.squareup.moshi.kotlin.reflect.KotlinJsonAdapterFactory
@@ -17,8 +18,8 @@ data class Metadata internal constructor(
         public var safetyHazards: Boolean = false,
         public var interventionRequired: Boolean = false,
         public var notes: String = "",
-        public var latitude: Double = 0.0,
-        public var longitude: Double = 0.0,
+        @Json(name="lat") public var latitude: Double = 0.0,
+        @Json(name="lon") public var longitude: Double = 0.0,
         public var date: Long? = null,
         public var localIdentifier: String = ""
 ) {
