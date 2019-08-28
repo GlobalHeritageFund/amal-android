@@ -13,7 +13,7 @@ import java.util.*
 
 class RestReportUploader(val reportDraft: ReportDraft) {
 
-    private val baseURL = "http://herbridge.legiongis.com/"
+    private val baseURL = "https://herbridge.legiongis.com/"
 
     private val client = OkHttpClient()
 
