@@ -87,7 +87,7 @@ class RestReportUploader(val reportDraft: ReportDraft) {
                 .addFormDataPart("latitude", image.metadata.latitude.toString())
                 .addFormDataPart("longitude", image.metadata.longitude.toString())
                 .addFormDataPart("caption", image.metadata.name)
-                .addFormDataPart("captureDate", image.metadata.date?.toString() ?: "0")
+                .addFormDataPart("captureDate", ((image.date?.time ?: 0)/1000).toString())
                 .addFormDataPart("image", "image_1.jpg", RequestBody.create(jpegContentType, image.file))
                 .build()
 
