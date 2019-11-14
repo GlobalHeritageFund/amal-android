@@ -194,7 +194,9 @@ class TabActivity : AppCompatActivity(),
                     fragment.uploadItem?.isEnabled = false
                     upload(report)
                             .catch {
-                                fragment.uploadItem?.isEnabled = true
+                                this.runOnUiThread {
+                                    fragment.uploadItem?.isEnabled = true
+                                }
                             }
                     dialog.dismiss()
                 })
