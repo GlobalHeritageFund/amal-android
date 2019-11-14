@@ -57,7 +57,7 @@ class ReportsAdapter(var context: Context, var reports: List<Report> = listOf())
         val count = report.images.count()
         holder.subtitle.text = if (count == 1) "1 item" else count.toString() + " items"
 
-        report.images.firstOrNull()?.let { it.load(context)?.centerCrop().into(holder.imageView) }
+        report.images.firstOrNull()?.let { it.load(context).centerCrop().into(holder.imageView) }
     }
 
     override fun getItemCount(): Int {

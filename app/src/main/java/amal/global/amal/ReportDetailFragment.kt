@@ -23,7 +23,7 @@ class ReportDetailFragment : Fragment() {
                               savedInstanceState: Bundle?): View? {
         adapter = ReportDetailAdapter(context!!, report)
         setHasOptionsMenu(true)
-        return inflater?.inflate(R.layout.fragment_report_detail, container, false)
+        return inflater.inflate(R.layout.fragment_report_detail, container, false)
     }
 
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
