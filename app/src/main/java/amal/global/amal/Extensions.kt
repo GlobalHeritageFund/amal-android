@@ -148,20 +148,15 @@ fun ExifInterface.getTimeStamp(): Date? {
 fun Call.enqueue(): Promise<Response> {
     val promise = Promise<Response>()
 
-    this.enqueue(object: Callback {
-        override fun onFailure(call: Call?, e: IOException?) {
-            promise.reject(Error(e?.message ?: "The request unexpectedly failed."))
+    this.enqueue(responseCallback = object: Callback {
+        override fun onFailure(call: Call, e: IOException) {
+            promise.reject(Error(e.message ?: "The request unexpectedly failed."))
         }
 
-        override fun onResponse(call: Call?, response: Response?) {
+        override fun onResponse(call: Call, response: Response) {
             try {
-                if (response == null) {
-                    promise.reject(Error("The response was null."))
-                    return
-                }
-
                 if (!response.isSuccessful) {
-                    promise.reject(Error((response.body()?.string() ?: "") + "Unexpected error code :" + response))
+                    promise.reject(Error((response.body?.string() ?: "") + "Unexpected error code :" + response))
                     return
                 }
 

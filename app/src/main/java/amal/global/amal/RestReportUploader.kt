@@ -5,6 +5,7 @@ import com.squareup.moshi.JsonClass
 import com.squareup.moshi.Moshi
 import com.squareup.moshi.kotlin.reflect.KotlinJsonAdapterFactory
 import okhttp3.*
+import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.RequestBody
 import okhttp3.MultipartBody
 import org.json.JSONArray
@@ -19,9 +20,9 @@ class RestReportUploader(val reportDraft: ReportDraft) {
 
     val promise = Promise<ReportInterface>()
 
-    private val jpegContentType = MediaType.parse("image/jpeg")
+    private val jpegContentType = "image/jpeg".toMediaTypeOrNull()
 
-    private val jsonContentType = MediaType.parse("application/json; charset=utf-8")
+    private val jsonContentType = "application/json; charset=utf-8".toMediaTypeOrNull()
 
     fun upload() {
         val imageUploads = reportDraft.images.map { uploadImage(it) }.asSequence()
@@ -76,7 +77,7 @@ class RestReportUploader(val reportDraft: ReportDraft) {
 
         return client.newCall(request).enqueue()
                 .map {
-                    HerBridgeReport.jsonAdapter.fromJson(it.body()?.string() ?: "")!!
+                    HerBridgeReport.jsonAdapter.fromJson(it.body?.string() ?: "")!!
                 }
     }
 
@@ -100,7 +101,7 @@ class RestReportUploader(val reportDraft: ReportDraft) {
                 .newCall(request)
                 .enqueue()
                 .map {
-                    val responseString = it.body()?.string() ?: ""
+                    val responseString = it.body?.string() ?: ""
                     HerBridgeImage.jsonAdapter.fromJson(responseString)!!
                 }
     }

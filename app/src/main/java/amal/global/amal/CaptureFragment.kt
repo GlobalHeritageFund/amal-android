@@ -13,8 +13,6 @@ import android.view.*
 import com.wonderkiln.camerakit.*
 import kotlinx.android.synthetic.main.fragment_capture.*
 import android.animation.ObjectAnimator
-import kotlinx.coroutines.experimental.launch
-
 
 interface CaptureDelegate {
     fun settingsButtonTapped(fragment: CaptureFragment)
@@ -122,9 +120,10 @@ class CaptureFragment : Fragment() {
             metadata.latitude = lastLocation?.latitude ?: 0.0
             metadata.longitude = lastLocation?.longitude ?: 0.0
 
-            launch {
+
+//            launch {
                 PhotoStorage(activity!!.applicationContext).savePhotoLocally(image.jpeg, metadata)
-            }
+//            }
         }
 
         override fun onVideo(video: CameraKitVideo) { }
