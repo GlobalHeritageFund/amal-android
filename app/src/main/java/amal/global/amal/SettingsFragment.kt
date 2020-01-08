@@ -1,9 +1,9 @@
 package amal.global.amal
 
 import android.os.Bundle
-import android.support.v7.preference.PreferenceFragmentCompat
+import androidx.preference.PreferenceFragmentCompat
 import android.content.pm.PackageManager
-import android.support.v7.preference.Preference
+import androidx.preference.Preference
 
 interface SettingsFragmentDelegate {
     fun signOutTapped(fragment: SettingsFragment)

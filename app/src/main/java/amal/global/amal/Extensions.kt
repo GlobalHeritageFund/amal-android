@@ -5,11 +5,11 @@ import android.graphics.BitmapFactory
 import android.net.Uri
 import android.os.Parcel
 import android.os.Parcelable
-import android.support.annotation.IdRes
-import android.support.annotation.LayoutRes
-import android.support.media.ExifInterface
-import android.support.v4.app.Fragment
-import android.support.v7.widget.RecyclerView
+import androidx.annotation.IdRes
+import androidx.annotation.LayoutRes
+import androidx.exifinterface.media.ExifInterface
+import androidx.fragment.app.Fragment
+import androidx.recyclerview.widget.RecyclerView
 import android.text.Editable
 import android.text.TextWatcher
 import android.view.LayoutInflater

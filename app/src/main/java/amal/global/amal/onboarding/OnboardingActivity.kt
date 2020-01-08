@@ -3,13 +3,13 @@ package amal.global.amal.onboarding
 import amal.global.amal.CurrentUser
 import amal.global.amal.R
 import amal.global.amal.TabActivity
-import android.support.v7.app.AppCompatActivity
+import androidx.appcompat.app.AppCompatActivity
 import android.content.Intent
 import android.os.Bundle
-import android.support.v4.app.Fragment
+import androidx.fragment.app.Fragment
 import kotlinx.android.synthetic.main.activity_onboarding.*
-import android.support.v4.app.FragmentStatePagerAdapter
-import android.support.v4.view.ViewPager
+import androidx.fragment.app.FragmentStatePagerAdapter
+import androidx.viewpager.widget.ViewPager
 import android.view.View
 
 class OnboardingActivity : AppCompatActivity() {

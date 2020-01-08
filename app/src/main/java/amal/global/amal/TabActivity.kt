@@ -2,13 +2,13 @@ package amal.global.amal
 
 import amal.global.amal.onboarding.OnboardingActivity
 import android.os.Bundle
-import android.support.design.widget.BottomNavigationView
-import android.support.v4.app.Fragment
-import android.support.v7.app.AppCompatActivity
+import com.google.android.material.bottomnavigation.BottomNavigationView
+import androidx.fragment.app.Fragment
+import androidx.appcompat.app.AppCompatActivity
 import android.util.Log
 import android.content.Intent
-import android.support.design.widget.BottomSheetDialog
-import android.support.v7.app.AlertDialog
+import com.google.android.material.bottomsheet.BottomSheetDialog
+import androidx.appcompat.app.AlertDialog
 import android.view.View
 import com.google.firebase.auth.FirebaseAuth
 import java.util.*

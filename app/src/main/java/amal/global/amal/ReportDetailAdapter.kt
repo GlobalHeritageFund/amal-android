@@ -1,7 +1,7 @@
 package amal.global.amal
 
 import android.content.Context
-import android.support.v7.widget.RecyclerView
+import androidx.recyclerview.widget.RecyclerView
 import android.view.ViewGroup
 
 class ReportDetailAdapter(val context: Context, var report: Report) : RecyclerView.Adapter<SubtitleViewHolder>() {

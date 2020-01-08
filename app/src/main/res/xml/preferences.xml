@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.v7.preference.PreferenceScreen
+<androidx.preference.PreferenceScreen
     xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <android.support.v7.preference.PreferenceCategory
+    <androidx.preference.PreferenceCategory
         android:title="About">
 
         <Preference
@@ -16,17 +16,17 @@
             android:selectable="false"
             android:title="Version" >
         </Preference>
-    </android.support.v7.preference.PreferenceCategory>
+    </androidx.preference.PreferenceCategory>
 
-    <android.support.v7.preference.PreferenceCategory
+    <androidx.preference.PreferenceCategory
         android:title="Account">
         <Preference
             android:key="auth"
             android:title="Log In">
         </Preference>
-    </android.support.v7.preference.PreferenceCategory>
+    </androidx.preference.PreferenceCategory>
 
-    <android.support.v7.preference.PreferenceCategory
+    <androidx.preference.PreferenceCategory
         android:title="Visit">
 
         <Preference
@@ -57,9 +57,9 @@
                 android:data="http://amal.global/guide/" />
         </Preference>
 
-    </android.support.v7.preference.PreferenceCategory>
+    </androidx.preference.PreferenceCategory>
 
-    <android.support.v7.preference.PreferenceCategory
+    <androidx.preference.PreferenceCategory
         android:title="Other">
 
         <Preference
@@ -68,7 +68,7 @@
             android:summary="Enter a passphrase to unlock other database targets.">
         </Preference>
 
-    </android.support.v7.preference.PreferenceCategory>
+    </androidx.preference.PreferenceCategory>
 
 
-</android.support.v7.preference.PreferenceScreen>
+</androidx.preference.PreferenceScreen>

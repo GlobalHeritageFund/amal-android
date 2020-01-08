@@ -7,8 +7,8 @@ import android.location.Location
 import android.location.LocationListener
 import android.location.LocationManager
 import android.os.Bundle
-import android.support.v4.app.ActivityCompat
-import android.support.v4.app.Fragment
+import androidx.core.app.ActivityCompat
+import androidx.fragment.app.Fragment
 import android.view.*
 import com.wonderkiln.camerakit.*
 import kotlinx.android.synthetic.main.fragment_capture.*
