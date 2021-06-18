@@ -27,13 +27,15 @@ class ImageImporter(val activity: Activity, val onComplete: () -> Unit): IntentR
         fun buildMetadata(): Metadata {
             val metadata = Metadata()
             val inputStream = activity.contentResolver.openInputStream(imageUri)
-            val exifInterface = ExifInterface(inputStream)
-            val doubleArray = exifInterface.latLong ?: doubleArrayOf()
-            if (doubleArray.count() == 2) {
-                metadata.latitude = doubleArray[0]
-                metadata.longitude = doubleArray[1]
+            if (inputStream != null) {
+                val exifInterface = ExifInterface(inputStream)
+                val doubleArray = exifInterface.latLong ?: doubleArrayOf()
+                if (doubleArray.count() == 2) {
+                    metadata.latitude = doubleArray[0]
+                    metadata.longitude = doubleArray[1]
+                }
+                metadata.date = exifInterface.getTimeStamp()?.time
             }
-            metadata.date = exifInterface.getTimeStamp()?.time
             return metadata
         }
 

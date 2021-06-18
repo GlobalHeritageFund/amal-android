@@ -32,7 +32,7 @@ class CurrentUser(var context: Context) {
                 result = UUID.randomUUID().toString()
                 this.token = result
             }
-            return result
+            return result ?: ""
         }
         set(value) {
             val editor = preferences.edit()
@@ -56,7 +56,7 @@ class CurrentUser(var context: Context) {
 
     var databaseTargets: List<String>
         get() {
-            return preferences.getString(databaseTargetsKey, "").split(",")
+            return (preferences.getString(databaseTargetsKey, "") ?: "").split(",")
         }
         set(value) {
             val editor = preferences.edit()
