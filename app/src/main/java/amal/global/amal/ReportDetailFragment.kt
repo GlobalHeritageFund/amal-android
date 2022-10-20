@@ -48,7 +48,7 @@ class ReportDetailFragment : Fragment() {
         })
     }
 
-    override fun onOptionsItemSelected(item: MenuItem?): Boolean {
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when (item!!.getItemId()) {
             R.id.menu_item_pdf_report -> {
                 delegate?.pdfReportTapped(this)

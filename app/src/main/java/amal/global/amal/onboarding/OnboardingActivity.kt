@@ -15,13 +15,16 @@ import android.view.View
 class OnboardingActivity : AppCompatActivity() {
 
     var adapter: FragmentStatePagerAdapter = object : FragmentStatePagerAdapter(supportFragmentManager) {
-        override fun getItem(position: Int): Fragment? {
+        //breaking change: changed below return from Fragment? to Fragment in order to get build to work, also changed else t
+        // from null to OnboardingPage1() to avoid null problem - this is just to get project to build
+        //TODO this is not a long term solution and should be fixed appropriately - see suggestions when change back to Fragment?
+        override fun getItem(position: Int): Fragment {
             return when (position) {
                 0 -> OnboardingPage1()
                 1 -> OnboardingPage2()
                 2 -> OnboardingPage3()
                 3 -> OnboardingPage4()
-                else -> null
+                else -> OnboardingPage1()
             }
         }
 

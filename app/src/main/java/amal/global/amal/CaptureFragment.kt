@@ -11,8 +11,10 @@ import androidx.core.app.ActivityCompat
 import androidx.fragment.app.Fragment
 import android.view.*
 import com.wonderkiln.camerakit.*
-import kotlinx.android.synthetic.main.fragment_capture.*
+//import kotlinx.android.synthetic.main.fragment_capture.*
 import android.animation.ObjectAnimator
+import android.annotation.SuppressLint
+import kotlinx.android.synthetic.main.fragment_capture.*
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 
@@ -43,9 +45,10 @@ class CaptureFragment : Fragment() {
         inflater.inflate(R.menu.menu_capture, menu)
     }
 
+    @Deprecated("Deprecated in Java")
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
-        activity!!.setTitle(R.string.title_capture)
+        requireActivity().setTitle(R.string.title_capture)
     }
 
     override fun onResume() {
@@ -60,7 +63,8 @@ class CaptureFragment : Fragment() {
         super.onPause()
     }
 
-    override fun onOptionsItemSelected(item: MenuItem?): Boolean {
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when (item!!.getItemId()) {
             R.id.menu_item_settings -> {
                 delegate?.settingsButtonTapped(this)
@@ -73,14 +77,15 @@ class CaptureFragment : Fragment() {
 
     private fun requestLocationPermission() {
         val permission = Manifest.permission.ACCESS_FINE_LOCATION
-        val permissionStatus = ActivityCompat.checkSelfPermission(activity!!, permission)
+        val permissionStatus = ActivityCompat.checkSelfPermission(requireActivity(), permission)
         if (permissionStatus != PackageManager.PERMISSION_GRANTED) {
-            ActivityCompat.requestPermissions(activity!!, arrayOf(permission), 200)
+            ActivityCompat.requestPermissions(requireActivity(), arrayOf(permission), 200)
         }
     }
 
+    @SuppressLint("MissingPermission")
     private fun beginListeningForLocation() {
-        val locationManager = context!!.getSystemService(Context.LOCATION_SERVICE) as LocationManager
+        val locationManager = requireContext().getSystemService(Context.LOCATION_SERVICE) as LocationManager
 
         val locationListener = object : LocationListener {
             override fun onLocationChanged(location: Location) {
@@ -94,7 +99,7 @@ class CaptureFragment : Fragment() {
             override fun onProviderDisabled(provider: String) {}
         }
 
-        if (ActivityCompat.checkSelfPermission(context!!, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
+        if (ActivityCompat.checkSelfPermission(requireContext(), Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
             locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0f, locationListener)
             lastLocation = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER)
         }

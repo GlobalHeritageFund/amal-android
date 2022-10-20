@@ -2,6 +2,8 @@ package amal.global.amal
 
 import android.content.Context
 import android.graphics.drawable.Drawable
+import com.bumptech.glide.Glide
+import com.bumptech.glide.RequestBuilder
 import com.google.firebase.storage.FirebaseStorage
 import com.google.firebase.storage.StorageReference
 import com.squareup.moshi.Json
@@ -13,7 +15,7 @@ import java.io.File
 import java.util.*
 
 interface Image {
-    fun load(context: Context) : GlideRequest<Drawable>
+    fun load(context: Context) : RequestBuilder<Drawable>
     var metadata: Metadata
 }
 
@@ -47,8 +49,8 @@ data class LocalImage internal constructor(
     val date: Date
         get() = metadata.dateValue ?: Date(File(filePath).lastModified())
 
-    override fun load(context: Context): GlideRequest<Drawable> {
-        return GlideApp.with(context).load(file)
+    override fun load(context: Context): RequestBuilder<Drawable> {
+        return Glide.with(context).load(file)
     }
 }
 
@@ -70,7 +72,7 @@ data class RemoteImage(
     val firebaseReference: StorageReference
         get() = FirebaseStorage.getInstance().getReference(remoteStorageLocation)
 
-    override fun load(context: Context): GlideRequest<Drawable> {
-        return GlideApp.with(context).load(firebaseReference)
+    override fun load(context: Context): RequestBuilder<Drawable> {
+        return Glide.with(context).load(firebaseReference)
     }
 }

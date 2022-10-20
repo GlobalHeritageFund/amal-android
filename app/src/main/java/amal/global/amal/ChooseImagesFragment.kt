@@ -19,7 +19,7 @@ class ChooseImagesFragment: Fragment() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        adapter = GalleryAdapter(activity!!.applicationContext)
+        adapter = GalleryAdapter(requireActivity().applicationContext)
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
@@ -42,7 +42,7 @@ class ChooseImagesFragment: Fragment() {
         }
     }
 
-    override fun onOptionsItemSelected(item: MenuItem?): Boolean {
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when (item!!.getItemId()) {
             R.id.menu_item_choose_images_next -> {
                 delegate?.choseImages(this, adapter.selectedItems())

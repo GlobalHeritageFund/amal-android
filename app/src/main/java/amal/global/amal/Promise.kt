@@ -71,10 +71,12 @@ class Promise<T> private constructor(state: State<T>) {
         }
     }
 
+    //had to fix error in when bc not exhaustive list so put in do nothing hack for state pending since not being handled
     private fun fireCallbacks(callbacks: Set<Callback<T>>, newState: State<T>) {
         when (newState) {
             is State.Fulfilled -> callbacks.forEach { callback -> callback.onFulfilled(newState.value) }
             is State.Rejected -> callbacks.forEach { callback -> callback.onRejected(newState.error) }
+            is State.Pending -> {}
         }
     }
 

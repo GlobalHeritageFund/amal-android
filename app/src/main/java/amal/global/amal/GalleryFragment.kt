@@ -19,7 +19,7 @@ class GalleryFragment : Fragment() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        imageAdapter = GalleryAdapter(activity!!.applicationContext)
+        imageAdapter = GalleryAdapter(requireActivity().applicationContext)
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
@@ -49,7 +49,7 @@ class GalleryFragment : Fragment() {
         inflater.inflate(R.menu.menu_gallery, menu)
     }
 
-    override fun onOptionsItemSelected(item: MenuItem?): Boolean {
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
         return when (item!!.getItemId()) {
             R.id.menu_item_import -> {
                 delegate?.importButtonTapped(this)
