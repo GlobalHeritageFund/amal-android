@@ -15,13 +15,13 @@ import android.view.View
 class OnboardingActivity : AppCompatActivity() {
 
     var adapter: FragmentStatePagerAdapter = object : FragmentStatePagerAdapter(supportFragmentManager) {
-        override fun getItem(position: Int): Fragment? {
+        override fun getItem(position: Int): Fragment {
             return when (position) {
                 0 -> OnboardingPage1()
                 1 -> OnboardingPage2()
                 2 -> OnboardingPage3()
                 3 -> OnboardingPage4()
-                else -> null
+                else -> OnboardingPage1()
             }
         }
 

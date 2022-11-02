@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="amal.global.amal">
+<manifest xmlns:android="http://schemas.android.com/apk/res/android">
 
     <uses-permission android:name="android.permission.CAMERA" />
     <uses-permission android:name="android.permission.FLASHLIGHT" />
@@ -27,6 +26,7 @@
 
         <activity
             android:name=".TabActivity"
+            android:exported="true"
             android:screenOrientation="portrait"
             android:label="@string/title_activity_main">
             <intent-filter>
@@ -37,6 +37,7 @@
         </activity>
         <activity
             android:name=".onboarding.OnboardingActivity"
+            android:exported="true"
             android:label="@string/title_activity_main"
             android:screenOrientation="portrait"
             android:theme="@style/Theme.Design.Light.NoActionBar"

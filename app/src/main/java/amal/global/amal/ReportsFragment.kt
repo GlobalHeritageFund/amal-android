@@ -22,7 +22,7 @@ class ReportsFragment : Fragment() {
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
-        adapter = ReportsAdapter(context!!)
+        adapter = ReportsAdapter(requireContext())
         return inflater.inflate(R.layout.fragment_reports, container, false)
     }
 

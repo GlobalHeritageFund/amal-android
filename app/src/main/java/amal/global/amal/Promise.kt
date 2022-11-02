@@ -75,6 +75,7 @@ class Promise<T> private constructor(state: State<T>) {
         when (newState) {
             is State.Fulfilled -> callbacks.forEach { callback -> callback.onFulfilled(newState.value) }
             is State.Rejected -> callbacks.forEach { callback -> callback.onRejected(newState.error) }
+            is State.Pending -> {}
         }
     }
 

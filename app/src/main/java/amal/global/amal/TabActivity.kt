@@ -229,7 +229,7 @@ class TabActivity : AppCompatActivity(),
                     .commit()
 
         }.catch { error ->
-            Log.e("asdf", error.message)
+            error.message?.let { Log.e("asdf", it) }
         }
     }
 

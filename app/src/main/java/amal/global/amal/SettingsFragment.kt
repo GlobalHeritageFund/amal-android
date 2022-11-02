@@ -16,23 +16,22 @@ class SettingsFragment: PreferenceFragmentCompat() {
     var delegate: SettingsFragmentDelegate? = null
 
     private val currentUser: CurrentUser
-        get() = CurrentUser(this.context!!)
+        get() = CurrentUser(this.requireContext())
 
-    private val versionPreference: Preference
+    private val versionPreference: Preference?
         get() = findPreference("versionPreference")
 
-    private val authPreference: Preference
+    private val authPreference: Preference?
         get() = findPreference("auth")
 
-    private val passphrasePreference: Preference
+    private val passphrasePreference: Preference?
         get() = findPreference("passphrase")
 
     override fun onCreatePreferences(bundle: Bundle?, string: String?) {
         addPreferencesFromResource(R.xml.preferences)
 
         configureView()
-
-        authPreference.onPreferenceClickListener = Preference.OnPreferenceClickListener {
+        authPreference?.onPreferenceClickListener = Preference.OnPreferenceClickListener {
             if (currentUser.isLoggedIn) {
                 delegate?.signOutTapped(this)
             } else {
@@ -42,7 +41,7 @@ class SettingsFragment: PreferenceFragmentCompat() {
             true
         }
 
-        passphrasePreference.onPreferenceClickListener = Preference.OnPreferenceClickListener {
+        passphrasePreference?.onPreferenceClickListener = Preference.OnPreferenceClickListener {
             delegate?.passphraseButtonTapped(this)
             true
         }
@@ -51,16 +50,17 @@ class SettingsFragment: PreferenceFragmentCompat() {
     fun configureView() {
 
         try {
-            val pInfo = activity!!.packageManager.getPackageInfo(activity!!.packageName, 0)
+            val pInfo = requireActivity().packageManager.getPackageInfo(requireActivity().packageName, 0)
             val version = pInfo.versionName
-            versionPreference.summary = version
+            versionPreference?.summary = version
         } catch (e: PackageManager.NameNotFoundException) {
             e.printStackTrace()
         }
 
         val email = currentUser.email ?: ""
         val stringID = if (currentUser.isLoggedIn) R.string.log_out else R.string.log_in
-        authPreference.title = resources.getString(stringID)
-        authPreference.summary = if (currentUser.isLoggedIn) "${resources.getString(R.string.signed_in_as)} $email" else ""
+
+        authPreference?.title = resources.getString(stringID)
+        authPreference?.summary = if (currentUser.isLoggedIn) "${resources.getString(R.string.signed_in_as)} $email" else ""
     }
 }

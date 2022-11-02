@@ -16,7 +16,7 @@ class PhotoStorage internal constructor(internal var context: Context) {
 
         val maxImageID = dir.listFiles()
                 .mapNotNull { file ->  file.nameWithoutExtension.toIntOrNull() }
-                .max() ?: 0
+                .maxOrNull() ?: 0
 
         val newImageID = maxImageID + 1
         val imageFile = File(dir.toString() + "/$newImageID.jpg")
