@@ -53,8 +53,6 @@ class SettingsFragment: PreferenceFragmentCompat() {
             val versionCode = BuildConfig.VERSION_CODE
             val versionName = BuildConfig.VERSION_NAME
             val version = "$versionName.$versionCode"
-            //changed Preference.summary.. to safe call since changed above to Preference?
-            //TODO this and above changes need to be checked and changed to preserve for functionality, but doing now to get build to work
             versionPreference?.summary = version
         } catch (e: PackageManager.NameNotFoundException) {
             e.printStackTrace()
