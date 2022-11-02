@@ -1,13 +1,11 @@
 package amal.global.amal
 
 import android.os.Bundle
-import android.util.Log
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import android.view.*
-import kotlinx.android.synthetic.main.fragment_reports.*
 
 interface ReportsDelegate {
     fun newReportTapped(reportsFragment: ReportsFragment)
