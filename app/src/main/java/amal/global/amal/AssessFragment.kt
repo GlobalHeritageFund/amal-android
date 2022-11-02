@@ -178,7 +178,7 @@ class AssessFragment : Fragment() {
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when (item.getItemId()) {
             R.id.menu_item_delete -> {
-                Log.d("assess fragment","delete item option selected")
+                Log.d("assess fragment", "delete item option selected")
                 delegate?.deleteButtonTapped(this, image?.filePath, image?.settingsPath)
                 return true
             }

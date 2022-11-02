@@ -13,7 +13,7 @@ interface ReportsDelegate {
     fun tappedReport(report: Report, reportsFragment: ReportsFragment)
 }
 
-class ReportsFragment : Fragment(),ReportsAdapterDelegate {
+class ReportsFragment : Fragment(), ReportsAdapterDelegate {
 
     companion object {
         const val TAG = "Reports Fragment"
@@ -61,14 +61,14 @@ class ReportsFragment : Fragment(),ReportsAdapterDelegate {
     }
 
     override fun reportsFound() {
-        Log.d(TAG,"reports found called")
+        Log.d(TAG, "reports found called")
         listView.visibility = View.VISIBLE
         emptyView.visibility = View.GONE
 
     }
 
     override fun noReportsFound() {
-        Log.d(TAG,"reports not found called")
+        Log.d(TAG, "reports not found called")
         emptyView.visibility = View.VISIBLE
         listView.visibility = View.GONE
     }

@@ -266,7 +266,6 @@ class TabActivity : AppCompatActivity(),
     override fun deleteButtonTapped(fragment: AssessFragment, imagePath: String?, settingsPath: String?) {
         Log.d(TAG,"delete button Tapped called")
         if (imagePath != null && settingsPath != null) {
-            Log.d(TAG,"delete button Tapped got in if")
             PhotoStorage(this).deleteImage(imagePath, settingsPath)
         }
         navigation.selectedItemId = R.id.navigation_assess

@@ -45,7 +45,7 @@ public class GalleryAdapter(private val context: Context) : BaseAdapter() {
     //not sure if should send this through adapter first or just call directly through galleryfragment
     //keep here for now until figure out how will implement the select function
     fun deleteImage(imagePath: String, settingsPath: String) {
-        Log.d(TAG,"deleteImage was called")
+        Log.d(TAG, "deleteImage was called")
         PhotoStorage(context).deleteImage(imagePath, settingsPath)
         reloadData()
         notifyDataSetChanged()

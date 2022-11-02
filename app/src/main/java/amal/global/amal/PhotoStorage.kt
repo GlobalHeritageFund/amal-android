@@ -57,8 +57,8 @@ class PhotoStorage internal constructor(internal var context: Context) {
             //delete affiliated json file - no idea if this will work - just trying easy first
             val metaDataFile = File(settingsPath)
             metaDataFile.delete()
-        } catch(e:Exception) {
-           Log.e(e.toString(),"Error deleting photo")
+        } catch(e: Exception) {
+           Log.e(e.toString(), "Error deleting photo")
         }
             //TODO should probably add some error protection at some point - also may eventually add to WorkManager
     }
