@@ -17,6 +17,9 @@ interface ReportsAdapterDelegate {
 
 class ReportsAdapter(var context: Context, var reports: List<Report> = listOf()) : RecyclerView.Adapter<SubtitleViewHolder>() {
 
+    companion object {
+        val TAG = "Reports Adapter"
+    }
     var delegate: ReportsAdapterDelegate? = null
 
     init {
@@ -26,7 +29,6 @@ class ReportsAdapter(var context: Context, var reports: List<Report> = listOf())
         val query = reference
                 .orderByChild("authorDeviceToken")
                 .equalTo(CurrentUser(context).token)
-// it looks like the below is not getting called when first query result is delivered - only when changes are ad eto the first result
 
         query.addValueEventListener(object : ValueEventListener {
             override fun onDataChange(snapshot: DataSnapshot) {
@@ -44,6 +46,7 @@ class ReportsAdapter(var context: Context, var reports: List<Report> = listOf())
                         .filter { (it["uploadComplete"] as? Boolean) ?: false }
                         .mapNotNull { Report.jsonAdapter.fromJsonValue(it) }
                         .sortedByDescending { it.creationDateValue }
+                Log.d(TAG,"got into addValueEventListener")
                 if (reports.isEmpty()) {
                     delegate?.noReportsFound()
                 } else {

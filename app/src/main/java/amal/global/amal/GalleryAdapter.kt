@@ -11,6 +11,10 @@ import java.io.File
 
 public class GalleryAdapter(private val context: Context) : BaseAdapter() {
 
+    companion object {
+        const val TAG = "Gallery Adapter"
+    }
+
     private var images: List<Image> = PhotoStorage(context).fetchImages()
 
     private var selectedImages = mutableListOf<Int>()
@@ -39,8 +43,9 @@ public class GalleryAdapter(private val context: Context) : BaseAdapter() {
     }
 
     //not sure if should send this through adapter first or just call directly through galleryfragment
+    //keep here for now until figure out how will implement the select function
     fun deleteImage(imagePath: String, settingsPath: String) {
-        Log.d("GalleryAdapter","deleteImage was called")
+        Log.d(TAG,"deleteImage was called")
         PhotoStorage(context).deleteImage(imagePath, settingsPath)
         reloadData()
         notifyDataSetChanged()

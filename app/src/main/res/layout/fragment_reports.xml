@@ -16,7 +16,8 @@
             android:layout_height="match_parent"
             android:background="@color/backgroundColor"
             android:cacheColorHint="#00000000"
-            android:scrollbars="vertical">
+            android:scrollbars="vertical"
+            android:visibility="gone">
         </androidx.recyclerview.widget.RecyclerView>
 
         <LinearLayout
@@ -25,8 +26,8 @@
             android:layout_width="fill_parent"
             android:layout_height="fill_parent"
             android:id="@+id/empty_reports_view"
-            android:visibility="gone">
-            <ImageView  xmlns:android="http://schemas.android.com/apk/res/android"
+            android:visibility="visible">
+            <ImageView xmlns:android="http://schemas.android.com/apk/res/android"
                 android:id="@+id/empty_reports_image"
                 android:layout_marginTop="10dp"
                 android:layout_width="fill_parent"

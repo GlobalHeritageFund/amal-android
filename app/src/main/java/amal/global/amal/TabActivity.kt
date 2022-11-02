@@ -32,6 +32,10 @@ class TabActivity : AppCompatActivity(),
         PassphraseFormFragmentDelegate,
         SettingsFragmentDelegate
 {
+    companion object {
+        const val TAG = "Tab Activity"
+    }
+
     private val mOnNavigationItemSelectedListener = BottomNavigationView.OnNavigationItemSelectedListener { item ->
         var fragment: Fragment = when (item.itemId) {
             R.id.navigation_assess -> {
@@ -89,7 +93,7 @@ class TabActivity : AppCompatActivity(),
     }
 
     override fun imageTapped(fragment: GalleryFragment, image: LocalImage) {
-        Log.d("Tab Activity","imageTapped called")
+        Log.d(TAG,"imageTapped called")
         val assessFragment = AssessFragment().also { it.delegate = this }
         assessFragment.image = image
         pushFragment(assessFragment)
@@ -260,9 +264,9 @@ class TabActivity : AppCompatActivity(),
     }
 
     override fun deleteButtonTapped(fragment: AssessFragment, imagePath: String?, settingsPath: String?) {
-        Log.d("Tab Activity","delete button Tapped called")
+        Log.d(TAG,"delete button Tapped called")
         if (imagePath != null && settingsPath != null) {
-            Log.d("Tab Activity","delete button Tapped got in if")
+            Log.d(TAG,"delete button Tapped got in if")
             PhotoStorage(this).deleteImage(imagePath, settingsPath)
         }
         navigation.selectedItemId = R.id.navigation_assess
@@ -277,10 +281,4 @@ class TabActivity : AppCompatActivity(),
                 .commit()
 
     }
-
-//    private fun popFragment() {
-//        supportFragmentManager
-//                .beginTransaction()
-//
-//    }
 }

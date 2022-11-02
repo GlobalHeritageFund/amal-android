@@ -10,6 +10,10 @@ import java.io.OutputStream
 
 class PhotoStorage internal constructor(internal var context: Context) {
 
+    companion object {
+        const val TAG = "PhotoStorage"
+    }
+
     @Throws(IOException::class)
     public fun savePhotoLocally(bytes: ByteArray, metadata: Metadata) {
         val dir = File(context.filesDir.toString() + "/images/")
@@ -45,7 +49,7 @@ class PhotoStorage internal constructor(internal var context: Context) {
     }
 
     public fun deleteImage(imagePath: String, settingsPath: String) {
-        Log.d("PhotoStorage","delete image was called")
+        Log.d(TAG,"delete image was called")
         try {
             //delete photo jpeg file
             val imageFile = File(imagePath)

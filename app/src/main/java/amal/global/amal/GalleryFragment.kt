@@ -15,6 +15,10 @@ interface GalleryDelegate {
 
 class GalleryFragment : Fragment() {
 
+    companion object {
+        const val TAG = "Gallery Fragment"
+    }
+
     var delegate: GalleryDelegate? = null
 
     internal var imageAdapter: GalleryAdapter? = null
@@ -43,16 +47,16 @@ class GalleryFragment : Fragment() {
 
 
         gridView.onItemClickListener = AdapterView.OnItemClickListener { parent, view, position, id ->
-            Log.d("galleryfragment","click listener on picture got called")
+            Log.d(TAG,"click listener on picture got called")
             val image = imageAdapter?.getItem(position) as LocalImage
             delegate?.imageTapped(this, image)
             val tempDelegate = delegate
-            Log.d("gallery fragment","after delegate imageTapped line")
+            Log.d(TAG,"after delegate imageTapped line")
         }
 
 //        This was to quickly test delete functionality and will be adapted once implement
 //        gridView.onItemClickListener = AdapterView.OnItemClickListener { parent, view, position, id ->
-//            Log.d("galleryfragment","click listener on picture got called")
+//            Log.d(TAG,"click listener on picture got called")
 //            val image = imageAdapter?.getItem(position) as LocalImage
 //            imageAdapter?.deleteImage(image.filePath, image.settingsPath)
 //        }
