@@ -1,9 +1,9 @@
 package amal.global.amal
 
-import android.os.Bundle
-import androidx.preference.PreferenceFragmentCompat
 import android.content.pm.PackageManager
+import android.os.Bundle
 import androidx.preference.Preference
+import androidx.preference.PreferenceFragmentCompat
 
 interface SettingsFragmentDelegate {
     fun signOutTapped(fragment: SettingsFragment)
@@ -55,8 +55,9 @@ class SettingsFragment: PreferenceFragmentCompat() {
     fun configureView() {
 
         try {
-            val pInfo = requireActivity().packageManager.getPackageInfo(requireActivity().packageName, 0)
-            val version = pInfo.versionName
+            val versionCode = BuildConfig.VERSION_CODE
+            val versionName = BuildConfig.VERSION_NAME
+            val version = "$versionName.$versionCode"
             //changed Preference.summary.. to safe call since changed above to Preference?
             //TODO this and above changes need to be checked and changed to preserve for functionality, but doing now to get build to work
             versionPreference?.summary = version

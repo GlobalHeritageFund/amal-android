@@ -1,6 +1,7 @@
 package amal.global.amal
 
 import android.content.Context
+import android.util.Log
 import java.io.File
 import java.io.FileNotFoundException
 import java.io.FileOutputStream
@@ -16,7 +17,7 @@ class PhotoStorage internal constructor(internal var context: Context) {
 
         val maxImageID = dir.listFiles()
                 .mapNotNull { file ->  file.nameWithoutExtension.toIntOrNull() }
-                .max() ?: 0
+                .maxOrNull() ?: 0
 
         val newImageID = maxImageID + 1
         val imageFile = File(dir.toString() + "/$newImageID.jpg")
@@ -41,6 +42,21 @@ class PhotoStorage internal constructor(internal var context: Context) {
         } finally {
             output?.close()
         }
+    }
+
+    public fun deleteImage(imagePath: String, settingsPath: String) {
+        Log.d("PhotoStorage","delete image was called")
+        try {
+            //delete photo jpeg file
+            val imageFile = File(imagePath)
+            imageFile.delete()
+            //delete affiliated json file - no idea if this will work - just trying easy first
+            val metaDataFile = File(settingsPath)
+            metaDataFile.delete()
+        } catch(e:Exception) {
+           Log.e(e.toString(),"Error deleting photo")
+        }
+            //TODO should probably add some error protection at some point - also may eventually add to WorkManager
     }
 
     public fun fetchImages(): List<LocalImage> {

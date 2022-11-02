@@ -10,14 +10,23 @@ import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.database.ValueEventListener
 
+interface ReportsAdapterDelegate {
+    fun noReportsFound()
+    fun reportsFound()
+}
+
 class ReportsAdapter(var context: Context, var reports: List<Report> = listOf()) : RecyclerView.Adapter<SubtitleViewHolder>() {
 
+    var delegate: ReportsAdapterDelegate? = null
+
     init {
+
         val reference = FirebaseDatabase.getInstance().reference.child("reports")
 
         val query = reference
                 .orderByChild("authorDeviceToken")
                 .equalTo(CurrentUser(context).token)
+// it looks like the below is not getting called when first query result is delivered - only when changes are ad eto the first result
 
         query.addValueEventListener(object : ValueEventListener {
             override fun onDataChange(snapshot: DataSnapshot) {
@@ -35,6 +44,11 @@ class ReportsAdapter(var context: Context, var reports: List<Report> = listOf())
                         .filter { (it["uploadComplete"] as? Boolean) ?: false }
                         .mapNotNull { Report.jsonAdapter.fromJsonValue(it) }
                         .sortedByDescending { it.creationDateValue }
+                if (reports.isEmpty()) {
+                    delegate?.noReportsFound()
+                } else {
+                    delegate?.reportsFound()
+                }
                 notifyDataSetChanged()
             }
 

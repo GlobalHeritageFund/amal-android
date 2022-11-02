@@ -1,10 +1,12 @@
 package amal.global.amal
 
 import android.os.Bundle
+import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.*
 import android.widget.AdapterView
 import kotlinx.android.synthetic.main.fragment_gallery.*
+import java.nio.file.Files.delete
 
 interface GalleryDelegate {
     fun imageTapped(fragment: GalleryFragment, image: LocalImage)
@@ -37,11 +39,23 @@ class GalleryFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         gridView.adapter = imageAdapter
+        gridView.emptyView = empty_gallery_view
+
 
         gridView.onItemClickListener = AdapterView.OnItemClickListener { parent, view, position, id ->
+            Log.d("galleryfragment","click listener on picture got called")
             val image = imageAdapter?.getItem(position) as LocalImage
             delegate?.imageTapped(this, image)
+            val tempDelegate = delegate
+            Log.d("gallery fragment","after delegate imageTapped line")
         }
+
+//        This was to quickly test delete functionality and will be adapted once implement
+//        gridView.onItemClickListener = AdapterView.OnItemClickListener { parent, view, position, id ->
+//            Log.d("galleryfragment","click listener on picture got called")
+//            val image = imageAdapter?.getItem(position) as LocalImage
+//            imageAdapter?.deleteImage(image.filePath, image.settingsPath)
+//        }
     }
 
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {

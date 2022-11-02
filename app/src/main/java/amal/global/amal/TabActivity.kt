@@ -11,6 +11,7 @@ import com.google.android.material.bottomsheet.BottomSheetDialog
 import androidx.appcompat.app.AlertDialog
 import android.view.View
 import com.google.firebase.auth.FirebaseAuth
+import kotlinx.android.synthetic.main.activity_tab.*
 import java.util.*
 
 interface IntentRequest {
@@ -88,6 +89,7 @@ class TabActivity : AppCompatActivity(),
     }
 
     override fun imageTapped(fragment: GalleryFragment, image: LocalImage) {
+        Log.d("Tab Activity","imageTapped called")
         val assessFragment = AssessFragment().also { it.delegate = this }
         assessFragment.image = image
         pushFragment(assessFragment)
@@ -257,6 +259,15 @@ class TabActivity : AppCompatActivity(),
         pushFragment(editLocation)
     }
 
+    override fun deleteButtonTapped(fragment: AssessFragment, imagePath: String?, settingsPath: String?) {
+        Log.d("Tab Activity","delete button Tapped called")
+        if (imagePath != null && settingsPath != null) {
+            Log.d("Tab Activity","delete button Tapped got in if")
+            PhotoStorage(this).deleteImage(imagePath, settingsPath)
+        }
+        navigation.selectedItemId = R.id.navigation_assess
+    }
+
     private fun pushFragment(fragment: Fragment) {
         supportFragmentManager
                 .beginTransaction()
@@ -266,4 +277,10 @@ class TabActivity : AppCompatActivity(),
                 .commit()
 
     }
+
+//    private fun popFragment() {
+//        supportFragmentManager
+//                .beginTransaction()
+//
+//    }
 }
