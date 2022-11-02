@@ -18,7 +18,6 @@ class SettingsFragment: PreferenceFragmentCompat() {
     private val currentUser: CurrentUser
         get() = CurrentUser(this.requireContext())
 
-    //changed all below from Preference to Preference? bc was getting type mismatch from inferred type
     private val versionPreference: Preference?
         get() = findPreference("versionPreference")
 

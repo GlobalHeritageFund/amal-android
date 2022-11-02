@@ -11,7 +11,6 @@ import androidx.core.app.ActivityCompat
 import androidx.fragment.app.Fragment
 import android.view.*
 import com.wonderkiln.camerakit.*
-//import kotlinx.android.synthetic.main.fragment_capture.*
 import android.animation.ObjectAnimator
 import android.annotation.SuppressLint
 import kotlinx.android.synthetic.main.fragment_capture.*
