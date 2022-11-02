@@ -50,8 +50,9 @@ class SettingsFragment: PreferenceFragmentCompat() {
     fun configureView() {
 
         try {
-            val pInfo = requireActivity().packageManager.getPackageInfo(requireActivity().packageName, 0)
-            val version = pInfo.versionName
+            val versionCode = BuildConfig.VERSION_CODE
+            val versionName = BuildConfig.VERSION_NAME
+            val version = "$versionName.$versionCode"
             versionPreference?.summary = version
         } catch (e: PackageManager.NameNotFoundException) {
             e.printStackTrace()

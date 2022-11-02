@@ -2,12 +2,18 @@ package amal.global.amal
 
 import android.content.Context
 import android.graphics.drawable.Drawable
+import android.util.Log
 import android.view.View
 import android.view.ViewGroup
 import android.widget.BaseAdapter
 import kotlinx.android.synthetic.main.cell_gallery.view.*
+import java.io.File
 
 public class GalleryAdapter(private val context: Context) : BaseAdapter() {
+
+    companion object {
+        const val TAG = "Gallery Adapter"
+    }
 
     private var images: List<Image> = PhotoStorage(context).fetchImages()
 
@@ -34,6 +40,15 @@ public class GalleryAdapter(private val context: Context) : BaseAdapter() {
 
         galleryCell.selectionStateImageView.visibility = if (selectedImages.contains(position)) View.VISIBLE else View.INVISIBLE
         return galleryCell
+    }
+
+    //not sure if should send this through adapter first or just call directly through galleryfragment
+    //keep here for now until figure out how will implement the select function
+    fun deleteImage(imagePath: String, settingsPath: String) {
+        Log.d(TAG, "deleteImage was called")
+        PhotoStorage(context).deleteImage(imagePath, settingsPath)
+        reloadData()
+        notifyDataSetChanged()
     }
 
     fun selectedItems(): List<LocalImage> {

@@ -11,6 +11,7 @@ import com.google.android.material.bottomsheet.BottomSheetDialog
 import androidx.appcompat.app.AlertDialog
 import android.view.View
 import com.google.firebase.auth.FirebaseAuth
+import kotlinx.android.synthetic.main.activity_tab.*
 import java.util.*
 
 interface IntentRequest {
@@ -31,6 +32,10 @@ class TabActivity : AppCompatActivity(),
         PassphraseFormFragmentDelegate,
         SettingsFragmentDelegate
 {
+    companion object {
+        const val TAG = "Tab Activity"
+    }
+
     private val mOnNavigationItemSelectedListener = BottomNavigationView.OnNavigationItemSelectedListener { item ->
         var fragment: Fragment = when (item.itemId) {
             R.id.navigation_assess -> {
@@ -88,6 +93,7 @@ class TabActivity : AppCompatActivity(),
     }
 
     override fun imageTapped(fragment: GalleryFragment, image: LocalImage) {
+        Log.d(TAG,"imageTapped called")
         val assessFragment = AssessFragment().also { it.delegate = this }
         assessFragment.image = image
         pushFragment(assessFragment)
@@ -255,6 +261,14 @@ class TabActivity : AppCompatActivity(),
         val editLocation = EditLocationFragment()
         editLocation.image = fragment.image
         pushFragment(editLocation)
+    }
+
+    override fun deleteButtonTapped(fragment: AssessFragment, imagePath: String?, settingsPath: String?) {
+        Log.d(TAG,"delete button Tapped called")
+        if (imagePath != null && settingsPath != null) {
+            PhotoStorage(this).deleteImage(imagePath, settingsPath)
+        }
+        navigation.selectedItemId = R.id.navigation_assess
     }
 
     private fun pushFragment(fragment: Fragment) {

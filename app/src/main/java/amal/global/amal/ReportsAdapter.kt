@@ -10,9 +10,20 @@ import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.database.ValueEventListener
 
+interface ReportsAdapterDelegate {
+    fun noReportsFound()
+    fun reportsFound()
+}
+
 class ReportsAdapter(var context: Context, var reports: List<Report> = listOf()) : RecyclerView.Adapter<SubtitleViewHolder>() {
 
+    companion object {
+        val TAG = "Reports Adapter"
+    }
+    var delegate: ReportsAdapterDelegate? = null
+
     init {
+
         val reference = FirebaseDatabase.getInstance().reference.child("reports")
 
         val query = reference
@@ -35,6 +46,12 @@ class ReportsAdapter(var context: Context, var reports: List<Report> = listOf())
                         .filter { (it["uploadComplete"] as? Boolean) ?: false }
                         .mapNotNull { Report.jsonAdapter.fromJsonValue(it) }
                         .sortedByDescending { it.creationDateValue }
+                Log.d(TAG,"got into addValueEventListener")
+                if (reports.isEmpty()) {
+                    delegate?.noReportsFound()
+                } else {
+                    delegate?.reportsFound()
+                }
                 notifyDataSetChanged()
             }
 

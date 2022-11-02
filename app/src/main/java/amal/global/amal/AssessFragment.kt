@@ -3,9 +3,8 @@ package amal.global.amal
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.text.Editable
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
+import android.util.Log
+import android.view.*
 import android.widget.Button
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.MapView
@@ -17,6 +16,7 @@ import com.google.android.gms.maps.model.MarkerOptions
 interface AssessDelegate {
     fun mapTapped(fragment: AssessFragment)
     fun editLocationTapped(fragment: AssessFragment)
+    fun deleteButtonTapped(fragment: AssessFragment, imagePath: String?, settingsPath: String?)
 }
 
 class AssessFragment : Fragment() {
@@ -50,6 +50,7 @@ class AssessFragment : Fragment() {
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
+        setHasOptionsMenu(true)
         return inflater.inflate(R.layout.fragment_assess, container, false)
     }
 
@@ -155,6 +156,11 @@ class AssessFragment : Fragment() {
         updateImage()
     }
 
+    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
+        super.onCreateOptionsMenu(menu, inflater)
+        inflater.inflate(R.menu.menu_assess, menu)
+    }
+
     fun activateConditionButtonAtIndex(index: Int) {
         conditionButtons.forEach({ it.isActivated = false })
         conditionButtons[index].isActivated = true
@@ -162,13 +168,24 @@ class AssessFragment : Fragment() {
     }
 
     private fun updateImage() {
-        image?.load(context!!)?.into(imageView)
+        image?.load(requireContext())?.into(imageView)
     }
 
     fun explicitlyBindMapViewSoItDoesntGetDeallocatedForOnDestroy() {
         mapView = bind(R.id.mapView)
     }
 
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        when (item.getItemId()) {
+            R.id.menu_item_delete -> {
+                Log.d("assess fragment", "delete item option selected")
+                delegate?.deleteButtonTapped(this, image?.filePath, image?.settingsPath)
+                return true
+            }
+            else ->
+                return super.onOptionsItemSelected(item)
+        }
+    }
     // MapView needs to have all of these forwarded manually
     override fun onDestroy() {
         mapView.onDestroy()

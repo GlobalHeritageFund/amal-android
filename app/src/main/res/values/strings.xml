@@ -1,6 +1,8 @@
 <resources>
     <string name="app_name">Amal</string>
     <string name="take_picture">Take Picture</string>
+    <string name="delete_photo">Delete Photo</string>
+    <string name="delete">Delete</string>
     <string name="title_activity_main">Amal</string>
     <string name="title_assess">Assess</string>
     <string name="title_capture">Capture</string>
@@ -44,5 +46,9 @@
     <string name="log_out">Log out</string>
     <string name="signed_in_as">Signed in as</string>
     <string name="submit">Submit</string>
+    <string name="gallery_empty_text">No photos to show</string>
+    <string name="reports_empty_text">No reports to show</string>
     <string name="passphrase">Passphrase</string>
+    <string name="gallery_empty_state_text">As you take photos, the gallery on this page will display them.</string>
+    <string name="reports_empty_state_text">To create a report, first take some photos, then tap \'New\' at the top of this screen.</string>
 </resources>
