@@ -31,8 +31,6 @@ class SettingsFragment: PreferenceFragmentCompat() {
         addPreferencesFromResource(R.xml.preferences)
 
         configureView()
-//changed authPreference.onPref.. to safe call since changed above to Preference?
-        //TODO this and above changes need to be checked and changed to preserve for functionality, but doing now to get build to work
         authPreference?.onPreferenceClickListener = Preference.OnPreferenceClickListener {
             if (currentUser.isLoggedIn) {
                 delegate?.signOutTapped(this)
@@ -42,8 +40,6 @@ class SettingsFragment: PreferenceFragmentCompat() {
             configureView()
             true
         }
-        //changed Preference.onPref.. to safe call since changed above to Preference?
-        //TODO this and above changes need to be checked and changed to preserve for functionality, but doing now to get build to work
 
         passphrasePreference?.onPreferenceClickListener = Preference.OnPreferenceClickListener {
             delegate?.passphraseButtonTapped(this)
@@ -56,8 +52,6 @@ class SettingsFragment: PreferenceFragmentCompat() {
         try {
             val pInfo = requireActivity().packageManager.getPackageInfo(requireActivity().packageName, 0)
             val version = pInfo.versionName
-            //changed Preference.summary.. to safe call since changed above to Preference?
-            //TODO this and above changes need to be checked and changed to preserve for functionality, but doing now to get build to work
             versionPreference?.summary = version
         } catch (e: PackageManager.NameNotFoundException) {
             e.printStackTrace()
@@ -65,8 +59,6 @@ class SettingsFragment: PreferenceFragmentCompat() {
 
         val email = currentUser.email ?: ""
         val stringID = if (currentUser.isLoggedIn) R.string.log_out else R.string.log_in
-        //changed authPref.title and summary to safe call since changed above to Preference?
-        //TODO this and above changes need to be checked and changed to preserve for functionality, but doing now to get build to work
 
         authPreference?.title = resources.getString(stringID)
         authPreference?.summary = if (currentUser.isLoggedIn) "${resources.getString(R.string.signed_in_as)} $email" else ""
