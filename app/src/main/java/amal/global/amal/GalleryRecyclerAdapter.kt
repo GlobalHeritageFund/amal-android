@@ -20,28 +20,37 @@ class GalleryRecyclerAdapter(private val context: Context): RecyclerView.Adapter
         const val TAG = "Gallery Recycler Adapter"
     }
 
-    private val galleryItems: List<GalleryItem>
+    private val galleryItems = mutableListOf<GalleryItem>()
 
     init {
+        var lastDate =  ""
         var images: List<LocalImage> = PhotoStorage(context).fetchImages()
         //key is date value is list of images
         //entries takes dictionary to a list
         //then have to sort by date again bc might have lost date ordering by how dictionary stored
-        galleryItems = images.groupBy { it.localDateString ?: "No Date" }
-                .entries
-                .toList()
-                .sortedByDescending { it.key }
-                .flatMap {
-                    val itemsList = mutableListOf<GalleryItem>()
-                    itemsList.add(GalleryDateDivider(it.key))
-                    itemsList.addAll(it.value.map { photo -> GalleryPhoto(photo) })
-                    return@flatMap itemsList
-                }
+//        galleryItems = images.groupBy { it.localDateString ?: "No Date" }
+//                .entries
+//                .toList()
+//                .sortedByDescending { it.key }
+//                .flatMap {
+//                    val itemsList = mutableListOf<GalleryItem>()
+//                    itemsList.add(GalleryDateDivider(it.key))
+//                    itemsList.addAll(it.value.map { photo -> GalleryPhoto(photo) })
+//                    return@flatMap itemsList
+//                }
+
+        images.forEach {
+            if (it.localDateString != lastDate) {
+                galleryItems.add(GalleryDateDivider(it.localDateString ?: "No Date"))
+            }
+            galleryItems.add(GalleryPhoto(it))
+        }
     }
 
     override fun getItemCount(): Int {
-        TODO("Not yet implemented")
+        return galleryItems.size
     }
+    
     override fun getItemViewType(position: Int): Int {
         return if (galleryItems[position] is GalleryDateDivider) {
             1 //normally define constants
