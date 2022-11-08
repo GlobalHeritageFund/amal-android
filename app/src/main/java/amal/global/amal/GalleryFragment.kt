@@ -5,7 +5,10 @@ import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.*
 import android.widget.AdapterView
+import androidx.recyclerview.widget.GridLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import kotlinx.android.synthetic.main.fragment_gallery.*
+import kotlinx.android.synthetic.main.fragment_report_detail.*
 import java.nio.file.Files.delete
 
 interface GalleryDelegate {
@@ -14,6 +17,7 @@ interface GalleryDelegate {
 }
 
 class GalleryFragment : Fragment() {
+    //TODO need to also create adn implemnt GalleryAdapterDelegate?
 
     companion object {
         const val TAG = "Gallery Fragment"
@@ -21,11 +25,15 @@ class GalleryFragment : Fragment() {
 
     var delegate: GalleryDelegate? = null
 
-    internal var imageAdapter: GalleryAdapter? = null
+//    internal var imageAdapter: GalleryAdapter? = null
+    lateinit var recyclerAdapter: GalleryRecyclerAdapter? = null
+    lateinit var assessRecyclerView: RecyclerView
+    lateinit var emptyView: View
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        imageAdapter = GalleryAdapter(requireActivity().applicationContext)
+//        imageAdapter = GalleryAdapter(requireActivity().applicationContext)
+        recyclerAdapter = GalleryRecyclerAdapter(requireActivity().applicationContext)
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
@@ -41,16 +49,21 @@ class GalleryFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        assessRecyclerView = bind(R.id.assess_recycler_view)
+//        assessRecyclerView.layoutManager = GridLayoutManager(activity)
+        //aove commented bc think doing it in xml
+        assessRecyclerView.adapter = recyclerAdapter
+        assessRecyclerView.emptyView = empty_gallery_view
 
-        gridView.adapter = imageAdapter
-        gridView.emptyView = empty_gallery_view
 
-
-        gridView.onItemClickListener = AdapterView.OnItemClickListener { parent, view, position, id ->
+        assessRecyclerView.onItemClickListener = AdapterView.OnItemClickListener { parent, view, position, id ->
             Log.d(TAG,"click listener on picture got called")
-            val image = imageAdapter?.getItem(position) as LocalImage
+            val image = recyclerAdapter.galleryItems[position] as LocalImage
             delegate?.imageTapped(this, image)
+            //TODO this is wrong - have issues with imagelist vs gallerylist
         }
+
+        emptyView = bind(R.id.empty_gallery_view)
 
 //        gridView.onItemClickListener = AdapterView.OnItemClickListener { parent, view, position, id ->
 //            Log.d(TAG,"click listener on picture got called")
@@ -75,9 +88,22 @@ class GalleryFragment : Fragment() {
         }
     }
 
+//    override fun photosFound() {
+//        Log.d(ReportsFragment.TAG, "reports found called")
+//        listView.visibility = View.VISIBLE
+//        emptyView.visibility = View.GONE
+//
+//    }
+//
+//    override fun noPhotosFound() {
+//        Log.d(ReportsFragment.TAG, "reports not found called")
+//        emptyView.visibility = View.VISIBLE
+//        listView.visibility = View.GONE
+//    }
+
     fun updateData() {
-        imageAdapter?.reloadData()
-        imageAdapter?.notifyDataSetChanged()
+        recyclerAdapter?.reloadData()
+        recyclerAdapter?.notifyDataSetChanged()
     }
 
 }

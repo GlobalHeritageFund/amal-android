@@ -1,6 +1,7 @@
 package amal.global.amal
 
 import android.content.Context
+import android.util.Log
 import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
@@ -17,34 +18,17 @@ class GalleryRecyclerViewHolder(val itemView: View): RecyclerView.ViewHolder(ite
 
 class GalleryRecyclerAdapter(private val context: Context): RecyclerView.Adapter<GalleryRecyclerViewHolder>() {
     companion object {
-        const val TAG = "Gallery Recycler Adapter"
+        const val TAG = "GallRecyclerAdapter"
     }
 
     private val galleryItems = mutableListOf<GalleryItem>()
+    private var selectedImages = mutableListOf<Int>()
 
     init {
         var lastDate =  ""
         var images: List<LocalImage> = PhotoStorage(context).fetchImages()
-        //key is date value is list of images
-        //entries takes dictionary to a list
-        //then have to sort by date again bc might have lost date ordering by how dictionary stored
-//        galleryItems = images.groupBy { it.localDateString ?: "No Date" }
-//                .entries
-//                .toList()
-//                .sortedByDescending { it.key }
-//                .flatMap {
-//                    val itemsList = mutableListOf<GalleryItem>()
-//                    itemsList.add(GalleryDateDivider(it.key))
-//                    itemsList.addAll(it.value.map { photo -> GalleryPhoto(photo) })
-//                    return@flatMap itemsList
-//                }
 
-        images.forEach {
-            if (it.localDateString != lastDate) {
-                galleryItems.add(GalleryDateDivider(it.localDateString ?: "No Date"))
-            }
-            galleryItems.add(GalleryPhoto(it))
-        }
+        createGalleryItemList(images)
     }
 
     override fun getItemCount(): Int {
@@ -68,4 +52,19 @@ class GalleryRecyclerAdapter(private val context: Context): RecyclerView.Adapter
         TODO("Not yet implemented")
     }
 
+    fun createGalleryItemList(imageList: List<LocalImage>) {
+        images.forEach {
+            if (it.localDateString != lastDate) {
+                lastDate = it.localDateString ?: ""
+                galleryItems.add(GalleryDateDivider(it.localDateString ?: "No Date"))
+            }
+            galleryItems.add(GalleryPhoto(it))
+        }
+    }
+
+    fun reloadData() {
+        images = PhotoStorage(context).fetchImages()
+        createGalleryItemList(images)
+        selectedImages = mutableListOf()
+    }
 }
