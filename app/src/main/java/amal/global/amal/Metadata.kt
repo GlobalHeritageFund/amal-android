@@ -7,6 +7,10 @@ import com.squareup.moshi.Json
 import com.squareup.moshi.JsonClass
 import com.squareup.moshi.Moshi
 import com.squareup.moshi.kotlin.reflect.KotlinJsonAdapterFactory
+import org.joda.time.DateTime
+import org.joda.time.LocalDate
+import org.joda.time.format.DateTimeFormat
+import org.joda.time.format.DateTimeFormatter
 
 @JsonClass(generateAdapter = true)
 data class Metadata internal constructor(
@@ -39,6 +43,9 @@ data class Metadata internal constructor(
 
     val dateValue: Date?
         get() = date?.let { Date(it) }
+
+    val localDateValue: LocalDate?
+        get() = date?.let { DateTime(date).toLocalDate() }
 
     val condition: String
         get() {

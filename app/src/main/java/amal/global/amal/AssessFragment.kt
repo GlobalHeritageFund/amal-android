@@ -59,6 +59,7 @@ class AssessFragment : Fragment() {
 
         explicitlyBindMapViewSoItDoesntGetDeallocatedForOnDestroy()
 
+        nameField.setText(image?.metadata?.name ?: "")
         nameField.afterTextChanged { editable: Editable? ->
             image?.metadata?.name = editable.toString()
             image?.saveMetaData()
@@ -146,7 +147,10 @@ class AssessFragment : Fragment() {
         }
 
         coordinatesTextView.text = image?.metadata?.coordinatesString()
-
+        val tempMetadata = image?.metadata
+        Log.d("acc frg meta",tempMetadata.toString())
+        val tempCoords = image?.metadata?.coordinatesString()
+        Log.d("acc frg ccord string",tempCoords.toString())
         editLocationButton.text = if (hasCoordinates) "Edit Location" else "Set Location"
 
         editLocationButton.setOnClickListener({ view ->

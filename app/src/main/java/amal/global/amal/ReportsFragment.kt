@@ -49,9 +49,9 @@ class ReportsFragment : Fragment(), ReportsAdapterDelegate {
 
         emptyView = bind(R.id.empty_reports_view)
 
-        view?.findViewById<FloatingActionButton>(R.id.new_report_button)?.setOnClickListener({
+        view?.findViewById<FloatingActionButton>(R.id.new_report_button)?.setOnClickListener{
             delegate?.newReportTapped(this)
-        })
+        }
     }
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {

@@ -1,13 +1,11 @@
 package amal.global.amal
 
 import android.content.Context
-import android.graphics.drawable.Drawable
 import android.util.Log
 import android.view.View
 import android.view.ViewGroup
 import android.widget.BaseAdapter
 import kotlinx.android.synthetic.main.cell_gallery.view.*
-import java.io.File
 
 public class GalleryAdapter(private val context: Context) : BaseAdapter() {
 
@@ -35,10 +33,12 @@ public class GalleryAdapter(private val context: Context) : BaseAdapter() {
         val galleryCell = (convertView as? GalleryCell) ?: GalleryCell(context)
 
         val image = getItem(position) as Image
+        val locImage = getItem(position) as LocalImage
 
         image.load(context).centerCrop().into(galleryCell.contentImageView)
 
         galleryCell.selectionStateImageView.visibility = if (selectedImages.contains(position)) View.VISIBLE else View.INVISIBLE
+        galleryCell.imageDateTextView.text = locImage.localDateString
         return galleryCell
     }
 

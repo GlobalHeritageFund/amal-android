@@ -14,4 +14,11 @@
         android:src="@android:drawable/checkbox_on_background"
         android:visibility="invisible"
         android:contentDescription="" />
+
+    <TextView
+        android:id="@+id/imageDateTextView"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:text=""
+        android:contentDescription="" />
 </RelativeLayout>

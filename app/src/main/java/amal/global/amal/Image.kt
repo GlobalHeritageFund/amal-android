@@ -11,6 +11,10 @@ import com.squareup.moshi.JsonAdapter
 import com.squareup.moshi.JsonClass
 import com.squareup.moshi.Moshi
 import com.squareup.moshi.kotlin.reflect.KotlinJsonAdapterFactory
+import org.joda.time.DateTime
+import org.joda.time.LocalDate
+import org.joda.time.format.DateTimeFormat
+import org.joda.time.format.DateTimeFormatter
 import java.io.File
 import java.util.*
 
@@ -48,6 +52,15 @@ data class LocalImage internal constructor(
 
     val date: Date
         get() = metadata.dateValue ?: Date(File(filePath).lastModified())
+
+    val localDate: LocalDate
+        get() = metadata.localDateValue ?: DateTime(File(filePath).lastModified()).toLocalDate()
+
+    val localDateString: String?
+        get() {
+            val fmt: DateTimeFormatter = DateTimeFormat.forPattern("MMMM d, yyyy")
+            return localDate.toString(fmt)
+        }
 
     override fun load(context: Context): RequestBuilder<Drawable> {
         return Glide.with(context).load(file)

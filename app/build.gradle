@@ -13,6 +13,7 @@ android {
         versionName "1.0"
         multiDexEnabled  true
     }
+
     buildTypes {
 
         release {
@@ -42,7 +43,9 @@ dependencies {
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
     implementation 'com.wonderkiln:camerakit:0.13.4'
     implementation 'com.jakewharton:disklrucache:2.0.2'
+    implementation 'joda-time:joda-time:2.12.1'
     implementation 'com.google.android.gms:play-services-maps:18.1.0'
+    implementation 'com.google.android.gms:play-services-location:21.0.1'
     implementation 'com.firebaseui:firebase-ui-auth:7.2.0'
 
     //firebase
