@@ -8,6 +8,7 @@ import android.view.ViewGroup
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import kotlinx.android.synthetic.main.cell_gallery.view.*
+import java.util.Collections.addAll
 
 sealed class GalleryItem {
     data class GalleryDateDivider(val photoGroupDate: String): GalleryItem()
@@ -40,19 +41,11 @@ class GalleryRecyclerAdapter(private val context: Context): RecyclerView.Adapter
 
     val galleryItems = mutableListOf<GalleryItem>()
     private var selectedImages = mutableListOf<Int>()
+    var lastDate =  ""
 
     init {
-        var lastDate =  ""
         var images: List<LocalImage> = PhotoStorage(context).fetchImagesSortedByDateDesc()
-        images.forEach {
-            if (it.localDateString != lastDate) {
-                lastDate = it.localDateString ?: ""
-                galleryItems.add(GalleryItem.GalleryDateDivider(it.localDateString ?: "No Date"))
-            }
-            galleryItems.add(GalleryItem.GalleryPhoto(it))
-        }
-        //TODO will need to reuse this code for reload, but worry about reloading later
-//        createGalleryItemList(images)
+        createGalleryItemList(images)
     }
 
     override fun getItemCount(): Int {
@@ -84,26 +77,43 @@ class GalleryRecyclerAdapter(private val context: Context): RecyclerView.Adapter
         holder.bind(galleryItems[position])
     }
 
-//    fun createGalleryItemList(imageList: List<LocalImage>) {
-//        images.forEach {
-//            if (it.localDateString != lastDate) {
-//                lastDate = it.localDateString ?: ""
-//                galleryItems.add(GalleryItem.GalleryDateDivider(it.localDateString ?: "No Date"))
-//            }
-//            galleryItems.add(GalleryItem.GalleryPhoto(it))
-//        }
- //   }
+    fun createGalleryItemList(imageList: List<LocalImage>) {
+        imageList.forEach {
+            if (it.localDateString != lastDate) {
+                lastDate = it.localDateString ?: ""
+                galleryItems.add(GalleryItem.GalleryDateDivider(it.localDateString ?: "No Date"))
+            }
+            galleryItems.add(GalleryItem.GalleryPhoto(it))
+        }
+    }
 
-//    fun reloadData() {
-//        images = PhotoStorage(context).fetchImages()
-//        createGalleryItemList(images)
-//        selectedImages = mutableListOf()
+    //not sure if should send this through adapter first or just call directly through galleryfragment
+    //keep here for now until figure out how will implement the select function
+    fun deleteImage(imagePath: String, settingsPath: String) {
+        Log.d(GalleryAdapter.TAG, "deleteImage was called")
+        PhotoStorage(context).deleteImage(imagePath, settingsPath)
+        reloadData()
+        notifyDataSetChanged()
+    }
+// below line was in getView of original galleryAdapter - may need for implementation of multi select
+//    galleryCell.selectionStateImageView.visibility = if (selectedImages.contains(position)) View.VISIBLE else View.INVISIBLE
+
+//    fun selectedItems(): List<LocalImage> {
+//        return selectedImages.sorted().mapNotNull { getItem(it) as? LocalImage }
+//    }
+//
+//    fun toggleSelectionAt(position: Int) {
+//        if (selectedImages.contains(position)) {
+//            selectedImages.remove(position)
+//        } else {
+//            selectedImages.add(position)
+//        }
+//        notifyDataSetChanged()
 //    }
 
-//    fun setData(data: List<GalleryItem>) {
-//        adapterData.apply {
-//            clear()
-//            addAll(data)
-//        }
-//    }
+    fun reloadData() {
+        createGalleryItemList(PhotoStorage(context).fetchImagesSortedByDateDesc())
+        selectedImages = mutableListOf()
+    }
+
 }

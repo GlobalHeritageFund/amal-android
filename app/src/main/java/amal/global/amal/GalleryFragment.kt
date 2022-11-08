@@ -4,7 +4,6 @@ import android.os.Bundle
 import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.*
-import android.widget.AdapterView
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import kotlinx.android.synthetic.main.fragment_gallery.*
@@ -17,7 +16,7 @@ interface GalleryDelegate {
 }
 
 class GalleryFragment : Fragment() {
-    //TODO need to also create and implemnt GalleryAdapterDelegate? foe empty state
+    //TODO will need to make empty state logic reactive to change in data, but leave for now bc will be affected by other changes
 
     companion object {
         const val TAG = "Gallery Fragment"
@@ -26,14 +25,12 @@ class GalleryFragment : Fragment() {
 
     var delegate: GalleryDelegate? = null
 
-//    internal var imageAdapter: GalleryAdapter? = null
-    var recyclerAdapter: GalleryRecyclerAdapter? = null
+    internal var recyclerAdapter: GalleryRecyclerAdapter? = null
     lateinit var assessRecyclerView: RecyclerView
     lateinit var emptyView: View
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-//        imageAdapter = GalleryAdapter(requireActivity().applicationContext)
         recyclerAdapter = GalleryRecyclerAdapter(requireActivity().applicationContext)
     }
 
@@ -51,6 +48,7 @@ class GalleryFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         assessRecyclerView = bind(R.id.assess_recycler_view)
+        emptyView = bind(R.id.empty_gallery_view)
         assessRecyclerView.adapter = recyclerAdapter
         assessRecyclerView.layoutManager = GridLayoutManager(activity,3).apply {
             spanSizeLookup = object : GridLayoutManager.SpanSizeLookup() {
@@ -63,31 +61,20 @@ class GalleryFragment : Fragment() {
             }
         }
 
+        if (recyclerAdapter!!.galleryItems.isNullOrEmpty()) {
+            emptyView.visibility = View.VISIBLE
+            assessRecyclerView.visibility = View.GONE
+        } else {
+            assessRecyclerView.visibility = View.VISIBLE
+            emptyView.visibility = View.GONE
+        }
+
         assessRecyclerView.addOnItemClickListener(object: OnItemClickListener {
             override fun onItemClicked(position: Int, view: View) {
                 if (recyclerAdapter!!.getItemViewType(position) == TYPE_DIVIDER) return
                 assessGalleryClickHandle(position)
             }
         })
-
-        //aove commented bc think doing it in xml
-//        assessRecyclerView.emptyView = empty_gallery_view
-
-
-//        assessRecyclerView.onItemClickListener = AdapterView.OnItemClickListener { parent, view, position, id ->
-//            Log.d(TAG,"click listener on picture got called")
-//            val image = recyclerAdapter.galleryItems[position] as LocalImage
-//            delegate?.imageTapped(this, image)
-//            //TODO this is wrong - have issues with imagelist vs gallerylist
-//        }
-
-//        emptyView = bind(R.id.empty_gallery_view)
-
-//        gridView.onItemClickListener = AdapterView.OnItemClickListener { parent, view, position, id ->
-//            Log.d(TAG,"click listener on picture got called")
-//            val image = imageAdapter?.getItem(position) as LocalImage
-//            imageAdapter?.deleteImage(image.filePath, image.settingsPath)
-//        }
     }
 
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
@@ -106,19 +93,6 @@ class GalleryFragment : Fragment() {
         }
     }
 
-//    override fun photosFound() {
-//        Log.d(ReportsFragment.TAG, "reports found called")
-//        listView.visibility = View.VISIBLE
-//        emptyView.visibility = View.GONE
-//
-//    }
-//
-//    override fun noPhotosFound() {
-//        Log.d(ReportsFragment.TAG, "reports not found called")
-//        emptyView.visibility = View.VISIBLE
-//        listView.visibility = View.GONE
-//    }
-
     fun assessGalleryClickHandle(position: Int) {
         val galleryPhoto = recyclerAdapter!!.galleryItems[position]  as GalleryItem.GalleryPhoto
         val image = galleryPhoto.photoToShow as LocalImage
@@ -126,8 +100,7 @@ class GalleryFragment : Fragment() {
     }
 
     fun updateData() {
-        //TODO this is broken just to be able to test other features first
-//        recyclerAdapter?.reloadData()
+        recyclerAdapter?.reloadData()
         recyclerAdapter?.notifyDataSetChanged()
     }
 

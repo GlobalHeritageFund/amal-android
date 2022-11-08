@@ -13,7 +13,7 @@ public class GalleryAdapter(private val context: Context) : BaseAdapter() {
         const val TAG = "Gallery Adapter"
     }
 
-    private var images: List<Image> = PhotoStorage(context).fetchImages()
+    private var images: List<Image> = PhotoStorage(context).fetchImagesSortedByDateDesc()
 
     private var selectedImages = mutableListOf<Int>()
 
@@ -65,7 +65,7 @@ public class GalleryAdapter(private val context: Context) : BaseAdapter() {
     }
 
     fun reloadData() {
-        images = PhotoStorage(context).fetchImages()
+        images = PhotoStorage(context).fetchImagesSortedByDateDesc()
         selectedImages = mutableListOf()
     }
 
