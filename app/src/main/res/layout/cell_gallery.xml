@@ -1,24 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent" android:layout_height="match_parent">
+
     <ImageView
-        android:id="@+id/contentImageView"
-        android:layout_width="90dp"
-        android:layout_height="90dp"
-        android:contentDescription="" />
+        android:id="@+id/content_image_view"
+        android:layout_width="match_parent"
+        android:layout_height="100dp"
+        android:contentDescription=""
+        android:padding="5dp" />
 
     <ImageView
         android:id="@+id/selectionStateImageView"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_width="20dp"
+        android:layout_height="20dp"
         android:src="@android:drawable/checkbox_on_background"
         android:visibility="invisible"
-        android:contentDescription="" />
-
-    <TextView
-        android:id="@+id/imageDateTextView"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:text=""
         android:contentDescription="" />
 </RelativeLayout>

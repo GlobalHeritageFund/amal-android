@@ -35,10 +35,10 @@ public class GalleryAdapter(private val context: Context) : BaseAdapter() {
         val image = getItem(position) as Image
         val locImage = getItem(position) as LocalImage
 
-        image.load(context).centerCrop().into(galleryCell.contentImageView)
+        image.load(context).centerCrop().into(galleryCell.content_image_view)
 
         galleryCell.selectionStateImageView.visibility = if (selectedImages.contains(position)) View.VISIBLE else View.INVISIBLE
-        galleryCell.imageDateTextView.text = locImage.localDateString
+//        galleryCell.imageDateTextView.text = locImage.localDateString
         return galleryCell
     }
 

@@ -4,38 +4,37 @@
     android:layout_height="match_parent"
     tools:context="amal.global.amal.AssessFragment">
 
-    <androidx.recyclerview.widget.RecyclerView xmlns:android="http://schemas.android.com/apk/res/android"
+    <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/assess_recycler_view"
-        android:layout_marginTop="10dp"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:layout_marginBottom="10dp"
         android:background="@color/backgroundColor"
-        android:visibility="gone"
-        app:layoutManager="androidx.recyclerview.widget.GridLayoutManager"
-        />
+        android:visibility="visible" />
+
     <LinearLayout
-        xmlns:android="http://schemas.android.com/apk/res/android"
-        android:orientation="vertical"
+        android:id="@+id/empty_gallery_view"
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"
-        android:id="@+id/empty_gallery_view"
+        android:orientation="vertical"
         android:visibility="gone">
-        <ImageView  xmlns:android="http://schemas.android.com/apk/res/android"
+
+        <ImageView xmlns:android="http://schemas.android.com/apk/res/android"
             android:id="@+id/empty_gallery_image"
-            android:layout_marginTop="10dp"
             android:layout_width="fill_parent"
             android:layout_height="300dp"
-            android:gravity="center"
+            android:layout_marginTop="10dp"
             android:background="@color/backgroundColor"
             android:contentDescription="@string/gallery_empty_text"
-            android:src="@drawable/gallery_bg"
-            />
-        <TextView  xmlns:android="http://schemas.android.com/apk/res/android"
+            android:gravity="center"
+            android:src="@drawable/gallery_bg" />
+
+        <TextView xmlns:android="http://schemas.android.com/apk/res/android"
             android:id="@+id/empty_gallery_text"
-            android:layout_height="wrap_content"
             android:layout_width="wrap_content"
-            android:text="@string/gallery_empty_state_text"
-            />
+            android:layout_height="wrap_content"
+            android:text="@string/gallery_empty_state_text" />
     </LinearLayout>
 
 

@@ -5,6 +5,7 @@ import android.os.Bundle
 import android.view.*
 import android.widget.AdapterView
 import android.widget.GridView
+import androidx.recyclerview.widget.RecyclerView
 import kotlinx.android.synthetic.main.fragment_gallery.*
 
 interface ChooseImagesFragmentDelegate {
@@ -13,13 +14,15 @@ interface ChooseImagesFragmentDelegate {
 
 class ChooseImagesFragment: Fragment() {
 
-    lateinit var adapter: GalleryAdapter
+    lateinit var adapter: GalleryRecyclerAdapter
+    lateinit var assessRecyclerView: RecyclerView
 
     var delegate: ChooseImagesFragmentDelegate? = null
 
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        adapter = GalleryAdapter(requireActivity().applicationContext)
+        adapter = GalleryRecyclerAdapter(requireActivity().applicationContext)
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
@@ -34,18 +37,18 @@ class ChooseImagesFragment: Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        assessRecyclerView = bind(R.id.assess_recycler_view)
+        assessRecyclerView.adapter = adapter
 
-        gridView.adapter = adapter
-
-        gridView.onItemClickListener = AdapterView.OnItemClickListener { parent, view, position, id ->
-            adapter.toggleSelectionAt(position)
-        }
+//        assessRecyclerView.onItemClickListener = AdapterView.OnItemClickListener { parent, view, position, id ->
+//            adapter.toggleSelectionAt(position)
+//        }
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when (item!!.getItemId()) {
             R.id.menu_item_choose_images_next -> {
-                delegate?.choseImages(this, adapter.selectedItems())
+//                delegate?.choseImages(this, adapter.selectedItems())
                 return true
             }
             else ->
