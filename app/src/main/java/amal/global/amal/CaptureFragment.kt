@@ -12,6 +12,8 @@ import androidx.fragment.app.Fragment
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationServices
 import com.wonderkiln.camerakit.*
+import com.wonderkiln.camerakit.CameraKit.Constants.FLASH_OFF
+import com.wonderkiln.camerakit.CameraKit.Constants.FLASH_ON
 import kotlinx.android.synthetic.main.fragment_capture.*
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
@@ -103,6 +105,8 @@ class CaptureFragment : Fragment() {
 
     private fun toggleFlash(isSelected: Boolean) {
         Log.d("Capture Fragment", "toggleFlash method called")
+        if (isSelected) cameraView.setFlash(CameraKit.Constants.FLASH_AUTO)
+        else cameraView.setFlash(CameraKit.Constants.FLASH_OFF)
     }
 
     private fun animateFlashEmulator() {
