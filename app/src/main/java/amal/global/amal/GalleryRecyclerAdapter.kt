@@ -16,7 +16,7 @@ sealed class GalleryItem {
 
 class GalleryRecyclerViewHolder(itemView: View): RecyclerView.ViewHolder(itemView) {
     private fun bindPhoto(item: GalleryItem.GalleryPhoto) {
-        item.photoToShow.load(itemView.context).centerCrop().into(itemView.content_image_view)
+        item.photoToShow.load(itemView.context).centerCrop().into(itemView.contentImageView)
     }
 
     private fun bindDivider(item: GalleryItem.GalleryDateDivider) {
@@ -42,7 +42,7 @@ class GalleryRecyclerAdapter(private val context: Context): RecyclerView.Adapter
     private var selectedImages = mutableListOf<Int>()
 
     init {
-        val images: List<LocalImage> = PhotoStorage(context).fetchImagesSortedByDateDesc()
+        val images = PhotoStorage(context).fetchImagesSortedByDateDesc()
         createGalleryItemList(images)
     }
 
@@ -50,7 +50,7 @@ class GalleryRecyclerAdapter(private val context: Context): RecyclerView.Adapter
 
     override fun getItemViewType(position: Int) = when (galleryItems[position]) {
         is GalleryItem.GalleryPhoto -> TYPE_PHOTO
-        else -> TYPE_DIVIDER
+        is GalleryItem.GalleryDateDivider -> TYPE_DIVIDER
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): GalleryRecyclerViewHolder {
@@ -89,7 +89,7 @@ class GalleryRecyclerAdapter(private val context: Context): RecyclerView.Adapter
     //not sure if should send this through adapter first or just call directly through galleryfragment
     //keep here for now until figure out how will implement the select function
     fun deleteImage(imagePath: String, settingsPath: String) {
-        Log.d(GalleryAdapter.TAG, "deleteImage was called")
+        Log.d(GalleryRecyclerAdapter.TAG, "deleteImage was called")
         PhotoStorage(context).deleteImage(imagePath, settingsPath)
         reloadData()
         // Todo Use notifyItemRemoved() instead
