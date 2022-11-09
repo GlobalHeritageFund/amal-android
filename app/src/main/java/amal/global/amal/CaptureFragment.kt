@@ -24,6 +24,10 @@ interface CaptureDelegate {
 }
 
 class CaptureFragment : Fragment() {
+    companion object {
+        const val TAG = "Capture Fragment"
+        const val CAMERA_PERMISSION_REQUEST = 1
+    }
 
     private lateinit var fusedLocationClient: FusedLocationProviderClient
 
@@ -104,9 +108,9 @@ class CaptureFragment : Fragment() {
     }
 
     private fun toggleFlash(isSelected: Boolean) {
-        Log.d("Capture Fragment", "toggleFlash method called")
-        if (isSelected) cameraView.setFlash(CameraKit.Constants.FLASH_AUTO)
-        else cameraView.setFlash(CameraKit.Constants.FLASH_OFF)
+        //Could als0 do flash auto instead of flash on if desired
+        if (isSelected) cameraView.flash = FLASH_ON
+        else cameraView.flash = FLASH_OFF
     }
 
     private fun animateFlashEmulator() {
@@ -150,5 +154,4 @@ class CaptureFragment : Fragment() {
         }
         override fun onVideo(video: CameraKitVideo) { }
     }
-
 }
