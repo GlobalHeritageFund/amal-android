@@ -63,7 +63,7 @@ class PhotoStorage internal constructor(internal var context: Context) {
             //TODO should probably add some error protection at some point - also may eventually add to WorkManager
     }
 
-    public fun fetchImages(): List<LocalImage> {
+    public fun fetchImagesSortedByDateDesc(): List<LocalImage> {
         val dir = File(context.filesDir.toString() + "/images/")
         dir.mkdirs()
         return dir

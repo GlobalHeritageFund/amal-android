@@ -4,44 +4,37 @@
     android:layout_height="match_parent"
     tools:context="amal.global.amal.AssessFragment">
 
-    <GridView xmlns:android="http://schemas.android.com/apk/res/android"
-        android:id="@+id/gridView"
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/assessRecyclerView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
         android:layout_marginTop="10dp"
-        android:layout_width="fill_parent"
-        android:layout_height="fill_parent"
-        android:columnWidth="90dp"
-        android:numColumns="auto_fit"
-        android:verticalSpacing="10dp"
-        android:horizontalSpacing="10dp"
-        android:stretchMode="columnWidth"
-        android:gravity="center"
+        android:layout_marginBottom="10dp"
         android:background="@color/backgroundColor"
-        android:visibility="gone"
-        />
+        android:visibility="visible" />
+
     <LinearLayout
-        xmlns:android="http://schemas.android.com/apk/res/android"
-        android:orientation="vertical"
+        android:id="@+id/empty_gallery_view"
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"
-        android:id="@+id/empty_gallery_view"
+        android:orientation="vertical"
         android:visibility="gone">
-        <ImageView  xmlns:android="http://schemas.android.com/apk/res/android"
+
+        <ImageView
             android:id="@+id/empty_gallery_image"
-            android:layout_marginTop="10dp"
             android:layout_width="fill_parent"
             android:layout_height="300dp"
-            android:gravity="center"
+            android:layout_marginTop="10dp"
             android:background="@color/backgroundColor"
             android:contentDescription="@string/gallery_empty_text"
-            android:src="@drawable/gallery_bg"
-            />
-        <TextView  xmlns:android="http://schemas.android.com/apk/res/android"
-            android:id="@+id/empty_gallery_text"
-            android:layout_height="wrap_content"
-            android:layout_width="wrap_content"
-            android:text="@string/gallery_empty_state_text"
-            />
-    </LinearLayout>
+            android:gravity="center"
+            android:src="@drawable/gallery_bg" />
 
+        <TextView
+            android:id="@+id/empty_gallery_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/gallery_empty_state_text" />
+    </LinearLayout>
 
 </FrameLayout>

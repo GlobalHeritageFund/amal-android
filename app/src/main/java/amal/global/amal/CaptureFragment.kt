@@ -1,21 +1,20 @@
 package amal.global.amal
 
 import android.Manifest
-import android.content.Context
+import android.animation.ObjectAnimator
 import android.content.pm.PackageManager
-import android.location.Location
-import android.location.LocationListener
-import android.location.LocationManager
 import android.os.Bundle
+import android.util.Log
+import android.view.*
 import androidx.core.app.ActivityCompat
 import androidx.fragment.app.Fragment
-import android.view.*
+import com.google.android.gms.location.FusedLocationProviderClient
+import com.google.android.gms.location.LocationServices
 import com.wonderkiln.camerakit.*
-import android.animation.ObjectAnimator
-import android.annotation.SuppressLint
 import kotlinx.android.synthetic.main.fragment_capture.*
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
+
 
 interface CaptureDelegate {
     fun settingsButtonTapped(fragment: CaptureFragment)
@@ -23,9 +22,14 @@ interface CaptureDelegate {
 
 class CaptureFragment : Fragment() {
 
-    private var lastLocation: Location? = null
+    private lateinit var fusedLocationClient: FusedLocationProviderClient
 
     var delegate: CaptureDelegate? = null
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        fusedLocationClient = LocationServices.getFusedLocationProviderClient(requireContext())
+    }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
@@ -54,7 +58,6 @@ class CaptureFragment : Fragment() {
         super.onResume()
         cameraView.start()
         requestLocationPermission()
-        beginListeningForLocation()
     }
 
     override fun onPause() {
@@ -82,28 +85,6 @@ class CaptureFragment : Fragment() {
         }
     }
 
-    @SuppressLint("MissingPermission")
-    private fun beginListeningForLocation() {
-        val locationManager = requireContext().getSystemService(Context.LOCATION_SERVICE) as LocationManager
-
-        val locationListener = object : LocationListener {
-            override fun onLocationChanged(location: Location) {
-                lastLocation = location
-            }
-
-            override fun onStatusChanged(provider: String, status: Int, extras: Bundle) {}
-
-            override fun onProviderEnabled(provider: String) {}
-
-            override fun onProviderDisabled(provider: String) {}
-        }
-
-        if (ActivityCompat.checkSelfPermission(requireContext(), Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
-            locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0f, locationListener)
-            lastLocation = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER)
-        }
-    }
-
     private fun takePicture() {
         cameraView.captureImage()
     }
@@ -123,15 +104,29 @@ class CaptureFragment : Fragment() {
             animateFlashEmulator()
 
             val metadata = Metadata()
-            metadata.latitude = lastLocation?.latitude ?: 0.0
-            metadata.longitude = lastLocation?.longitude ?: 0.0
+            metadata.date = System.currentTimeMillis()
 
-
-            GlobalScope.launch {
-                PhotoStorage(activity!!.applicationContext).savePhotoLocally(image.jpeg, metadata)
+            //TODO check GPS or network? also see if okay with only checking once
+            if (ActivityCompat.checkSelfPermission(requireContext(), Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
+                //TODO will switch this over to currentLocation instead of last location for more precision, but will make change when add loading spinner so delay not confusin
+                fusedLocationClient.lastLocation
+                        .addOnCompleteListener { task ->
+                            val location = task.result
+                            if (task.isSuccessful && location != null) {
+                                metadata.latitude = location.latitude
+                                metadata.longitude = location.longitude
+                            } else {
+                                Log.d("Capture fragment", "No location received: task success? ${task.isSuccessful}, location? ${location != null}")
+                            }
+                            //TODO may not need to launch this on a separate thread, but leaving it for now bc don't want to mess w things too much
+                            GlobalScope.launch {
+                                PhotoStorage(activity!!.applicationContext).savePhotoLocally(image.jpeg, metadata)
+                            }
+                        }
+            } else {
+                Log.d("Capture fragment", "Fine location permission not available")
             }
         }
-
         override fun onVideo(video: CameraKitVideo) { }
     }
 

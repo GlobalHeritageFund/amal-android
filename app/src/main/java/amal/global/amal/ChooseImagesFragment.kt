@@ -1,10 +1,10 @@
 package amal.global.amal
 
+import amal.global.amal.GalleryRecyclerAdapter.Companion.TYPE_DIVIDER
 import androidx.fragment.app.Fragment
 import android.os.Bundle
 import android.view.*
-import android.widget.AdapterView
-import android.widget.GridView
+import androidx.recyclerview.widget.GridLayoutManager
 import kotlinx.android.synthetic.main.fragment_gallery.*
 
 interface ChooseImagesFragmentDelegate {
@@ -13,13 +13,16 @@ interface ChooseImagesFragmentDelegate {
 
 class ChooseImagesFragment: Fragment() {
 
-    lateinit var adapter: GalleryAdapter
+    companion object {
+        const val TAG = "Choose Fragment"
+    }
+    lateinit var adapter: GalleryRecyclerAdapter
 
     var delegate: ChooseImagesFragmentDelegate? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        adapter = GalleryAdapter(requireActivity().applicationContext)
+        adapter = GalleryRecyclerAdapter(requireActivity().applicationContext)
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
@@ -34,12 +37,20 @@ class ChooseImagesFragment: Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
-        gridView.adapter = adapter
-
-        gridView.onItemClickListener = AdapterView.OnItemClickListener { parent, view, position, id ->
-            adapter.toggleSelectionAt(position)
+        assessRecyclerView.adapter = adapter
+        assessRecyclerView.layoutManager = GridLayoutManager(activity,3).apply {
+            spanSizeLookup = object : GridLayoutManager.SpanSizeLookup() {
+                override fun getSpanSize(position: Int) = when (adapter.getItemViewType(position)) {
+                    TYPE_DIVIDER -> 3
+                    else ->  1
+                }
+            }
         }
+        assessRecyclerView.addOnItemClickListener(object: OnItemClickListener {
+            override fun onItemClicked(position: Int, view: View) {
+                adapter.toggleSelectionAt(position)
+            }
+        })
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
