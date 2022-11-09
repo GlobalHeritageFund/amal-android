@@ -59,7 +59,6 @@ class CaptureFragment : Fragment() {
         super.onResume()
         cameraView.start()
         requestLocationPermission()
-//        beginListeningForLocation()
     }
 
     override fun onPause() {
@@ -87,33 +86,6 @@ class CaptureFragment : Fragment() {
         }
     }
 
-//    @SuppressLint("MissingPermission")
-//    private fun beginListeningForLocation() {
-//        Log.d("cap frag last loc","got in beginListening")
-//        val locationManager = requireContext().getSystemService(Context.LOCATION_SERVICE) as LocationManager
-//
-//        val locationListener = object : LocationListener {
-//            override fun onLocationChanged(location: Location) {
-//                lastLocation = location
-//            }
-//
-//            override fun onStatusChanged(provider: String, status: Int, extras: Bundle) {}
-//
-//            override fun onProviderEnabled(provider: String) {}
-//
-//            override fun onProviderDisabled(provider: String) {}
-//        }
-//
-//        if (ActivityCompat.checkSelfPermission(requireContext(), Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
-//            Log.d("cap frag last loc","got in if loc permissions")
-//            locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0f, locationListener)
-//            lastLocation = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER)
-//        } else {
-//            Log.d("cap frag","hit else in permission location")
-//        }
-//
-//    }
-
     private fun takePicture() {
         cameraView.captureImage()
     }
@@ -137,12 +109,9 @@ class CaptureFragment : Fragment() {
 
             //TODO check GPS or network? also see if okay with only checking once
             if (ActivityCompat.checkSelfPermission(requireContext(), Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
-                Log.d("Cap frag", "if in on image")
                 fusedLocationClient.lastLocation
                         .addOnSuccessListener { location->
                             if (location != null) {
-                                Log.d("Cap Frag Longitude is ", location.longitude.toString() )
-                                Log.d("Cap Frag Latitude is ", location.latitude.toString() )
                                 metadata.latitude = location.latitude
                                 metadata.longitude = location.longitude
                             } else {

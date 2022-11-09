@@ -5,7 +5,7 @@
     tools:context="amal.global.amal.AssessFragment">
 
     <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/assess_recycler_view"
+        android:id="@+id/assessRecyclerView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="10dp"

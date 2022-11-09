@@ -3,9 +3,7 @@ package amal.global.amal
 import androidx.fragment.app.Fragment
 import android.os.Bundle
 import android.view.*
-import android.widget.AdapterView
-import android.widget.GridView
-import androidx.recyclerview.widget.RecyclerView
+import androidx.recyclerview.widget.GridLayoutManager
 import kotlinx.android.synthetic.main.fragment_gallery.*
 
 interface ChooseImagesFragmentDelegate {
@@ -14,11 +12,13 @@ interface ChooseImagesFragmentDelegate {
 
 class ChooseImagesFragment: Fragment() {
 
+    companion object {
+        const val TAG = "Choose Fragment"
+        private const val TYPE_DIVIDER = 1
+    }
     lateinit var adapter: GalleryRecyclerAdapter
-    lateinit var assessRecyclerView: RecyclerView
 
     var delegate: ChooseImagesFragmentDelegate? = null
-
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -37,18 +37,28 @@ class ChooseImagesFragment: Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        assessRecyclerView = bind(R.id.assess_recycler_view)
         assessRecyclerView.adapter = adapter
-
-//        assessRecyclerView.onItemClickListener = AdapterView.OnItemClickListener { parent, view, position, id ->
-//            adapter.toggleSelectionAt(position)
-//        }
+        assessRecyclerView.layoutManager = GridLayoutManager(activity,3).apply {
+            spanSizeLookup = object : GridLayoutManager.SpanSizeLookup() {
+                override fun getSpanSize(position: Int): Int {
+                    return when (adapter!!.getItemViewType(position)){
+                        TYPE_DIVIDER -> 3
+                        else ->  1
+                    }
+                }
+            }
+        }
+        assessRecyclerView.addOnItemClickListener(object: OnItemClickListener {
+            override fun onItemClicked(position: Int, view: View) {
+                adapter.toggleSelectionAt(position)
+            }
+        })
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when (item!!.getItemId()) {
             R.id.menu_item_choose_images_next -> {
-//                delegate?.choseImages(this, adapter.selectedItems())
+                delegate?.choseImages(this, adapter.selectedItems())
                 return true
             }
             else ->

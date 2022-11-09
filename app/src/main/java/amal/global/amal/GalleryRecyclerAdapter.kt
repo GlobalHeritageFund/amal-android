@@ -75,6 +75,10 @@ class GalleryRecyclerAdapter(private val context: Context): RecyclerView.Adapter
 
     override fun onBindViewHolder(holder: GalleryRecyclerViewHolder, position: Int) {
         holder.bind(galleryItems[position])
+        if (holder.itemViewType == TYPE_PHOTO) {
+            holder.itemView.selectionStateImageView.visibility = if (selectedImages.contains(position)) View.VISIBLE else View.INVISIBLE
+        }
+
     }
 
     fun createGalleryItemList(imageList: List<LocalImage>) {
@@ -95,25 +99,27 @@ class GalleryRecyclerAdapter(private val context: Context): RecyclerView.Adapter
         reloadData()
         notifyDataSetChanged()
     }
-// below line was in getView of original galleryAdapter - may need for implementation of multi select
-//    galleryCell.selectionStateImageView.visibility = if (selectedImages.contains(position)) View.VISIBLE else View.INVISIBLE
 
-//    fun selectedItems(): List<LocalImage> {
-//        return selectedImages.sorted().mapNotNull { getItem(it) as? LocalImage }
-//    }
-//
-//    fun toggleSelectionAt(position: Int) {
-//        if (selectedImages.contains(position)) {
-//            selectedImages.remove(position)
-//        } else {
-//            selectedImages.add(position)
-//        }
-//        notifyDataSetChanged()
-//    }
+    fun getImage(position: Int): Any {
+        val selectedGalleryItem = galleryItems[position] as GalleryItem.GalleryPhoto
+        return selectedGalleryItem.photoToShow
+    }
+
+    fun selectedItems(): List<LocalImage> {
+        return selectedImages.sorted().mapNotNull { getImage(it) as? LocalImage }
+    }
+
+    fun toggleSelectionAt(position: Int) {
+        if (selectedImages.contains(position)) {
+            selectedImages.remove(position)
+        } else {
+            selectedImages.add(position)
+        }
+        notifyDataSetChanged()
+    }
 
     fun reloadData() {
         createGalleryItemList(PhotoStorage(context).fetchImagesSortedByDateDesc())
         selectedImages = mutableListOf()
     }
-
 }

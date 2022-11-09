@@ -47,7 +47,7 @@ class GalleryFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        assessRecyclerView = bind(R.id.assess_recycler_view)
+        assessRecyclerView = bind(R.id.assessRecyclerView)
         emptyView = bind(R.id.empty_gallery_view)
         assessRecyclerView.adapter = recyclerAdapter
         assessRecyclerView.layoutManager = GridLayoutManager(activity,3).apply {
