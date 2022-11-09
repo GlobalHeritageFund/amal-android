@@ -51,4 +51,5 @@
     <string name="passphrase">Passphrase</string>
     <string name="gallery_empty_state_text">As you take photos, the gallery on this page will display them.</string>
     <string name="reports_empty_state_text">To create a report, first take some photos, then tap \'New\' at the top of this screen.</string>
+    <string name="flash">Flash</string>
 </resources>

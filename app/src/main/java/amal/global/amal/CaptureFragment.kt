@@ -7,6 +7,7 @@ import android.os.Bundle
 import android.util.Log
 import android.view.*
 import androidx.core.app.ActivityCompat
+import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationServices
@@ -25,6 +26,7 @@ class CaptureFragment : Fragment() {
     private lateinit var fusedLocationClient: FusedLocationProviderClient
 
     var delegate: CaptureDelegate? = null
+    private var isSelected = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -72,6 +74,16 @@ class CaptureFragment : Fragment() {
                 delegate?.settingsButtonTapped(this)
                 return true
             }
+            R.id.menu_item_flash -> {
+                isSelected = !isSelected
+                toggleFlash(isSelected)
+                if (isSelected) {
+                    item.icon = ContextCompat.getDrawable(requireContext(),R.drawable.ic_flash_on_white_36pt)
+                } else {
+                    item.icon = ContextCompat.getDrawable(requireContext(),R.drawable.ic_flash_off_white_36pt)
+                }
+                return true
+            }
             else ->
                 return super.onOptionsItemSelected(item)
         }
@@ -87,6 +99,10 @@ class CaptureFragment : Fragment() {
 
     private fun takePicture() {
         cameraView.captureImage()
+    }
+
+    private fun toggleFlash(isSelected: Boolean) {
+        Log.d("Capture Fragment", "toggleFlash method called")
     }
 
     private fun animateFlashEmulator() {
@@ -107,6 +123,7 @@ class CaptureFragment : Fragment() {
             metadata.date = System.currentTimeMillis()
 
             //TODO check GPS or network? also see if okay with only checking once
+            //TODO confirm waiting for fuse before saving the metadata isn't causing metadata for that image to be lost if doesn't return or something
             if (ActivityCompat.checkSelfPermission(requireContext(), Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
                 //TODO will switch this over to currentLocation instead of last location for more precision, but will make change when add loading spinner so delay not confusin
                 fusedLocationClient.lastLocation
