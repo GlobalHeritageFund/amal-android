@@ -147,10 +147,6 @@ class AssessFragment : Fragment() {
         }
 
         coordinatesTextView.text = image?.metadata?.coordinatesString()
-        val tempMetadata = image?.metadata
-        Log.d("acc frg meta",tempMetadata.toString())
-        val tempCoords = image?.metadata?.coordinatesString()
-        Log.d("acc frg ccord string",tempCoords.toString())
         editLocationButton.text = if (hasCoordinates) "Edit Location" else "Set Location"
 
         editLocationButton.setOnClickListener({ view ->

@@ -1,5 +1,6 @@
 package amal.global.amal
 
+import amal.global.amal.GalleryRecyclerAdapter.Companion.TYPE_DIVIDER
 import androidx.fragment.app.Fragment
 import android.os.Bundle
 import android.view.*
@@ -14,7 +15,6 @@ class ChooseImagesFragment: Fragment() {
 
     companion object {
         const val TAG = "Choose Fragment"
-        private const val TYPE_DIVIDER = 1
     }
     lateinit var adapter: GalleryRecyclerAdapter
 
@@ -40,11 +40,9 @@ class ChooseImagesFragment: Fragment() {
         assessRecyclerView.adapter = adapter
         assessRecyclerView.layoutManager = GridLayoutManager(activity,3).apply {
             spanSizeLookup = object : GridLayoutManager.SpanSizeLookup() {
-                override fun getSpanSize(position: Int): Int {
-                    return when (adapter!!.getItemViewType(position)){
-                        TYPE_DIVIDER -> 3
-                        else ->  1
-                    }
+                override fun getSpanSize(position: Int) = when (adapter.getItemViewType(position)) {
+                    TYPE_DIVIDER -> 3
+                    else ->  1
                 }
             }
         }

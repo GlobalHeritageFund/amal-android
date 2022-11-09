@@ -8,7 +8,6 @@ import android.view.ViewGroup
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import kotlinx.android.synthetic.main.cell_gallery.view.*
-import java.util.Collections.addAll
 
 sealed class GalleryItem {
     data class GalleryDateDivider(val photoGroupDate: String): GalleryItem()
@@ -35,28 +34,23 @@ class GalleryRecyclerViewHolder(itemView: View): RecyclerView.ViewHolder(itemVie
 class GalleryRecyclerAdapter(private val context: Context): RecyclerView.Adapter<GalleryRecyclerViewHolder>() {
     companion object {
         const val TAG = "GallRecyclerAdapter"
-        private const val TYPE_PHOTO = 0
-        private const val TYPE_DIVIDER = 1
+        const val TYPE_PHOTO = 0
+        const val TYPE_DIVIDER = 1
     }
 
     val galleryItems = mutableListOf<GalleryItem>()
     private var selectedImages = mutableListOf<Int>()
-    var lastDate =  ""
 
     init {
-        var images: List<LocalImage> = PhotoStorage(context).fetchImagesSortedByDateDesc()
+        val images: List<LocalImage> = PhotoStorage(context).fetchImagesSortedByDateDesc()
         createGalleryItemList(images)
     }
 
-    override fun getItemCount(): Int {
-        return galleryItems.size
-    }
+    override fun getItemCount() = galleryItems.size
 
-    override fun getItemViewType(position: Int): Int {
-        return when (galleryItems[position]) {
-            is GalleryItem.GalleryPhoto -> TYPE_PHOTO
-            else -> TYPE_DIVIDER
-        }
+    override fun getItemViewType(position: Int) = when (galleryItems[position]) {
+        is GalleryItem.GalleryPhoto -> TYPE_PHOTO
+        else -> TYPE_DIVIDER
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): GalleryRecyclerViewHolder {
@@ -81,7 +75,8 @@ class GalleryRecyclerAdapter(private val context: Context): RecyclerView.Adapter
 
     }
 
-    fun createGalleryItemList(imageList: List<LocalImage>) {
+    private fun createGalleryItemList(imageList: List<LocalImage>) {
+        var lastDate = ""
         imageList.forEach {
             if (it.localDateString != lastDate) {
                 lastDate = it.localDateString ?: ""
@@ -97,6 +92,7 @@ class GalleryRecyclerAdapter(private val context: Context): RecyclerView.Adapter
         Log.d(GalleryAdapter.TAG, "deleteImage was called")
         PhotoStorage(context).deleteImage(imagePath, settingsPath)
         reloadData()
+        // Todo Use notifyItemRemoved() instead
         notifyDataSetChanged()
     }
 
@@ -115,7 +111,7 @@ class GalleryRecyclerAdapter(private val context: Context): RecyclerView.Adapter
         } else {
             selectedImages.add(position)
         }
-        notifyDataSetChanged()
+        notifyItemChanged(position)
     }
 
     fun reloadData() {

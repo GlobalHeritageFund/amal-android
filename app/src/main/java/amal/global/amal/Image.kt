@@ -55,12 +55,10 @@ data class LocalImage internal constructor(
     val date: Date
         get() = metadata.dateValue ?: Date(File(filePath).lastModified())
 
-    val localDate: LocalDate
-        get() = metadata.localDateValue ?: DateTime(File(filePath).lastModified()).toLocalDate()
-
     val localDateString: String?
         get() {
             val fmt: DateTimeFormatter = DateTimeFormat.forPattern("MMMM d, yyyy")
+            val localDate = metadata.localDateValue ?: DateTime(File(filePath).lastModified()).toLocalDate()
             return localDate.toString(fmt)
         }
 

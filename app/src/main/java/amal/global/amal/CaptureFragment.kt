@@ -28,7 +28,6 @@ class CaptureFragment : Fragment() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        //TODO make sure sending correct context to location client - may need to be main activity
         fusedLocationClient = LocationServices.getFusedLocationProviderClient(requireContext())
     }
 
@@ -109,26 +108,25 @@ class CaptureFragment : Fragment() {
 
             //TODO check GPS or network? also see if okay with only checking once
             if (ActivityCompat.checkSelfPermission(requireContext(), Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
+                //TODO will switch this over to currentLocation instead of last location for more precision, but will make change when add loading spinner so delay not confusin
                 fusedLocationClient.lastLocation
-                        .addOnSuccessListener { location->
-                            if (location != null) {
+                        .addOnCompleteListener { task ->
+                            val location = task.result
+                            if (task.isSuccessful && location != null) {
                                 metadata.latitude = location.latitude
                                 metadata.longitude = location.longitude
                             } else {
-                                Log.d("Cap frag", "lastlocation Success but No location received")
+                                Log.d("Capture fragment", "No location received: task success? ${task.isSuccessful}, location? ${location != null}")
                             }
-                        }.addOnFailureListener{ error->
-                            Log.d("capfrag lastloc fail",error.toString())
+                            //TODO may not need to launch this on a separate thread, but leaving it for now bc don't want to mess w things too much
+                            GlobalScope.launch {
+                                PhotoStorage(activity!!.applicationContext).savePhotoLocally(image.jpeg, metadata)
+                            }
                         }
             } else {
-                Log.d("Cap frag", "else in on image")
-            }
-
-            GlobalScope.launch {
-                PhotoStorage(activity!!.applicationContext).savePhotoLocally(image.jpeg, metadata)
+                Log.d("Capture fragment", "Fine location permission not available")
             }
         }
-
         override fun onVideo(video: CameraKitVideo) { }
     }
 

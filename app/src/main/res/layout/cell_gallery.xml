@@ -11,7 +11,7 @@
         android:id="@+id/content_image_view"
         android:layout_width="match_parent"
         android:layout_height="100dp"
-        android:contentDescription=""
+        android:contentDescription="Image"
         android:padding="5dp" />
 
     <ImageView
@@ -20,5 +20,5 @@
         android:layout_height="40dp"
         android:src="@android:drawable/checkbox_on_background"
         android:visibility="invisible"
-        android:contentDescription="" />
+        android:contentDescription="Selected checkbox" />
 </RelativeLayout>
