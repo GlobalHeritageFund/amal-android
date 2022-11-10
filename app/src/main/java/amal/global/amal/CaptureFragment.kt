@@ -6,6 +6,7 @@ import android.content.pm.PackageManager
 import android.os.Bundle
 import android.util.Log
 import android.view.*
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
@@ -33,10 +34,27 @@ class CaptureFragment : Fragment() {
 
     var delegate: CaptureDelegate? = null
     private var isSelected = false
+    private var haveCameraPermission = true
+
+//    val requestPermissionLauncher =
+//            registerForActivityResult(ActivityResultContracts.RequestPermission()
+//            ) { isGranted: Boolean ->
+//                if (isGranted) {
+//                    // All is good - do nothing
+//                    Log.d(TAG, "permission granted")
+//                } else {
+//                    //change view to cover camera
+//                    Log.d(TAG, "permission denied")
+//                }
+//            }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         fusedLocationClient = LocationServices.getFusedLocationProviderClient(requireContext())
+        if (ContextCompat.checkSelfPermission(
+                        requireActivity(),
+                        Manifest.permission.CAMERA
+                ) != PackageManager.PERMISSION_GRANTED) haveCameraPermission = false
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
@@ -47,8 +65,13 @@ class CaptureFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        cameraView.addCameraKitListener(getNewCameraKitListener())
-        shutterButton.setOnClickListener({ takePicture() })
+        if (haveCameraPermission) {
+            cameraView.addCameraKitListener(getNewCameraKitListener())
+            shutterButton.setOnClickListener({ takePicture() })
+        } else {
+            cameraView.visibility = View.GONE
+            noCameraView.visibility = View.VISIBLE
+        }
     }
 
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
@@ -64,12 +87,14 @@ class CaptureFragment : Fragment() {
 
     override fun onResume() {
         super.onResume()
-        cameraView.start()
-        requestLocationPermission()
+        if (haveCameraPermission) {
+            cameraView.start()
+            requestLocationPermission()
+        }
     }
 
     override fun onPause() {
-        cameraView.stop()
+        if (haveCameraPermission) cameraView.stop()
         super.onPause()
     }
 
@@ -81,12 +106,14 @@ class CaptureFragment : Fragment() {
                 return true
             }
             R.id.menu_item_flash -> {
-                isSelected = !isSelected
-                toggleFlash(isSelected)
-                if (isSelected) {
-                    item.icon = ContextCompat.getDrawable(requireContext(),R.drawable.ic_flash_on_white_36pt)
-                } else {
-                    item.icon = ContextCompat.getDrawable(requireContext(),R.drawable.ic_flash_off_white_36pt)
+                if (haveCameraPermission) {
+                    isSelected = !isSelected
+                    toggleFlash(isSelected)
+                    if (isSelected) {
+                        item.icon = ContextCompat.getDrawable(requireContext(),R.drawable.ic_flash_on_white_36pt)
+                    } else {
+                        item.icon = ContextCompat.getDrawable(requireContext(),R.drawable.ic_flash_off_white_36pt)
+                    }
                 }
                 return true
             }
@@ -103,12 +130,26 @@ class CaptureFragment : Fragment() {
         }
     }
 
+//    private fun requestCameraPermission() {
+//        val permission = Manifest.permission.CAMERA
+//        if (ContextCompat.checkSelfPermission(
+//                        requireActivity(),
+//                        Manifest.permission.CAMERA
+//                ) == PackageManager.PERMISSION_GRANTED) {
+//            return
+//        } else {
+//            requestPermissionLauncher.launch(
+//                    Manifest.permission.CAMERA)
+//        }
+//    }
+
     private fun takePicture() {
         cameraView.captureImage()
     }
 
+    //TODO not sure what would happen if camera did not have a flashlight can check for flashlight permissin before calling
     private fun toggleFlash(isSelected: Boolean) {
-        //Could als0 do flash auto instead of flash on if desired
+        //Could also do flash auto instead of flash on if desired
         if (isSelected) cameraView.flash = FLASH_ON
         else cameraView.flash = FLASH_OFF
     }
