@@ -11,6 +11,8 @@
         android:id="@+id/menu_item_flash"
         app:showAsAction="always"
         android:icon="@drawable/ic_flash_off_white_36pt"
+        android:actionLayout="@layout/flash_icon_action_view"
+        style="@android:style/Widget.ActionButton"
         android:title="@string/flash">
     </item>
 </menu>

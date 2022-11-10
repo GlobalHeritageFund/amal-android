@@ -3,10 +3,11 @@ package amal.global.amal
 import android.Manifest
 import android.animation.ObjectAnimator
 import android.content.pm.PackageManager
+import android.graphics.drawable.Drawable
+import android.hardware.SensorManager
 import android.os.Bundle
 import android.util.Log
 import android.view.*
-import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
@@ -31,6 +32,8 @@ class CaptureFragment : Fragment() {
     }
 
     private lateinit var fusedLocationClient: FusedLocationProviderClient
+    private lateinit var orientationListener: OrientationEventListener
+//    private lateinit var flashToRotate: View
 
     var delegate: CaptureDelegate? = null
     private var isSelected = false
@@ -51,10 +54,11 @@ class CaptureFragment : Fragment() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         fusedLocationClient = LocationServices.getFusedLocationProviderClient(requireContext())
-        if (ContextCompat.checkSelfPermission(
-                        requireActivity(),
-                        Manifest.permission.CAMERA
-                ) != PackageManager.PERMISSION_GRANTED) haveCameraPermission = false
+        orientationListener = object : OrientationEventListener(activity, SensorManager.SENSOR_DELAY_UI) {
+            override fun onOrientationChanged(orientation: Int) {
+                handleOrientationChange(orientation)
+            }
+        }
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
@@ -65,19 +69,15 @@ class CaptureFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        if (haveCameraPermission) {
-            cameraView.addCameraKitListener(getNewCameraKitListener())
-            shutterButton.setOnClickListener({ takePicture() })
-        } else {
-            cameraView.visibility = View.GONE
-            noCameraView.visibility = View.VISIBLE
-        }
     }
 
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
         super.onCreateOptionsMenu(menu, inflater)
         inflater.inflate(R.menu.menu_capture, menu)
+//        flashToRotateItem = menu.findItem(R.id.menu_item_flash)
+//        flashToRotate = flashToRotateItem.actionView
     }
+
 
     @Deprecated("Deprecated in Java")
     override fun onActivityCreated(savedInstanceState: Bundle?) {
@@ -85,16 +85,39 @@ class CaptureFragment : Fragment() {
         requireActivity().setTitle(R.string.title_capture)
     }
 
+
     override fun onResume() {
         super.onResume()
+        //this permission was moved to here bc if user navigates away from amal to enable camera in settings
+        //and then back to amal the view and permission was not getting updated
+        //hopefully will not cause screen delay
+        if (ContextCompat.checkSelfPermission(
+                        requireActivity(),
+                        Manifest.permission.CAMERA
+                ) != PackageManager.PERMISSION_GRANTED) {
+            haveCameraPermission = false
+        } else {
+            haveCameraPermission = true
+        }
         if (haveCameraPermission) {
+            cameraView.addCameraKitListener(getNewCameraKitListener())
+            shutterButton.setOnClickListener({ takePicture() })
+            if (orientationListener.canDetectOrientation()) orientationListener.enable()
+            cameraView.visibility = View.VISIBLE
+            noCameraView.visibility = View.GONE
             cameraView.start()
             requestLocationPermission()
+        } else {
+            cameraView.visibility = View.GONE
+            noCameraView.visibility = View.VISIBLE
         }
     }
 
     override fun onPause() {
-        if (haveCameraPermission) cameraView.stop()
+        if (haveCameraPermission) {
+            cameraView.stop()
+            orientationListener?.disable()
+        }
         super.onPause()
     }
 
@@ -119,6 +142,25 @@ class CaptureFragment : Fragment() {
             }
             else ->
                 return super.onOptionsItemSelected(item)
+        }
+    }
+
+    private fun handleOrientationChange(orientation: Int) {
+        if (orientation >= 315 || orientation < 45) {
+            shutterButton.animate().rotation(0F).start()
+//            flashToRotate.animate().rotation(0F).start()
+        } else if (orientation >=45 && orientation < 135) {
+            shutterButton.animate().rotation(270F).start()
+//            flashToRotate.animate().rotation(0F).start()
+        } else if (orientation >=135 && orientation < 225) {
+            shutterButton.animate().rotation(180F).start()
+//            flashToRotate.animate().rotation(0F).start()
+        } else if (orientation >=225 && orientation < 315) {
+            shutterButton.animate().rotation(90F).start()
+//            flashToRotate.animate().rotation(0F).start()
+        } else {
+            Log.d(TAG, "stall")
+            //Keep the current State
         }
     }
 
