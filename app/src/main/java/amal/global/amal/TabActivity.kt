@@ -1,5 +1,6 @@
 package amal.global.amal
 
+import amal.global.amal.databinding.ActivityTabBinding
 import amal.global.amal.onboarding.OnboardingActivity
 import android.os.Bundle
 import com.google.android.material.bottomnavigation.BottomNavigationView
@@ -11,7 +12,6 @@ import com.google.android.material.bottomsheet.BottomSheetDialog
 import androidx.appcompat.app.AlertDialog
 import android.view.View
 import com.google.firebase.auth.FirebaseAuth
-import kotlinx.android.synthetic.main.activity_tab.*
 import java.util.*
 
 interface IntentRequest {
@@ -35,6 +35,8 @@ class TabActivity : AppCompatActivity(),
     companion object {
         const val TAG = "Tab Activity"
     }
+
+    private lateinit var binding: ActivityTabBinding
 
     private val mOnNavigationItemSelectedListener = BottomNavigationView.OnNavigationItemSelectedListener { item ->
         var fragment: Fragment = when (item.itemId) {
@@ -78,7 +80,9 @@ class TabActivity : AppCompatActivity(),
     override fun onCreate(savedInstanceState: Bundle?) {
 
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_tab)
+        binding = ActivityTabBinding.inflate(layoutInflater)
+        val view = binding.root
+        setContentView(view)
 
         if (!CurrentUser(this).onboardingComplete) {
             val onboarding = Intent(this, OnboardingActivity::class.java)
@@ -268,7 +272,7 @@ class TabActivity : AppCompatActivity(),
         if (imagePath != null && settingsPath != null) {
             PhotoStorage(this).deleteImage(imagePath, settingsPath)
         }
-        navigation.selectedItemId = R.id.navigation_assess
+        binding.navigation.selectedItemId = R.id.navigation_assess
     }
 
     private fun pushFragment(fragment: Fragment) {

@@ -1,5 +1,6 @@
 package amal.global.amal
 
+import amal.global.amal.databinding.FragmentCaptureBinding
 import android.Manifest
 import android.animation.ObjectAnimator
 import android.content.pm.PackageManager
@@ -16,7 +17,6 @@ import com.google.android.gms.location.LocationServices
 import com.wonderkiln.camerakit.*
 import com.wonderkiln.camerakit.CameraKit.Constants.FLASH_OFF
 import com.wonderkiln.camerakit.CameraKit.Constants.FLASH_ON
-import kotlinx.android.synthetic.main.fragment_capture.*
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 
@@ -31,6 +31,8 @@ class CaptureFragment : Fragment() {
         const val CAMERA_PERMISSION_REQUEST = 1
     }
 
+    private var _binding: FragmentCaptureBinding? = null
+    private val binding get() = _binding!!
     private lateinit var fusedLocationClient: FusedLocationProviderClient
     private lateinit var orientationListener: OrientationEventListener
 //    private lateinit var flashToRotate: View
@@ -64,7 +66,9 @@ class CaptureFragment : Fragment() {
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
         setHasOptionsMenu(true)
-        return inflater.inflate(R.layout.fragment_capture, container, false)
+        _binding = FragmentCaptureBinding.inflate(inflater, container, false)
+        val view = binding.root
+        return view
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -100,27 +104,31 @@ class CaptureFragment : Fragment() {
             haveCameraPermission = true
         }
         if (haveCameraPermission) {
-            cameraView.addCameraKitListener(getNewCameraKitListener())
-            shutterButton.setOnClickListener({ takePicture() })
+            binding.cameraView.addCameraKitListener(getNewCameraKitListener())
+            binding.shutterButton.setOnClickListener({ takePicture() })
             if (orientationListener.canDetectOrientation()) orientationListener.enable()
-            cameraView.visibility = View.VISIBLE
-            noCameraView.visibility = View.GONE
-            cameraView.start()
+            binding.cameraView.visibility = View.VISIBLE
+            binding.noCameraView.visibility = View.GONE
+            binding.cameraView.start()
             requestLocationPermission()
         } else {
-            cameraView.visibility = View.GONE
-            noCameraView.visibility = View.VISIBLE
+            binding.cameraView.visibility = View.GONE
+            binding.noCameraView.visibility = View.VISIBLE
         }
     }
 
     override fun onPause() {
         if (haveCameraPermission) {
-            cameraView.stop()
+            binding.cameraView.stop()
             orientationListener?.disable()
         }
         super.onPause()
     }
 
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null
+    }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when (item!!.getItemId()) {
@@ -147,16 +155,16 @@ class CaptureFragment : Fragment() {
 
     private fun handleOrientationChange(orientation: Int) {
         if (orientation >= 315 || orientation < 45) {
-            shutterButton.animate().rotation(0F).start()
+            binding.shutterButton.animate().rotation(0F).start()
 //            flashToRotate.animate().rotation(0F).start()
         } else if (orientation >=45 && orientation < 135) {
-            shutterButton.animate().rotation(270F).start()
+            binding.shutterButton.animate().rotation(270F).start()
 //            flashToRotate.animate().rotation(0F).start()
         } else if (orientation >=135 && orientation < 225) {
-            shutterButton.animate().rotation(180F).start()
+            binding.shutterButton.animate().rotation(180F).start()
 //            flashToRotate.animate().rotation(0F).start()
         } else if (orientation >=225 && orientation < 315) {
-            shutterButton.animate().rotation(90F).start()
+            binding.shutterButton.animate().rotation(90F).start()
 //            flashToRotate.animate().rotation(0F).start()
         } else {
             Log.d(TAG, "stall")
@@ -186,18 +194,18 @@ class CaptureFragment : Fragment() {
 //    }
 
     private fun takePicture() {
-        cameraView.captureImage()
+        binding.cameraView.captureImage()
     }
 
     //TODO not sure what would happen if camera did not have a flashlight can check for flashlight permissin before calling
     private fun toggleFlash(isSelected: Boolean) {
         //Could also do flash auto instead of flash on if desired
-        if (isSelected) cameraView.flash = FLASH_ON
-        else cameraView.flash = FLASH_OFF
+        if (isSelected) binding.cameraView.flash = FLASH_ON
+        else binding.cameraView.flash = FLASH_OFF
     }
 
     private fun animateFlashEmulator() {
-        val anim = ObjectAnimator.ofFloat(flashEmulator, "alpha", 0f, 1f, 0f)
+        val anim = ObjectAnimator.ofFloat(binding.flashEmulator, "alpha", 0f, 1f, 0f)
         anim.duration = 150
         anim.start()
     }

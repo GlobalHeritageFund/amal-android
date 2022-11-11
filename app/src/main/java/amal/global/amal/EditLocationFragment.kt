@@ -1,5 +1,6 @@
 package amal.global.amal
 
+import amal.global.amal.databinding.FragmentEditLocationBinding
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
@@ -10,9 +11,11 @@ import com.google.android.gms.maps.MapView
 import com.google.android.gms.maps.model.CameraPosition
 import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.MarkerOptions
-import kotlinx.android.synthetic.main.fragment_assess.*
 
 class EditLocationFragment : Fragment() {
+
+    private var _binding: FragmentEditLocationBinding? = null
+    private val binding get() = _binding!!
 
     var image: LocalImage? = null
 
@@ -29,7 +32,9 @@ class EditLocationFragment : Fragment() {
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
-        return inflater.inflate(R.layout.fragment_edit_location, container, false)
+        _binding = FragmentEditLocationBinding.inflate(inflater, container, false)
+        val view = binding.root
+        return view
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -57,12 +62,12 @@ class EditLocationFragment : Fragment() {
             map.moveCamera(CameraUpdateFactory.newCameraPosition(cameraPosition))
 
             map.setOnCameraMoveListener({
-                editLocationButton.isEnabled = true
+                binding.editLocationButton.isEnabled = true
             })
         })
 
-        editLocationButton.setOnClickListener({
-            editLocationButton.isEnabled = false
+        binding.editLocationButton.setOnClickListener({
+            binding.editLocationButton.isEnabled = false
             mapView.getMapAsync({
                 val latLong = it.cameraPosition.target
                 image?.metadata?.latitude = latLong.latitude
@@ -81,6 +86,11 @@ class EditLocationFragment : Fragment() {
     override fun onDestroy() {
         mapView.onDestroy()
         super.onDestroy()
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null
     }
 
     override fun onLowMemory() {

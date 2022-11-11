@@ -1,11 +1,11 @@
 package amal.global.amal
 
 import amal.global.amal.GalleryRecyclerAdapter.Companion.TYPE_DIVIDER
+import amal.global.amal.databinding.FragmentGalleryBinding
 import androidx.fragment.app.Fragment
 import android.os.Bundle
 import android.view.*
 import androidx.recyclerview.widget.GridLayoutManager
-import kotlinx.android.synthetic.main.fragment_gallery.*
 
 interface ChooseImagesFragmentDelegate {
     fun choseImages(fragment: ChooseImagesFragment, images: List<LocalImage>)
@@ -16,6 +16,9 @@ class ChooseImagesFragment: Fragment() {
     companion object {
         const val TAG = "Choose Fragment"
     }
+
+    private var _binding: FragmentGalleryBinding? = null
+    private val binding get() = _binding!!
     lateinit var adapter: GalleryRecyclerAdapter
 
     var delegate: ChooseImagesFragmentDelegate? = null
@@ -27,7 +30,9 @@ class ChooseImagesFragment: Fragment() {
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         setHasOptionsMenu(true)
-        return inflater.inflate(R.layout.fragment_gallery, container, false)
+        _binding = FragmentGalleryBinding.inflate(inflater, container, false)
+        val view = binding.root
+        return view
     }
 
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
@@ -37,8 +42,8 @@ class ChooseImagesFragment: Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        assessRecyclerView.adapter = adapter
-        assessRecyclerView.layoutManager = GridLayoutManager(activity,3).apply {
+        binding.assessRecyclerView.adapter = adapter
+        binding.assessRecyclerView.layoutManager = GridLayoutManager(activity,3).apply {
             spanSizeLookup = object : GridLayoutManager.SpanSizeLookup() {
                 override fun getSpanSize(position: Int) = when (adapter.getItemViewType(position)) {
                     TYPE_DIVIDER -> 3
@@ -46,7 +51,7 @@ class ChooseImagesFragment: Fragment() {
                 }
             }
         }
-        assessRecyclerView.addOnItemClickListener(object: OnItemClickListener {
+        binding.assessRecyclerView.addOnItemClickListener(object: OnItemClickListener {
             override fun onItemClicked(position: Int, view: View) {
                 adapter.toggleSelectionAt(position)
             }
@@ -62,6 +67,10 @@ class ChooseImagesFragment: Fragment() {
             else ->
                 return super.onOptionsItemSelected(item)
         }
+    }
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null
     }
 
 
