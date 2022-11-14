@@ -239,7 +239,7 @@ class TabActivity : AppCompatActivity(),
                     .commit()
 
         }.catch { error ->
-            error.message?.let { Log.e("asdf", it) }
+            error.message?.let { Log.e("Upload to target ", it) }
         }
     }
 

@@ -4,7 +4,6 @@ import amal.global.amal.databinding.FragmentCaptureBinding
 import android.Manifest
 import android.animation.ObjectAnimator
 import android.content.pm.PackageManager
-import android.graphics.drawable.Drawable
 import android.hardware.SensorManager
 import android.os.Bundle
 import android.util.Log
@@ -33,9 +32,10 @@ class CaptureFragment : Fragment() {
 
     private var _binding: FragmentCaptureBinding? = null
     private val binding get() = _binding!!
+//    private var flashToRotate: View? = null
     private lateinit var fusedLocationClient: FusedLocationProviderClient
     private lateinit var orientationListener: OrientationEventListener
-//    private lateinit var flashToRotate: View
+
 
     var delegate: CaptureDelegate? = null
     private var isSelected = false
@@ -78,8 +78,8 @@ class CaptureFragment : Fragment() {
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
         super.onCreateOptionsMenu(menu, inflater)
         inflater.inflate(R.menu.menu_capture, menu)
-//        flashToRotateItem = menu.findItem(R.id.menu_item_flash)
-//        flashToRotate = flashToRotateItem.actionView
+//        val flashToRotateItem = menu.findItem(R.id.menu_item_flash)
+//        flashToRotate = flashToRotateItem?.actionView
     }
 
 
@@ -156,16 +156,16 @@ class CaptureFragment : Fragment() {
     private fun handleOrientationChange(orientation: Int) {
         if (orientation >= 315 || orientation < 45) {
             binding.shutterButton.animate().rotation(0F).start()
-//            flashToRotate.animate().rotation(0F).start()
-        } else if (orientation >=45 && orientation < 135) {
+//            flashToRotate?.animate()?.rotation(0F)?.start()
+        } else if (orientation in 45..134) {
             binding.shutterButton.animate().rotation(270F).start()
-//            flashToRotate.animate().rotation(0F).start()
-        } else if (orientation >=135 && orientation < 225) {
+//            flashToRotate?.animate()?.rotation(270F)?.start()
+        } else if (orientation in 135..224) {
             binding.shutterButton.animate().rotation(180F).start()
-//            flashToRotate.animate().rotation(0F).start()
-        } else if (orientation >=225 && orientation < 315) {
+//            flashToRotate?.animate()?.rotation(180F)?.start()
+        } else if (orientation in 225..314) {
             binding.shutterButton.animate().rotation(90F).start()
-//            flashToRotate.animate().rotation(0F).start()
+//            flashToRotate?.animate()?.rotation(90F)?.start()
         } else {
             Log.d(TAG, "stall")
             //Keep the current State
