@@ -138,12 +138,7 @@ class TabActivity : AppCompatActivity(),
 
     override fun settingsButtonTapped(fragment: CaptureFragment) {
         val fragment = SettingsFragment().also { it.delegate = this }
-        supportFragmentManager
-                .beginTransaction()
-                .setCustomAnimations(R.anim.enter, R.anim.exit, R.anim.pop_enter, R.anim.pop_exit)
-                .replace(R.id.content, fragment)
-                .addToBackStack(null)
-                .commit()
+        pushFragment(fragment)
     }
 
     override fun signInTapped(fragment: SettingsFragment) {
@@ -164,8 +159,8 @@ class TabActivity : AppCompatActivity(),
                 .then {
                     this.runOnUiThread {
                         val builder = AlertDialog.Builder(this);
-                        builder.setMessage("You activated the EAMENA database target.");
-                        builder.setPositiveButton("OK") { dialog, which -> }
+                        builder.setMessage("You activated the ${passphrase.uppercase()} database target.");
+                        builder.setPositiveButton("OK") { dialog, which -> returnToSettings() }
                         builder.show()
                     }
                 }
@@ -193,14 +188,14 @@ class TabActivity : AppCompatActivity(),
 
         contentView
                 .findViewById<View>(R.id.logInView)
-                .setOnClickListener({
+                .setOnClickListener {
                     dialog.dismiss()
                     val authenticator = FirebaseAuthenticator(this, { upload(report) })
                     registerAndStartIntentRequest(authenticator)
-                })
+                }
         contentView
                 .findViewById<View>(R.id.publishAnonymouslyView)
-                .setOnClickListener({
+                .setOnClickListener {
                     fragment.uploadItem?.isEnabled = false
                     upload(report)
                             .catch {
@@ -209,12 +204,12 @@ class TabActivity : AppCompatActivity(),
                                 }
                             }
                     dialog.dismiss()
-                })
+                }
         contentView
                 .findViewById<View>(R.id.cancelView)
-                .setOnClickListener({
+                .setOnClickListener {
                     dialog.dismiss()
-                })
+                }
 
         dialog.show()
     }
@@ -222,7 +217,7 @@ class TabActivity : AppCompatActivity(),
     fun upload(report: ReportDraft): Promise<ReportInterface> {
 
         val promise: Promise<ReportInterface>
-        if (report.uploadToEAMENA) {
+        if (report.restTarget != null) {
             var uploader = RestReportUploader(report)
             uploader.upload()
             promise = uploader.promise
@@ -244,10 +239,10 @@ class TabActivity : AppCompatActivity(),
     }
 
     override fun pdfReportTapped(reportDetailFragment: ReportDetailFragment) {
-        reportDetailFragment.report.fetchPDFURL().then({ uri ->
+        reportDetailFragment.report.fetchPDFURL().then { uri ->
             val browserIntent = Intent(Intent.ACTION_VIEW, uri)
             startActivity(browserIntent)
-        })
+        }
     }
 
     override fun webReportTapped(reportDetailFragment: ReportDetailFragment) {
@@ -273,6 +268,11 @@ class TabActivity : AppCompatActivity(),
             PhotoStorage(this).deleteImage(imagePath, settingsPath)
         }
         binding.navigation.selectedItemId = R.id.navigation_assess
+    }
+
+    private fun returnToSettings() {
+        val fragment = SettingsFragment().also { it.delegate = this }
+        pushFragment(fragment)
     }
 
     private fun pushFragment(fragment: Fragment) {

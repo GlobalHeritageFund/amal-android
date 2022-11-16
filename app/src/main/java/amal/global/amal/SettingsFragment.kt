@@ -27,6 +27,9 @@ class SettingsFragment: PreferenceFragmentCompat() {
     private val passphrasePreference: Preference?
         get() = findPreference("passphrase")
 
+    private val dataBasePreference: Preference?
+        get() = findPreference("dbPreference")
+
     override fun onCreatePreferences(bundle: Bundle?, string: String?) {
         addPreferencesFromResource(R.xml.preferences)
 
@@ -63,5 +66,7 @@ class SettingsFragment: PreferenceFragmentCompat() {
 
         authPreference?.title = resources.getString(stringID)
         authPreference?.summary = if (currentUser.isLoggedIn) "${resources.getString(R.string.signed_in_as)} $email" else ""
+
+        dataBasePreference?.summary = currentUser.databaseTargets.joinToString(", ")
     }
 }

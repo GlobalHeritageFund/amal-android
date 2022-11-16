@@ -55,6 +55,11 @@
     <androidx.preference.PreferenceCategory
         android:title="Other">
         <Preference
+            android:key="dbPreference"
+            android:selectable="false"
+            android:title="Database Access" >
+        </Preference>
+        <Preference
             android:key="passphrase"
             android:title="Enter Passphrase"
             android:summary="Enter a passphrase to unlock other database targets.">
