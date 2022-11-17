@@ -95,14 +95,10 @@ class CaptureFragment : Fragment() {
         //this permission was moved to here bc if user navigates away from amal to enable camera in settings
         //and then back to amal the view and permission was not getting updated
         //hopefully will not cause screen delay
-        if (ContextCompat.checkSelfPermission(
-                        requireActivity(),
-                        Manifest.permission.CAMERA
-                ) != PackageManager.PERMISSION_GRANTED) {
-            haveCameraPermission = false
-        } else {
-            haveCameraPermission = true
-        }
+        haveCameraPermission = ContextCompat.checkSelfPermission(
+                requireActivity(),
+                Manifest.permission.CAMERA
+        ) == PackageManager.PERMISSION_GRANTED
         if (haveCameraPermission) {
             binding.cameraView.addCameraKitListener(getNewCameraKitListener())
             binding.shutterButton.setOnClickListener({ takePicture() })

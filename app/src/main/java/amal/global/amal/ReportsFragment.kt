@@ -27,8 +27,6 @@ class ReportsFragment : Fragment(), ReportsAdapterDelegate {
     var delegate: ReportsDelegate? = null
 
     lateinit var adapter: ReportsAdapter
-//    lateinit var listView: RecyclerView
-//    lateinit var emptyView: View
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
@@ -40,7 +38,6 @@ class ReportsFragment : Fragment(), ReportsAdapterDelegate {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-//        listView = bind(R.id.report_list)
 
         binding.reportList.layoutManager = LinearLayoutManager(activity);
 
@@ -52,8 +49,6 @@ class ReportsFragment : Fragment(), ReportsAdapterDelegate {
                 delegate?.tappedReport(report, this@ReportsFragment)
             }
         })
-
-//        emptyView = bind(R.id.empty_reports_view)
 
         view?.findViewById<FloatingActionButton>(R.id.new_report_button)?.setOnClickListener{
             delegate?.newReportTapped(this)
@@ -72,17 +67,18 @@ class ReportsFragment : Fragment(), ReportsAdapterDelegate {
     }
 
     override fun reportsFound() {
-        Log.d(TAG, "reports found called")
-        binding.progressBarReportsView.visibility = View.GONE
-        binding.reportList.visibility = View.VISIBLE
-        binding.emptyReportsView.visibility = View.GONE
-
+        if (_binding!=null) {//I know this is hacky and bad, but just looking for a quick fix at the moment
+            binding.progressBarReportsView.visibility = View.GONE
+            binding.reportList.visibility = View.VISIBLE
+            binding.emptyReportsView.visibility = View.GONE
+        }
     }
 
     override fun noReportsFound() {
-        Log.d(TAG, "reports not found called")
-        binding.progressBarReportsView.visibility = View.GONE
-        binding.emptyReportsView.visibility = View.VISIBLE
-        binding.reportList.visibility = View.GONE
+        if (_binding!=null) { //again, this is bad...
+            binding.progressBarReportsView.visibility = View.GONE
+            binding.emptyReportsView.visibility = View.VISIBLE
+            binding.reportList.visibility = View.GONE
+        }
     }
 }
