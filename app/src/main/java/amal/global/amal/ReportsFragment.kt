@@ -67,7 +67,7 @@ class ReportsFragment : Fragment(), ReportsAdapterDelegate {
     }
 
     override fun reportsFound() {
-        if (_binding!=null) {//I know this is hacky and bad, but just looking for a quick fix at the moment
+        if (_binding!=null) {//quick fix at the moment, might want to change flow at some point
             binding.progressBarReportsView.visibility = View.GONE
             binding.reportList.visibility = View.VISIBLE
             binding.emptyReportsView.visibility = View.GONE
@@ -75,7 +75,7 @@ class ReportsFragment : Fragment(), ReportsAdapterDelegate {
     }
 
     override fun noReportsFound() {
-        if (_binding!=null) { //again, this is bad...
+        if (_binding!=null) {
             binding.progressBarReportsView.visibility = View.GONE
             binding.emptyReportsView.visibility = View.VISIBLE
             binding.reportList.visibility = View.GONE

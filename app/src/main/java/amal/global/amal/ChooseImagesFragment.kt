@@ -46,6 +46,7 @@ class ChooseImagesFragment: Fragment() {
         binding.assessRecyclerView.layoutManager = GridLayoutManager(activity,3).apply {
             spanSizeLookup = object : GridLayoutManager.SpanSizeLookup() {
                 override fun getSpanSize(position: Int) = when (adapter.getItemViewType(position)) {
+                    //type divider set to takeup all 3 colums so spans enire width while pics take 1/3 screen
                     TYPE_DIVIDER -> 3
                     else ->  1
                 }
