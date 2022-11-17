@@ -4,6 +4,8 @@ import amal.global.amal.databinding.FragmentNewReportBinding
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.*
+import android.widget.RadioButton
+import android.widget.Toast
 import java.text.DateFormat
 import java.util.*
 
@@ -25,10 +27,33 @@ class NewReportFragment: Fragment() {
     private val currentUser: CurrentUser
         get() = CurrentUser(this.requireContext())
 
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+    }
+
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         setHasOptionsMenu(true)
         _binding = FragmentNewReportBinding.inflate(inflater, container, false)
         val view = binding.root
+        val radioGroup = binding.dbChooser
+        //both phrase and databaseTargets should be in uppercase
+        val dbTargets = currentUser.databaseTargets
+        RestTarget.values().forEach {
+            if (it.phrase in dbTargets) {
+                var tempButton = RadioButton(requireContext())
+                tempButton.text = it.toString()
+                tempButton.id = it.ordinal
+                radioGroup.addView(tempButton)
+            }
+        }
+        radioGroup.setOnCheckedChangeListener {
+            group, checkedId ->
+            if (checkedId !== -1) {
+                var text = RestTarget.values()[checkedId].toString()
+                binding.sendingToAmal.setText("Sending to $text")
+                Toast.makeText(requireContext().applicationContext, text, Toast.LENGTH_SHORT).show()
+            }
+        }
         return view
     }
 
@@ -51,14 +76,14 @@ class NewReportFragment: Fragment() {
         val date = Date()
         val dateFormat = DateFormat.getDateTimeInstance(DateFormat.LONG, DateFormat.SHORT)
         binding.dateLabel.text = dateFormat.format(date)
-
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         report.assessorEmail = binding.emailField.text.toString()
         report.creationDate = Date()
         report.title = binding.titleField.text.toString()
-        report.uploadToEAMENA = binding.eamenaSwitch.isChecked
+        val checkedId = binding.dbChooser.checkedRadioButtonId
+        if (checkedId !== -1) report.restTarget = RestTarget.values()[checkedId]
         when (item!!.itemId) {
             R.id.uploadReport -> {
                 delegate?.uploadReport(this, report)

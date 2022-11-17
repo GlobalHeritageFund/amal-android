@@ -26,8 +26,6 @@ class GalleryFragment : Fragment() {
     var delegate: GalleryDelegate? = null
 
     lateinit var recyclerAdapter: GalleryRecyclerAdapter
-//    lateinit var assessRecyclerView: RecyclerView
-//    lateinit var emptyView: View
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -50,8 +48,6 @@ class GalleryFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-//        assessRecyclerView = bind(R.id.assessRecyclerView)
-//        emptyView = bind(R.id.empty_gallery_view)
         binding.assessRecyclerView.adapter = recyclerAdapter
         binding.assessRecyclerView.layoutManager = GridLayoutManager(activity,3).apply {
             spanSizeLookup = object : GridLayoutManager.SpanSizeLookup() {

@@ -2,6 +2,7 @@ package amal.global.amal
 
 import android.content.Context
 import android.content.SharedPreferences
+import android.text.TextUtils.split
 import com.google.firebase.auth.FirebaseAuth
 import java.util.*
 
@@ -55,8 +56,14 @@ class CurrentUser(var context: Context) {
     private val databaseTargetsKey = "AMALDatabaseTargets"
 
     var databaseTargets: List<String>
+    //am switching to uppercase bc in passphrase validator is matching to uppercase
         get() {
-            return (preferences.getString(databaseTargetsKey, "") ?: "").split(",")
+        //bc of way things were done in the past some older installs
+        //may get a leading comma on string which was creating an extra list item
+//            preferences.edit().remove(databaseTargetsKey).commit()
+            var dbPrefString = preferences.getString(databaseTargetsKey, "") ?: ""
+            if (dbPrefString == "") return emptyList()
+            else return dbPrefString.removePrefix(",").uppercase().split(",")
         }
         set(value) {
             val editor = preferences.edit()
