@@ -1,9 +1,9 @@
 package amal.global.amal
 
+import amal.global.amal.databinding.FragmentNewReportBinding
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.*
-import kotlinx.android.synthetic.main.fragment_new_report.*
 import java.text.DateFormat
 import java.util.*
 
@@ -12,6 +12,9 @@ interface NewReportFragmentDelegate {
 }
 
 class NewReportFragment: Fragment() {
+
+    private var _binding: FragmentNewReportBinding? = null
+    private val binding get() = _binding!!
 
     var report = ReportDraft()
 
@@ -24,7 +27,9 @@ class NewReportFragment: Fragment() {
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         setHasOptionsMenu(true)
-        return inflater.inflate(R.layout.fragment_new_report, container, false)
+        _binding = FragmentNewReportBinding.inflate(inflater, container, false)
+        val view = binding.root
+        return view
     }
 
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
@@ -41,19 +46,19 @@ class NewReportFragment: Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         
-        emailField.setText(currentUser.email ?: "")
+        binding.emailField.setText(currentUser.email ?: "")
 
         val date = Date()
         val dateFormat = DateFormat.getDateTimeInstance(DateFormat.LONG, DateFormat.SHORT)
-        dateLabel.text = dateFormat.format(date)
+        binding.dateLabel.text = dateFormat.format(date)
 
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        report.assessorEmail = emailField.text.toString()
+        report.assessorEmail = binding.emailField.text.toString()
         report.creationDate = Date()
-        report.title = titleField.text.toString()
-        report.uploadToEAMENA = eamenaSwitch.isChecked
+        report.title = binding.titleField.text.toString()
+        report.uploadToEAMENA = binding.eamenaSwitch.isChecked
         when (item!!.itemId) {
             R.id.uploadReport -> {
                 delegate?.uploadReport(this, report)
@@ -62,5 +67,10 @@ class NewReportFragment: Fragment() {
             else ->
                 return super.onOptionsItemSelected(item)
         }
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null
     }
 }

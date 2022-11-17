@@ -4,13 +4,11 @@
 
     <androidx.preference.PreferenceCategory
         android:title="About">
-
         <Preference
             android:title="About Amal"
             android:selectable="false"
             android:summary="AMAL is a mobile and web application designed for the rapid impact assessment of damaged heritage areas, buildings, or artifacts.">
         </Preference>
-
         <Preference
             android:key="versionPreference"
             android:selectable="false"
@@ -28,47 +26,39 @@
 
     <androidx.preference.PreferenceCategory
         android:title="Visit">
-
         <Preference
             android:title="Amal Website"
             android:summary="Go to the Amal website in your web browser.">
             <intent android:action="android.intent.action.VIEW"
                 android:data="http://amal.global" />
         </Preference>
-
         <Preference
             android:title="Privacy Policy"
             android:summary="Go to the privacy policy in your web browser.">
             <intent android:action="android.intent.action.VIEW"
                 android:data="https://globalheritagefund.org/index.php/news-resources/library/privacy-policy/" />
         </Preference>
-
         <Preference
             android:title="Terms of Service"
             android:summary="Go to the terms of service in your web browser.">
             <intent android:action="android.intent.action.VIEW"
                 android:data="http://amal.global/terms-of-service/" />
         </Preference>
-
         <Preference
             android:title="User Guide"
             android:summary="Go to the Amal User Guide in your web browser.">
             <intent android:action="android.intent.action.VIEW"
                 android:data="http://amal.global/guide/" />
         </Preference>
-
     </androidx.preference.PreferenceCategory>
 
     <androidx.preference.PreferenceCategory
         android:title="Other">
-
         <Preference
             android:key="passphrase"
             android:title="Enter Passphrase"
             android:summary="Enter a passphrase to unlock other database targets.">
         </Preference>
-
     </androidx.preference.PreferenceCategory>
-
 
 </androidx.preference.PreferenceScreen>

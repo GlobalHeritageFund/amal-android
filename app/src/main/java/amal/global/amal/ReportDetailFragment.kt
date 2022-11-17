@@ -1,10 +1,10 @@
 package amal.global.amal
 
+import amal.global.amal.databinding.FragmentReportDetailBinding
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import android.view.*
-import kotlinx.android.synthetic.main.fragment_report_detail.*
 
 interface ReportDetailFragmentDelegate {
     fun webReportTapped(reportDetailFragment: ReportDetailFragment)
@@ -12,6 +12,9 @@ interface ReportDetailFragmentDelegate {
 }
 
 class ReportDetailFragment : Fragment() {
+
+    private var _binding: FragmentReportDetailBinding? = null
+    private val binding get() = _binding!!
 
     lateinit var report: Report
 
@@ -21,9 +24,11 @@ class ReportDetailFragment : Fragment() {
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
-        adapter = ReportDetailAdapter(context!!, report)
+        adapter = ReportDetailAdapter(requireContext(), report)
         setHasOptionsMenu(true)
-        return inflater.inflate(R.layout.fragment_report_detail, container, false)
+        _binding = FragmentReportDetailBinding.inflate(inflater, container, false)
+        val view = binding.root
+        return view
     }
 
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
@@ -36,11 +41,11 @@ class ReportDetailFragment : Fragment() {
 
         activity?.title = report.title
 
-        recyclerView.layoutManager = LinearLayoutManager(activity);
+        binding.recyclerView.layoutManager = LinearLayoutManager(activity);
 
-        recyclerView.adapter = adapter
+        binding.recyclerView.adapter = adapter
 
-        recyclerView.addOnItemClickListener(object: OnItemClickListener {
+        binding.recyclerView.addOnItemClickListener(object: OnItemClickListener {
             override fun onItemClicked(position: Int, view: View) {
                 val image = report.images[position]
                 print(image.metadata.name)
@@ -61,6 +66,11 @@ class ReportDetailFragment : Fragment() {
             else ->
                 return super.onOptionsItemSelected(item)
         }
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null
     }
 
 }

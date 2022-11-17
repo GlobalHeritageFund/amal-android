@@ -15,14 +15,10 @@ import java.util.*
 class RestReportUploader(val reportDraft: ReportDraft) {
 
     private val baseURL = "https://eamena.herbridge.org/"
-
     private val client = OkHttpClient()
-
-    val promise = Promise<ReportInterface>()
-
     private val jpegContentType = "image/jpeg".toMediaTypeOrNull()
-
     private val jsonContentType = "application/json; charset=utf-8".toMediaTypeOrNull()
+    val promise = Promise<ReportInterface>()
 
     fun upload() {
         val imageUploads = reportDraft.images.map { uploadImage(it) }.asSequence()

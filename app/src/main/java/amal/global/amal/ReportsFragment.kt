@@ -1,5 +1,7 @@
 package amal.global.amal
 
+import amal.global.amal.databinding.FragmentAssessBinding
+import amal.global.amal.databinding.FragmentReportsBinding
 import android.os.Bundle
 import android.util.Log
 import com.google.android.material.floatingactionbutton.FloatingActionButton
@@ -18,36 +20,40 @@ class ReportsFragment : Fragment(), ReportsAdapterDelegate {
     companion object {
         const val TAG = "Reports Fragment"
     }
+
+    private var _binding: FragmentReportsBinding? = null
+    private val binding get() = _binding!!
+
     var delegate: ReportsDelegate? = null
 
     lateinit var adapter: ReportsAdapter
-
-    lateinit var listView: RecyclerView
-    lateinit var emptyView: View
+//    lateinit var listView: RecyclerView
+//    lateinit var emptyView: View
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
         adapter = ReportsAdapter(requireContext()).also { it.delegate = this }
-
-        return inflater.inflate(R.layout.fragment_reports, container, false)
+        _binding = FragmentReportsBinding.inflate(inflater, container, false)
+        val view = binding.root
+        return view
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        listView = bind(R.id.report_list)
+//        listView = bind(R.id.report_list)
 
-        listView.setLayoutManager(LinearLayoutManager(activity));
+        binding.reportList.layoutManager = LinearLayoutManager(activity);
 
-        listView.adapter = adapter
+        binding.reportList.adapter = adapter
 
-        listView.addOnItemClickListener(object: OnItemClickListener {
+        binding.reportList.addOnItemClickListener(object: OnItemClickListener {
             override fun onItemClicked(position: Int, view: View) {
                 val report = adapter.reports[position]
                 delegate?.tappedReport(report, this@ReportsFragment)
             }
         })
 
-        emptyView = bind(R.id.empty_reports_view)
+//        emptyView = bind(R.id.empty_reports_view)
 
         view?.findViewById<FloatingActionButton>(R.id.new_report_button)?.setOnClickListener{
             delegate?.newReportTapped(this)
@@ -60,16 +66,23 @@ class ReportsFragment : Fragment(), ReportsAdapterDelegate {
         activity?.setTitle(R.string.title_report)
     }
 
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null
+    }
+
     override fun reportsFound() {
         Log.d(TAG, "reports found called")
-        listView.visibility = View.VISIBLE
-        emptyView.visibility = View.GONE
+        binding.progressBarReportsView.visibility = View.GONE
+        binding.reportList.visibility = View.VISIBLE
+        binding.emptyReportsView.visibility = View.GONE
 
     }
 
     override fun noReportsFound() {
         Log.d(TAG, "reports not found called")
-        emptyView.visibility = View.VISIBLE
-        listView.visibility = View.GONE
+        binding.progressBarReportsView.visibility = View.GONE
+        binding.emptyReportsView.visibility = View.VISIBLE
+        binding.reportList.visibility = View.GONE
     }
 }

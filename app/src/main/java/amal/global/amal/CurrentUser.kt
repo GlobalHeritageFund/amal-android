@@ -63,5 +63,4 @@ class CurrentUser(var context: Context) {
             editor.putString(databaseTargetsKey, value.joinToString(","))
             editor.apply()
         }
-
 }

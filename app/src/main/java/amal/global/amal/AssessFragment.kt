@@ -1,5 +1,6 @@
 package amal.global.amal
 
+import amal.global.amal.databinding.FragmentAssessBinding
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.text.Editable
@@ -9,7 +10,6 @@ import android.widget.Button
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.MapView
 import com.google.android.gms.maps.model.CameraPosition
-import kotlinx.android.synthetic.main.fragment_assess.*
 import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.MarkerOptions
 
@@ -21,6 +21,9 @@ interface AssessDelegate {
 
 class AssessFragment : Fragment() {
 
+    private var _binding: FragmentAssessBinding? = null
+    private val binding get() = _binding!!
+
     var image: LocalImage? = null
 
     var delegate: AssessDelegate? = null
@@ -30,12 +33,12 @@ class AssessFragment : Fragment() {
     val conditionButtons: List<Button>
         get() {
             return listOf(
-                    conditionButton0,
-                    conditionButton1,
-                    conditionButton2,
-                    conditionButton3,
-                    conditionButton4,
-                    conditionButton5
+                    binding.conditionButton0,
+                    binding.conditionButton1,
+                    binding.conditionButton2,
+                    binding.conditionButton3,
+                    binding.conditionButton4,
+                    binding.conditionButton5
             )
         }
 
@@ -51,7 +54,9 @@ class AssessFragment : Fragment() {
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
         setHasOptionsMenu(true)
-        return inflater.inflate(R.layout.fragment_assess, container, false)
+        _binding = FragmentAssessBinding.inflate(inflater, container, false)
+        val view = binding.root
+        return view
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -59,8 +64,8 @@ class AssessFragment : Fragment() {
 
         explicitlyBindMapViewSoItDoesntGetDeallocatedForOnDestroy()
 
-        nameField.setText(image?.metadata?.name ?: "")
-        nameField.afterTextChanged { editable: Editable? ->
+        binding.nameField.setText(image?.metadata?.name ?: "")
+        binding.nameField.afterTextChanged { editable: Editable? ->
             image?.metadata?.name = editable.toString()
             image?.saveMetaData()
         }
@@ -96,11 +101,11 @@ class AssessFragment : Fragment() {
         })
 
         when (image?.metadata?.category ?: "") {
-            "area" -> categoryRadioGroup.check(R.id.radioOverall)
-            "site" -> categoryRadioGroup.check(R.id.radioSite)
-            "object" -> categoryRadioGroup.check(R.id.radioObject)
+            "area" -> binding.categoryRadioGroup.check(R.id.radioOverall)
+            "site" -> binding.categoryRadioGroup.check(R.id.radioSite)
+            "object" -> binding.categoryRadioGroup.check(R.id.radioObject)
         }
-        categoryRadioGroup.setOnCheckedChangeListener({ radioGroup, checkedID ->
+        binding.categoryRadioGroup.setOnCheckedChangeListener({ radioGroup, checkedID ->
             val string = when (checkedID) {
                 R.id.radioOverall -> "area"
                 R.id.radioSite -> "site"
@@ -121,35 +126,35 @@ class AssessFragment : Fragment() {
             })
         })
 
-        hazardsCheckBox.isChecked = image?.metadata?.hazards ?: false
-        hazardsCheckBox.setOnCheckedChangeListener({ buttonView, isChecked ->
+        binding.hazardsCheckBox.isChecked = image?.metadata?.hazards ?: false
+        binding.hazardsCheckBox.setOnCheckedChangeListener({ buttonView, isChecked ->
             image?.metadata?.hazards = isChecked
             image?.saveMetaData()
         })
 
-        safetyHazardsCheckBox.isChecked = image?.metadata?.safetyHazards ?: false
-        safetyHazardsCheckBox.setOnCheckedChangeListener({ buttonView, isChecked ->
+        binding.safetyHazardsCheckBox.isChecked = image?.metadata?.safetyHazards ?: false
+        binding.safetyHazardsCheckBox.setOnCheckedChangeListener({ buttonView, isChecked ->
             image?.metadata?.safetyHazards = isChecked
             image?.saveMetaData()
         })
 
-        interventionCheckBox.isChecked = image?.metadata?.interventionRequired ?: false
-        interventionCheckBox.setOnCheckedChangeListener({ buttonView, isChecked ->
+        binding.interventionCheckBox.isChecked = image?.metadata?.interventionRequired ?: false
+        binding.interventionCheckBox.setOnCheckedChangeListener({ buttonView, isChecked ->
             image?.metadata?.interventionRequired = isChecked
             image?.saveMetaData()
         })
 
 
-        notesField.setText(image?.metadata?.notes ?: "")
-        notesField.afterTextChanged { editable: Editable? ->
+        binding.notesField.setText(image?.metadata?.notes ?: "")
+        binding.notesField.afterTextChanged { editable: Editable? ->
             image?.metadata?.notes = editable.toString()
             image?.saveMetaData()
         }
 
-        coordinatesTextView.text = image?.metadata?.coordinatesString()
-        editLocationButton.text = if (hasCoordinates) "Edit Location" else "Set Location"
+        binding.coordinatesTextView.text = image?.metadata?.coordinatesString()
+        binding.editLocationButton.text = if (hasCoordinates) "Edit Location" else "Set Location"
 
-        editLocationButton.setOnClickListener({ view ->
+        binding.editLocationButton.setOnClickListener({ view ->
             delegate?.editLocationTapped(this)
         })
 
@@ -164,11 +169,11 @@ class AssessFragment : Fragment() {
     fun activateConditionButtonAtIndex(index: Int) {
         conditionButtons.forEach({ it.isActivated = false })
         conditionButtons[index].isActivated = true
-        conditionDescription.text = conditionLabels[index]
+        binding.conditionDescription.text = conditionLabels[index]
     }
 
     private fun updateImage() {
-        image?.load(requireContext())?.into(imageView)
+        image?.load(requireContext())?.into(binding.imageView)
     }
 
     fun explicitlyBindMapViewSoItDoesntGetDeallocatedForOnDestroy() {
@@ -210,6 +215,11 @@ class AssessFragment : Fragment() {
     override fun onStart() {
         super.onStart()
         mapView.onStart()
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null
     }
 
     override fun onStop() {

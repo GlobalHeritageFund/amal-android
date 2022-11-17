@@ -9,7 +9,31 @@
         android:id="@+id/cameraView"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:adjustViewBounds="true" />
+        android:adjustViewBounds="true"
+        android:visibility="visible"/>
+
+    <androidx.appcompat.widget.LinearLayoutCompat
+        android:id="@+id/noCameraView"
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:gravity="center_horizontal"
+        android:background="@color/white"
+        android:visibility="gone">
+        <androidx.appcompat.widget.AppCompatImageView
+            android:src="@drawable/no_camera"
+            android:layout_marginTop="10dp"
+            android:layout_width="300dp"
+            android:layout_height="300dp"
+            />
+        <TextView
+            android:layout_margin="20dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/no_camera_permission"
+            android:textSize="24sp"
+            />
+    </androidx.appcompat.widget.LinearLayoutCompat>
 
     <View
         android:id="@+id/flashEmulator"

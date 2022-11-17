@@ -13,7 +13,7 @@ class PassphraseValidator(val context: Context) {
 
     fun validate(passphrase: String): Promise<Unit> {
         return Promise({ fulfill, reject ->
-            if (passphrase.toLowerCase() == eamenaPassphrase.toLowerCase()) {
+            if (passphrase.lowercase() == eamenaPassphrase.lowercase()) {
                 val databaseTargets = currentUser.databaseTargets
                 if (!databaseTargets.contains(eamenaTargetKey)) {
                     currentUser.databaseTargets = databaseTargets + listOf(eamenaTargetKey)

@@ -1,6 +1,7 @@
 package amal.global.amal.onboarding
 
 import amal.global.amal.R
+import amal.global.amal.databinding.FragmentOnboardingPage4Binding
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
@@ -8,25 +9,32 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import kotlinx.android.synthetic.main.fragment_onboarding_page_4.*
-
 
 class OnboardingPage4 : Fragment() {
+
+    private var _binding: FragmentOnboardingPage4Binding? = null
+    // This property is only valid between onCreateView and
+    // onDestroyView.
+
+    private val binding get() = _binding!!
     private val tosUrl = "http://amal.global/terms-of-service/"
     private val privacyUrl = "https://globalheritagefund.org/index.php/news-resources/library/privacy-policy/"
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        return inflater.inflate(
-                R.layout.fragment_onboarding_page_4,
-                container,
-                false
-        )
+        _binding = FragmentOnboardingPage4Binding.inflate(inflater, container, false)
+        val view = binding.root
+        return view
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        tos.setOnClickListener { launchWebBrowser(tosUrl) }
-        privacy.setOnClickListener { launchWebBrowser(privacyUrl) }
+        binding.tos.setOnClickListener { launchWebBrowser(tosUrl) }
+        binding.privacy.setOnClickListener { launchWebBrowser(privacyUrl) }
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null
     }
 
     private fun launchWebBrowser(url: String) {

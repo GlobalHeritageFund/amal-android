@@ -5,9 +5,9 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
-import kotlinx.android.synthetic.main.cell_gallery.view.*
 
 sealed class GalleryItem {
     data class GalleryDateDivider(val photoGroupDate: String): GalleryItem()
@@ -16,7 +16,7 @@ sealed class GalleryItem {
 
 class GalleryRecyclerViewHolder(itemView: View): RecyclerView.ViewHolder(itemView) {
     private fun bindPhoto(item: GalleryItem.GalleryPhoto) {
-        item.photoToShow.load(itemView.context).centerCrop().into(itemView.contentImageView)
+        item.photoToShow.load(itemView.context).centerCrop().into(itemView.findViewById(R.id.contentImageView))
     }
 
     private fun bindDivider(item: GalleryItem.GalleryDateDivider) {
@@ -70,7 +70,7 @@ class GalleryRecyclerAdapter(private val context: Context): RecyclerView.Adapter
     override fun onBindViewHolder(holder: GalleryRecyclerViewHolder, position: Int) {
         holder.bind(galleryItems[position])
         if (holder.itemViewType == TYPE_PHOTO) {
-            holder.itemView.selectionStateImageView.visibility = if (selectedImages.contains(position)) View.VISIBLE else View.INVISIBLE
+            holder.itemView.findViewById<ImageView>(R.id.selectionStateImageView).visibility = if (selectedImages.contains(position)) View.VISIBLE else View.INVISIBLE
         }
 
     }
