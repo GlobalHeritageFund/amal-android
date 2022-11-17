@@ -1,9 +1,7 @@
 package amal.global.amal
 
 import amal.global.amal.databinding.FragmentNewReportBinding
-import android.graphics.Color
 import android.os.Bundle
-import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.*
 import android.widget.RadioButton
@@ -40,7 +38,7 @@ class NewReportFragment: Fragment() {
         val radioGroup = binding.dbChooser
         //both phrase and databaseTargets should be in uppercase
         val dbTargets = currentUser.databaseTargets
-        RestTargets.values().forEach {
+        RestTarget.values().forEach {
             if (it.phrase in dbTargets) {
                 var tempButton = RadioButton(requireContext())
                 tempButton.text = it.toString()
@@ -51,7 +49,7 @@ class NewReportFragment: Fragment() {
         radioGroup.setOnCheckedChangeListener {
             group, checkedId ->
             if (checkedId !== -1) {
-                var text = RestTargets.values()[checkedId].toString()
+                var text = RestTarget.values()[checkedId].toString()
                 binding.sendingToAmal.setText("Sending to $text")
                 Toast.makeText(requireContext().applicationContext, text, Toast.LENGTH_SHORT).show()
             }
@@ -85,7 +83,7 @@ class NewReportFragment: Fragment() {
         report.creationDate = Date()
         report.title = binding.titleField.text.toString()
         val checkedId = binding.dbChooser.checkedRadioButtonId
-        if (checkedId !== -1) report.restTarget = RestTargets.values()[checkedId]
+        if (checkedId !== -1) report.restTarget = RestTarget.values()[checkedId]
         when (item!!.itemId) {
             R.id.uploadReport -> {
                 delegate?.uploadReport(this, report)

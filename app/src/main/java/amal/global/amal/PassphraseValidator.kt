@@ -12,7 +12,7 @@ class PassphraseValidator(val context: Context) {
 
     fun validate(passphrase: String): Promise<Unit> {
         return Promise { fulfill, reject ->
-            RestTargets.values().forEach {
+            RestTarget.values().forEach {
                 if (it.phrase.lowercase() == passphrase.lowercase()) {
                     val databaseTargets = currentUser.databaseTargets
                     //new code writes and reads target Strings as uppercase
