@@ -159,7 +159,9 @@ class TabActivity : AppCompatActivity(),
                 .then {
                     this.runOnUiThread {
                         val builder = AlertDialog.Builder(this);
-                        builder.setMessage("You activated the ${passphrase.uppercase()} database target.");
+
+                        builder.setMessage("You activated the ${RestTarget[passphrase]} database target.");
+
                         builder.setPositiveButton("OK") { dialog, which -> returnToSettings() }
                         builder.show()
                     }

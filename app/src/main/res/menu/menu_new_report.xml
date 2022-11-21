@@ -2,8 +2,8 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
     <item
-        android:id="@+id/uploadReport"
+        android:id="@+id/cancelReport"
         app:showAsAction="always"
-        android:title="@string/upload">
+        android:title="@string/cancel">
     </item>
 </menu>

@@ -25,4 +25,3 @@ class PassphraseValidator(val context: Context) {
         }
     }
 }
-

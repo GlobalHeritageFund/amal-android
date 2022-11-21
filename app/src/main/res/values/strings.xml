@@ -55,4 +55,7 @@
     <string name="no_camera_permission">The photo capture feature is not available when the application does not have camera permissions</string>
     <string name="database_target">Select Alternate Database Target</string>
     <string name="enter_title_here">Enter title here</string>
+    <string name="save_draft">Save Draft</string>
+    <string name="delete_draft">Delete Draft</string>
+    <string name="would_you_like_to_save_this_as_a_draft">Would you like to save this as a draft?</string>
 </resources>

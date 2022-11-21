@@ -1,11 +1,10 @@
 package amal.global.amal
 
 import android.net.Uri
+import androidx.room.Entity
+import androidx.room.TypeConverter
 import com.google.firebase.storage.FirebaseStorage
-import com.squareup.moshi.Json
-import com.squareup.moshi.JsonAdapter
-import com.squareup.moshi.JsonClass
-import com.squareup.moshi.Moshi
+import com.squareup.moshi.*
 import com.squareup.moshi.kotlin.reflect.KotlinJsonAdapterFactory
 import java.util.*
 import kotlin.collections.HashMap
@@ -14,10 +13,11 @@ interface ReportInterface {
 
 }
 
+//@Entity(tableName = "report_table")
 @JsonClass(generateAdapter = true)
 data class Report internal constructor(
         val firebaseID: String,
-        val images: List<RemoteImage>,
+        val images: List<RemoteImage> = listOf(),
         @Json(name="authorDeviceToken") val deviceToken: String,
         val creationDate: Double,
         val title: String,
@@ -64,4 +64,20 @@ data class Report internal constructor(
             }
 
     }
+
+//    class Converters {
+//        private val moshi = Moshi.Builder().build()
+//        private val remoteImageType = Types.newParameterizedType(List::class.java, RemoteImage::class.java)
+//        private val remoteImagesAdapter = moshi.adapter<List<LocalImage>>(remoteImageType)
+//
+//        @TypeConverter
+//        fun stringToImages(string: String): List<LocalImage> {
+//            return remoteImagesAdapter.fromJson(string).orEmpty()
+//        }
+//
+//        @TypeConverter
+//        fun imagesToString(images: List<LocalImage>): String {
+//            return remoteImagesAdapter.toJson(images)
+//        }
+//    }
 }

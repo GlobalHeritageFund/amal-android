@@ -14,7 +14,7 @@ import java.util.*
 
 class RestReportUploader(val reportDraft: ReportDraft) {
 
-    private var baseURL = reportDraft.restTarget!!.url
+    private var baseURL = reportDraft.restTarget!!
     private val client = OkHttpClient()
     private val jpegContentType = "image/jpeg".toMediaTypeOrNull()
     private val jsonContentType = "application/json; charset=utf-8".toMediaTypeOrNull()
