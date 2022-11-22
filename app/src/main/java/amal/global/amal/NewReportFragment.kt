@@ -2,6 +2,7 @@ package amal.global.amal
 
 import amal.global.amal.databinding.FragmentNewReportBinding
 import android.os.Bundle
+import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.*
 import android.widget.Button
@@ -21,13 +22,13 @@ class NewReportFragment: Fragment() {
     private var _binding: FragmentNewReportBinding? = null
     private val binding get() = _binding!!
 
-    private lateinit var dao: AmalRoomDatabaseDao
+//    private lateinit var dao: AmalRoomDatabaseDao
 
     var report = ReportDraft()
 
     var delegate: NewReportFragmentDelegate? = null
 
-    var uploadItem: MenuItem? = null
+    var cancelItem: MenuItem? = null
 
     private val currentUser: CurrentUser
         get() = CurrentUser(this.requireContext())
@@ -60,7 +61,7 @@ class NewReportFragment: Fragment() {
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
         super.onCreateOptionsMenu(menu, inflater)
         inflater.inflate(R.menu.menu_new_report, menu)
-        uploadItem = menu.findItem(R.id.cancelReport)
+        cancelItem = menu.findItem(R.id.cancelReport)
     }
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
@@ -77,8 +78,8 @@ class NewReportFragment: Fragment() {
         val dateFormat = DateFormat.getDateTimeInstance(DateFormat.LONG, DateFormat.SHORT)
         binding.dateLabel.text = dateFormat.format(date)
 
-        val db = AmalRoomDatabase.getDatabase(requireContext().applicationContext)
-        dao = db.amalRoomDatabaseDao()
+//        val db = AmalRoomDatabase.getDatabase(requireContext().applicationContext)
+//        dao = db.amalRoomDatabaseDao()
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
@@ -127,11 +128,13 @@ class NewReportFragment: Fragment() {
             report.title = binding.titleField.text.toString()
             val checkedId = binding.dbChooser.checkedRadioButtonId
             if (checkedId !== -1) report.restTarget = RestTarget.values()[checkedId]
-            dao.insert(report)
+            Log.d("new report"," got in bottom dialog save")
+//            dao.insert(report)
         }
         val btnDelete = view.findViewById<Button>(R.id.delete_draft)
         btnDelete.setOnClickListener {
-            if (report.id != null) dao.delete(report)
+            Log.d("new report"," got in bottom dialog delete")
+//            if (report.id != null) dao.delete(report)
         }
         bottomSheetDialog.setCancelable(true)
         bottomSheetDialog.setContentView(view)
