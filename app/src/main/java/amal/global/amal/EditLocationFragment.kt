@@ -6,12 +6,17 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import com.google.android.gms.maps.CameraUpdateFactory
+import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.MapView
 import com.google.android.gms.maps.model.CameraPosition
 import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.MarkerOptions
 
+interface EditLocationFragmentDelegate {
+    fun returnToAssessFragment(fragment: EditLocationFragment)
+}
 class EditLocationFragment : Fragment() {
 
     private var _binding: FragmentEditLocationBinding? = null
@@ -27,6 +32,8 @@ class EditLocationFragment : Fragment() {
 
     val zoomLevel: Float
         get() = if (hasCoordinates) 12.0f else 2.0f
+
+    var delegate: EditLocationFragmentDelegate? = null
 
     lateinit var mapView: MapView
 
@@ -54,6 +61,8 @@ class EditLocationFragment : Fragment() {
                 map.addMarker(marker)
             }
 
+            map.mapType = GoogleMap.MAP_TYPE_SATELLITE
+
             val cameraPosition = CameraPosition
                     .builder()
                     .target(coordinateOrNullIsland)
@@ -73,6 +82,7 @@ class EditLocationFragment : Fragment() {
                 image?.metadata?.latitude = latLong.latitude
                 image?.metadata?.longitude = latLong.longitude
                 image?.saveMetaData()
+                delegate?.returnToAssessFragment(this)
             })
         })
 

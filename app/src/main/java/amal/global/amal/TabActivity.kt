@@ -11,6 +11,7 @@ import android.content.Intent
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import androidx.appcompat.app.AlertDialog
 import android.view.View
+import androidx.core.content.ContextCompat.startActivity
 import com.google.firebase.auth.FirebaseAuth
 import java.util.*
 
@@ -30,8 +31,10 @@ class TabActivity : AppCompatActivity(),
         AssessDelegate,
         CaptureDelegate,
         PassphraseFormFragmentDelegate,
-        SettingsFragmentDelegate
+        SettingsFragmentDelegate,
+        EditLocationFragmentDelegate
 {
+
     companion object {
         const val TAG = "Tab Activity"
     }
@@ -198,11 +201,11 @@ class TabActivity : AppCompatActivity(),
         contentView
                 .findViewById<View>(R.id.publishAnonymouslyView)
                 .setOnClickListener {
-                    fragment.uploadItem?.isEnabled = false
+//                    fragment.uploadItem?.isEnabled = false
                     upload(report)
                             .catch {
                                 this.runOnUiThread {
-                                    fragment.uploadItem?.isEnabled = true
+//                                    fragment.uploadItem?.isEnabled = true
                                 }
                             }
                     dialog.dismiss()
@@ -259,7 +262,7 @@ class TabActivity : AppCompatActivity(),
     }
 
     override fun editLocationTapped(fragment: AssessFragment) {
-        val editLocation = EditLocationFragment()
+        val editLocation = EditLocationFragment().also{it.delegate = this}
         editLocation.image = fragment.image
         pushFragment(editLocation)
     }
@@ -270,6 +273,10 @@ class TabActivity : AppCompatActivity(),
             PhotoStorage(this).deleteImage(imagePath, settingsPath)
         }
         binding.navigation.selectedItemId = R.id.navigation_assess
+    }
+
+    override fun returnToAssessFragment(fragment: EditLocationFragment) {
+        supportFragmentManager.popBackStack()
     }
 
     private fun returnToSettings() {

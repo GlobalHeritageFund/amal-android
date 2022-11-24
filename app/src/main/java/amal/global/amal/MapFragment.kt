@@ -7,6 +7,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import com.google.android.gms.maps.CameraUpdateFactory
+import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.MapView
 import com.google.android.gms.maps.model.CameraPosition
 import com.google.android.gms.maps.model.LatLng
@@ -45,6 +46,7 @@ class MapFragment : Fragment() {
 
             // only zooms on first coordinate for now
             val cameraPosition = CameraPosition.builder().target(coordinates.first()).zoom(12.0f).build()
+            map.mapType = GoogleMap.MAP_TYPE_SATELLITE
             map.moveCamera(CameraUpdateFactory.newCameraPosition(cameraPosition))
 
         })

@@ -8,6 +8,7 @@ import android.util.Log
 import android.view.*
 import android.widget.Button
 import com.google.android.gms.maps.CameraUpdateFactory
+import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.MapView
 import com.google.android.gms.maps.model.CameraPosition
 import com.google.android.gms.maps.model.LatLng
@@ -78,6 +79,8 @@ class AssessFragment : Fragment() {
             mapView.requestLayout()
         }
 
+
+
         val bundle = savedInstanceState?.getBundle("MapViewBundleKey") ?: savedInstanceState
         mapView.onCreate(bundle)
 
@@ -85,6 +88,9 @@ class AssessFragment : Fragment() {
             map.setOnMapClickListener {
                 delegate?.mapTapped(this@AssessFragment)
             }
+
+            //can take this out if want to revert to old map type for this view and satellite only for edit view
+            map.mapType = GoogleMap.MAP_TYPE_SATELLITE
 
             map.uiSettings.setAllGesturesEnabled(false)
             image?.metadata?.let {

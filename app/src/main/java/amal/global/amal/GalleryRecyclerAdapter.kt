@@ -70,7 +70,9 @@ class GalleryRecyclerAdapter(private val context: Context): RecyclerView.Adapter
     override fun onBindViewHolder(holder: GalleryRecyclerViewHolder, position: Int) {
         holder.bind(galleryItems[position])
         if (holder.itemViewType == TYPE_PHOTO) {
-            holder.itemView.findViewById<ImageView>(R.id.selectionStateImageView).visibility = if (selectedImages.contains(position)) View.VISIBLE else View.INVISIBLE
+            var cellView = holder.itemView.findViewById<ImageView>(R.id.selectionStateImageView)
+            if (selectedImages.contains(position)) cellView.setImageResource(R.drawable.ic_img_select_active)
+            else cellView.setImageResource(R.drawable.ic_img_select)
         }
 
     }
@@ -92,7 +94,7 @@ class GalleryRecyclerAdapter(private val context: Context): RecyclerView.Adapter
         Log.d(GalleryRecyclerAdapter.TAG, "deleteImage was called")
         PhotoStorage(context).deleteImage(imagePath, settingsPath)
         reloadData()
-        // Todo Use notifyItemRemoved() instead
+        // Todo Use notifyItemRemoved(position) once integrate and have position
         notifyDataSetChanged()
     }
 
