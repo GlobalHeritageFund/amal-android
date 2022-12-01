@@ -3,8 +3,9 @@ package amal.global.amal
 import androidx.room.Entity
 import androidx.room.PrimaryKey
 import androidx.room.TypeConverter
-import com.squareup.moshi.Moshi
-import com.squareup.moshi.Types
+import com.squareup.moshi.*
+import com.squareup.moshi.kotlin.reflect.KotlinJsonAdapterFactory
+import java.sql.Wrapper
 import java.util.*
 
 @Entity(tableName = "report_draft_table")
@@ -16,16 +17,41 @@ data class ReportDraft internal constructor(
         var title: String = "",
         var assessorEmail: String = "",
         //as of 11/15/22 uploadToEAMANA is not set for new reports so will be false for all
+        //TODO make sure uploadToEAMANA is never used and then stop setting it
         var uploadToEAMENA: Boolean = false,
         //restTarget introduced 11/15/22 if stays null know to save to firebase
         var restTarget: RestTarget? = null,
-        //uploadStatus introduced 11/17/22 but will not be used until implement workmanager
+        //uploadStatus introduced 11/17/22 but will not be used unless implement workmanager
         var upLoadStatus: String? = null
 ) {
-    //this will be used for upload status when implement work manager
+
     companion object {
-        const val QUEUED = "Queued for upload"
-        const val DRAFT = "Draft"
+//        this will be used for upload status when implement work manager
+//        const val QUEUED = "Queued for upload"
+//        const val DRAFT = "Draft"
+        @JsonClass(generateAdapter = true)
+        data class DraftWrapper(@Json(name = "list") val list: MutableList<ReportDraft>)
+
+        val jsonAdapter: JsonAdapter<DraftWrapper>
+            get() {
+                val moshi = Moshi.Builder()
+                        .add(DateAdapter())
+                        .add(KotlinJsonAdapterFactory())
+                        .build()
+                return moshi.adapter(DraftWrapper::class.java)
+            }
+    }
+}
+
+class DateAdapter {
+    @ToJson
+    fun toJson(date: Date?): Long? {
+        return date?.time
+    }
+
+    @FromJson
+    fun fromJson(value: Long?): Date? {
+        return value?.let { Date(it) }
     }
 }
 

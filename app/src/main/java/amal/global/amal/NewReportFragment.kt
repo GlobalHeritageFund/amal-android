@@ -2,6 +2,7 @@ package amal.global.amal
 
 import amal.global.amal.databinding.FragmentNewReportBinding
 import android.content.Context
+import android.content.SharedPreferences
 //is there a problem with not having appcompat context anymore import androidx.core.content.ContentProviderCompat.requireContext
 import android.net.ConnectivityManager
 import android.net.NetworkCapabilities
@@ -14,7 +15,11 @@ import android.view.*
 import android.widget.Button
 import android.widget.RadioButton
 import androidx.appcompat.app.AlertDialog
+import androidx.core.content.ContentProviderCompat.requireContext
 import com.google.android.material.bottomsheet.BottomSheetDialog
+import com.squareup.moshi.*
+import com.squareup.moshi.kotlin.reflect.KotlinJsonAdapterFactory
+import okio.`-DeprecatedOkio`.source
 import java.text.DateFormat
 import java.util.*
 
@@ -28,14 +33,21 @@ class NewReportFragment: Fragment() {
         const val TAG = "New Report Fragment"
     }
 
-    enum class NetworkStatus () {
+    enum class NetworkStatus() {
         NOTCONNECTED,
         CONNECTEDBUTMETERED,
         CONNECTED;
     }
 
     private var _binding: FragmentNewReportBinding? = null
+    var reportDraftList: MutableList<ReportDraft> = mutableListOf()
+
+    private val isNewDraft: Boolean = true
     private val binding get() = _binding!!
+    val draftReportPreferenceName = "DraftReportPreferences"
+    val preferences: SharedPreferences by lazy {
+        requireContext().getSharedPreferences(draftReportPreferenceName, Context.MODE_PRIVATE)
+    }
 
 //    private lateinit var dao: AmalRoomDatabaseDao
 
@@ -75,15 +87,15 @@ class NewReportFragment: Fragment() {
             setReportValues()
             //todo grey out publish button
             when (getNetworkAvailability(requireContext())) {
-                NetworkStatus.NOTCONNECTED -> {
+                NewReportFragment.NetworkStatus.NOTCONNECTED -> {
                     d(TAG, it.toString())
                     createNoNetworkAlert()
                 }
-                NetworkStatus.CONNECTEDBUTMETERED -> {
+                NewReportFragment.NetworkStatus.CONNECTEDBUTMETERED -> {
                     d(TAG, it.toString())
                     createMeteredAlert()
                 }
-                NetworkStatus.CONNECTED -> {
+                NewReportFragment.NetworkStatus.CONNECTED -> {
                     d(TAG, it.toString())
                     delegate?.uploadReport(this, report)
                 }
@@ -112,6 +124,10 @@ class NewReportFragment: Fragment() {
         val dateFormat = DateFormat.getDateTimeInstance(DateFormat.LONG, DateFormat.SHORT)
         binding.dateLabel.text = dateFormat.format(date)
 
+        var result = preferences.getString(draftReportPreferenceName, null)
+        if (!result.isNullOrEmpty()) {
+            reportDraftList = ReportDraft.jsonAdapter.fromJson(result)!!.list
+        }
 //        val db = AmalRoomDatabase.getDatabase(requireContext().applicationContext)
 //        dao = db.amalRoomDatabaseDao()
     }
@@ -182,14 +198,20 @@ class NewReportFragment: Fragment() {
         }
         val btnSaveDraft = view.findViewById<Button>(R.id.save_draft)
         btnSaveDraft.setOnClickListener {
-            setReportValues()
-           //TODO save report draft dao.insert(report)
+            setReportAndSaveToPrefs()
+           //or save report draft dao.insert(report)
             bottomSheetDialog.dismiss()
         }
         val btnDelete = view.findViewById<Button>(R.id.delete_draft)
         btnDelete.setOnClickListener {
             Log.d(TAG," got in bottom dialog delete")
-            //TODO       if (report.id != null) dao.delete(report)
+            //or if (report.id != null) dao.delete(report)
+            var newList = reportDraftList  //tempvar for debugging
+            if (!isNewDraft) {
+                reportDraftList.removeAll { it.id == report.id }
+                val showNewList = reportDraftList //tempvar for debugging
+                saveListToPrefs()
+            }
             bottomSheetDialog.dismiss()
         }
         bottomSheetDialog.setCancelable(true)
@@ -204,7 +226,10 @@ class NewReportFragment: Fragment() {
                 delegate?.uploadReport(this, report)
                 dialog.dismiss()
             }
-            builder.setNeutralButton("Save Draft") { dialog, which -> dialog.dismiss() } //TODO implement save  dao.insert() before dismiss
+            builder.setNeutralButton("Save Draft") { dialog, which ->
+                setReportAndSaveToPrefs()
+                dialog.dismiss()
+            } //or implement save  dao.insert() before dismiss
             builder.setNegativeButton("Cancel") {dialog, which -> dialog.dismiss()}
             builder.show()
     }
@@ -213,9 +238,22 @@ class NewReportFragment: Fragment() {
         val builder = AlertDialog.Builder(requireContext());
         builder.setMessage("You do not currently have a network connection.  Your report will be saved as a draft so you can upload it at another time.");
         builder.setPositiveButton("OK") { dialog, which ->
-                //TODO save as draft dao.insert
+                setReportAndSaveToPrefs()
+                //save as draft dao.insert if change to room
                 dialog.dismiss()
             }
         builder.show()
+    }
+
+    private fun setReportAndSaveToPrefs() {
+        setReportValues()
+        reportDraftList.add(report)
+        saveListToPrefs()
+    }
+
+    private fun saveListToPrefs() {
+        val editor = preferences.edit()
+        editor.putString(draftReportPreferenceName,ReportDraft.jsonAdapter.toJson(ReportDraft.Companion.DraftWrapper(reportDraftList)))
+        editor.apply()
     }
 }
