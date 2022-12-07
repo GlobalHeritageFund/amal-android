@@ -20,7 +20,7 @@ class GalleryRecyclerViewHolder(itemView: View): RecyclerView.ViewHolder(itemVie
     }
 
     private fun bindDivider(item: GalleryItem.GalleryDateDivider) {
-        itemView.findViewById<TextView>(R.id.date_text)?.text = item.photoGroupDate
+        itemView.findViewById<TextView>(R.id.divider_text)?.text = item.photoGroupDate
     }
 
     fun bind(galleryItem: GalleryItem) {
@@ -56,7 +56,7 @@ class GalleryRecyclerAdapter(private val context: Context): RecyclerView.Adapter
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): GalleryRecyclerViewHolder {
         val layout = when (viewType) {
             TYPE_PHOTO -> R.layout.cell_gallery
-            TYPE_DIVIDER -> R.layout.date_divider
+            TYPE_DIVIDER -> R.layout.list_divider
             else -> throw IllegalArgumentException("Invalid view type")
         }
 

@@ -27,12 +27,10 @@ class ReportsFragment : Fragment(), ReportsAdapterDelegate, DraftReportsAdapterD
     var delegate: ReportsDelegate? = null
 
     lateinit var adapter: ReportsAdapter
-    lateinit var draftAdapter: DraftReportsAdapter
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
         adapter = ReportsAdapter(requireContext(),this)
-        draftAdapter = DraftReportsAdapter(requireContext(), this)
         _binding = FragmentReportsBinding.inflate(inflater, container, false)
         return binding.root
     }
