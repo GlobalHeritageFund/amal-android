@@ -15,7 +15,7 @@ interface ReportsDelegate {
     fun tappedDraftReport(draftReport: ReportDraft, reportsFragment: ReportsFragment)
 }
 
-class ReportsFragment : Fragment(), ReportsAdapterDelegate, DraftReportsAdapterDelegate {
+class ReportsFragment : Fragment(), ReportsAdapterDelegate {
 
     companion object {
         const val TAG = "Reports Fragment"
@@ -30,8 +30,8 @@ class ReportsFragment : Fragment(), ReportsAdapterDelegate, DraftReportsAdapterD
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
-        adapter = ReportsAdapter(requireContext(),this)
         _binding = FragmentReportsBinding.inflate(inflater, container, false)
+        adapter = ReportsAdapter(requireContext(),this)
         return binding.root
     }
 
@@ -44,21 +44,11 @@ class ReportsFragment : Fragment(), ReportsAdapterDelegate, DraftReportsAdapterD
 
         binding.reportList.addOnItemClickListener(object: OnItemClickListener {
             override fun onItemClicked(position: Int, view: View) {
-                val report = adapter.reports[position]
-                delegate?.tappedReport(report, this@ReportsFragment)
+                if (adapter!!.getItemViewType(position) == ReportsAdapter.TYPE_DIVIDER) return
+                reportClickHandle(position)
             }
         })
 
-        binding.draftReportList.layoutManager = LinearLayoutManager(activity);
-
-        binding.draftReportList.adapter = draftAdapter
-
-        binding.draftReportList.addOnItemClickListener(object: OnItemClickListener {
-            override fun onItemClicked(position: Int, view: View) {
-                val draftReport = draftAdapter.draftReports[position]
-                delegate?.tappedDraftReport(draftReport, this@ReportsFragment)
-            }
-        })
 
         view?.findViewById<FloatingActionButton>(R.id.new_report_button)?.setOnClickListener{
             delegate?.newReportTapped(this)
@@ -78,33 +68,39 @@ class ReportsFragment : Fragment(), ReportsAdapterDelegate, DraftReportsAdapterD
 
     override fun reportsFound() {
         if (_binding!=null) {//quick fix at the moment, might want to change flow at some point
-            binding.allReportsEmptyView.visibility = View.GONE
-            binding.allReportsList.visibility = View.VISIBLE
             binding.progressBarReportsView.visibility = View.GONE
-            binding.publishedReportEmptyView.visibility = View.GONE
+            binding.emptyReportsView.visibility = View.GONE
+            binding.reportList.visibility = View.VISIBLE
         }
     }
 
     override fun noReportsFound() {
         if (_binding!=null) {
             binding.progressBarReportsView.visibility = View.GONE
-            binding.publishedReportEmptyView.visibility = View.VISIBLE
+            binding.emptyReportsView.visibility = View.VISIBLE
             binding.reportList.visibility = View.GONE
         }
     }
 
     override fun noDraftReportsFound() {
         if (_binding!=null) {
-            binding.draftReportEmptyView.visibility = View.VISIBLE
-            binding.draftReportList.visibility = View.GONE
+            binding.progressBarReportsView.visibility = View.GONE
+            binding.emptyReportsView.visibility = View.VISIBLE
+            binding.reportList.visibility = View.GONE
         }
     }
 
     override fun draftReportsFound() {
         if (_binding!=null) {
-            binding.allReportsEmptyView.visibility = View.GONE
-            binding.draftReportEmptyView.visibility = View.GONE
-            binding.allReportsList.visibility = View.VISIBLE
+            binding.progressBarReportsView.visibility = View.GONE
+            binding.emptyReportsView.visibility = View.GONE
+            binding.reportList.visibility = View.VISIBLE
         }
+    }
+
+    fun reportClickHandle(position: Int) {
+        val reportItem = adapter.allReports[position]
+        if (reportItem is ReportItem.PublishedReport) delegate?.tappedReport(reportItem.report, this@ReportsFragment)
+        if (reportItem is ReportItem.DraftReport) delegate?.tappedDraftReport(reportItem.draftReport, this)
     }
 }

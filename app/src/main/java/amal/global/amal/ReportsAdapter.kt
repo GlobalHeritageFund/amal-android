@@ -1,5 +1,6 @@
 package amal.global.amal
 
+import amal.global.amal.ReportsAdapter.Companion.TYPE_REPORT
 import android.content.Context
 import android.content.SharedPreferences
 import androidx.recyclerview.widget.RecyclerView
@@ -43,7 +44,7 @@ class ReportItemViewHolder(itemView: View): RecyclerView.ViewHolder(itemView) {
     }
 
     private fun bindDivider(item: ReportItem.ReportsHeader) {
-        itemView.findViewById<TextView>(R.id.divider_text)?.text = item.reportType
+        itemView.findViewById<TextView>(R.id.divider_text).text = item.reportType
     }
 
     fun bind(reportItem: ReportItem) {
@@ -60,6 +61,9 @@ class ReportsAdapter(val context: Context, val delegate: ReportsAdapterDelegate 
         val TAG = "Reports Adapter"
         const val TYPE_REPORT = 0
         const val TYPE_DIVIDER = 1
+        const val TYPE_EMPTY = "None to show"
+        const val TYPE_PUBLISHED_REPORT = "Reports"
+        const val TYPE_DRAFT = "Draft Reports"
     }
 
     val reports: MutableList<Report> = mutableListOf()
@@ -67,12 +71,6 @@ class ReportsAdapter(val context: Context, val delegate: ReportsAdapterDelegate 
     val allReports: MutableList<ReportItem> = mutableListOf()
 
     init {
-
-        val reference = FirebaseDatabase.getInstance().reference.child("reports")
-
-        val query = reference
-                .orderByChild("authorDeviceToken")
-                .equalTo(CurrentUser(context).token)
 
         val draftReportPreferenceName = "DraftReportPreferences" //change so don't have this hard coded in two places
         val preferences: SharedPreferences by lazy {
@@ -85,9 +83,13 @@ class ReportsAdapter(val context: Context, val delegate: ReportsAdapterDelegate 
             draftReports.addAll(ReportDraft.jsonAdapter.fromJson(draftReportsString)!!.list)
             createReportItemList(draftReports, reports)
             delegate.draftReportsFound()
-            notifyDataSetChanged()
         }
 
+        val reference = FirebaseDatabase.getInstance().reference.child("reports")
+
+        val query = reference
+                .orderByChild("authorDeviceToken")
+                .equalTo(CurrentUser(context).token)
 
         query.addValueEventListener(object : ValueEventListener {
             override fun onDataChange(snapshot: DataSnapshot) {
@@ -96,9 +98,10 @@ class ReportsAdapter(val context: Context, val delegate: ReportsAdapterDelegate 
 
                 val reportsSnapshot = map.entries
                         .map {
-                            var value = it.value
+                            val value = it.value
                             value["firebaseID"] = it.key
-                            val imagesMaps = value["images"] as? HashMap<*, *> ?: hashMapOf<String, Any>()
+                            val imagesMaps = value["images"] as? HashMap<*, *>
+                                    ?: hashMapOf<String, Any>()
                             val images = imagesMaps.values.toList()
                             value["images"] = images
                             value
@@ -107,15 +110,16 @@ class ReportsAdapter(val context: Context, val delegate: ReportsAdapterDelegate 
                         .mapNotNull { Report.jsonAdapter.fromJsonValue(it) }
                         .sortedByDescending { it.creationDateValue }
                 reports.addAll(reportsSnapshot)
-                Log.d(TAG,"got into addValueEventListener")
+                Log.d(TAG, "got into addValueEventListener")
                 if (reports.isEmpty()) {
                     delegate.noReportsFound()
                 } else {
                     createReportItemList(draftReports, reports)
                     delegate.reportsFound()
                 }
-                notifyDataSetChanged()
+
             }
+
 
             override fun onCancelled(error: DatabaseError) {
                 Log.d(TAG, error.toString())
@@ -126,8 +130,8 @@ class ReportsAdapter(val context: Context, val delegate: ReportsAdapterDelegate 
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ReportItemViewHolder {
         val layout = when (viewType) {
-            ReportsAdapter.TYPE_REPORT -> R.layout.subtitle_row
-            ReportsAdapter.TYPE_DIVIDER -> R.layout.list_divider
+            TYPE_REPORT -> R.layout.subtitle_row
+            TYPE_DIVIDER -> R.layout.list_divider
             else -> throw IllegalArgumentException("Invalid view type")
         }
 
@@ -141,28 +145,40 @@ class ReportsAdapter(val context: Context, val delegate: ReportsAdapterDelegate 
 
     override fun onBindViewHolder(holder: ReportItemViewHolder, position: Int) {
         holder.bind(allReports[position])
+        if (holder.itemViewType == TYPE_DIVIDER) {
+            val dividerLine = holder.itemView.findViewById<View>(R.id.divider_line)
+            val divider = allReports[position] as ReportItem.ReportsHeader
+            if (divider.reportType == TYPE_EMPTY) dividerLine.visibility = View.INVISIBLE
+        }
     }
 
     override fun getItemCount(): Int {
         return allReports.size
     }
 
+    override fun getItemViewType(position: Int) = when (allReports[position]) {
+        is ReportItem.DraftReport -> TYPE_REPORT
+        is ReportItem.PublishedReport -> TYPE_REPORT
+        is ReportItem.ReportsHeader -> TYPE_DIVIDER
+    }
+
     private fun createReportItemList(draftReports: MutableList<ReportDraft>, reports: MutableList<Report>) {
-        allReports.add(ReportItem.ReportsHeader("Draft Reports"))
+        allReports.add(ReportItem.ReportsHeader(TYPE_DRAFT))
         if (draftReports.isNotEmpty()) {
             draftReports.forEach {
                 allReports.add(ReportItem.DraftReport(it))
             }
         } else {
-            allReports.add(ReportItem.ReportsHeader("None to show"))
+            allReports.add(ReportItem.ReportsHeader(TYPE_EMPTY))
         }
-        allReports.add(ReportItem.ReportsHeader("Reports"))
+        allReports.add(ReportItem.ReportsHeader(TYPE_PUBLISHED_REPORT))
         if (reports.isNotEmpty()) {
             reports.forEach {
                 allReports.add(ReportItem.PublishedReport(it))
             }
         } else {
-            allReports.add(ReportItem.ReportsHeader("None to show"))
+            allReports.add(ReportItem.ReportsHeader(TYPE_EMPTY))
         }
+        notifyDataSetChanged()
     }
 }

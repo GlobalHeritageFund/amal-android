@@ -61,4 +61,5 @@
     <string name="publish">Publish</string>
     <string name="metered_connection_dialog_text">You are on a connection that might be expensive to upload on. Would you like to continue to upload, or would you prefer to save the report as a draft so you can upload it later on a different connection?</string>
     <string name="upload_now">Upload Now</string>
+    <string name="sending_to_db">Sending to %s database</string>
 </resources>

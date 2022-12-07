@@ -75,7 +75,10 @@ class NewReportFragment: Fragment() {
                 var tempButton = RadioButton(requireContext())
                 tempButton.text = it.toString()
                 tempButton.id = it.ordinal
-                if (existingDraft != null && existingDraft.restTarget == it) tempButton.isChecked = true
+                if (existingDraft != null && existingDraft.restTarget == it) {
+                    tempButton.isChecked = true
+                    binding.sendingToAmal.text = getString(R.string.sending_to_db,it.toString())
+                }
                 radioGroup.addView(tempButton)
             }
         }
@@ -84,7 +87,7 @@ class NewReportFragment: Fragment() {
             group, checkedId ->
             if (checkedId !== -1) {
                 var text = RestTarget.values()[checkedId].toString()
-                binding.sendingToAmal.setText("Sending to $text")
+                binding.sendingToAmal.text = getString(R.string.sending_to_db,text)
             }
         }
         publishButton.setOnClickListener{
@@ -125,7 +128,7 @@ class NewReportFragment: Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         if (existingDraft != null && !existingDraft?.title.isNullOrEmpty()) {
-            binding.emailField.setText(existingDraft.title)
+            binding.titleField.setText(existingDraft.title)
         }
 
         if (existingDraft != null && !existingDraft?.assessorEmail.isNullOrEmpty()) {

@@ -1,100 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout
+<LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
-  >
+    android:orientation="vertical">
 
-    <LinearLayout
-        xmlns:android="http://schemas.android.com/apk/res/android"
-        android:orientation="vertical"
-        android:layout_width="fill_parent"
-        android:layout_height="fill_parent"
-        android:id="@+id/allReportsEmptyView"
-        android:visibility="visible">
-        <ImageView xmlns:android="http://schemas.android.com/apk/res/android"
-            android:id="@+id/empty_reports_image"
-            android:layout_marginTop="10dp"
-            android:layout_width="fill_parent"
-            android:layout_height="300dp"
-            android:gravity="center"
-            android:background="@color/backgroundColor"
-            android:contentDescription="@string/gallery_empty_text"
-            android:src="@drawable/reports_bg"
-            />
-        <TextView  xmlns:android="http://schemas.android.com/apk/res/android"
-            android:id="@+id/empty_gallery_text"
-            android:layout_height="wrap_content"
-            android:layout_width="wrap_content"
-            android:text="@string/reports_empty_state_text"
-            />
-    </LinearLayout>
-<ScrollView
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:id="@+id/allReportsList"
-    android:visibility="gone"
-    >
-    <LinearLayout
+    <FrameLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:orientation="vertical"
-        >
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_horizontal"
-            android:layout_margin="5dp"
-            android:textSize="24sp"
-            android:text="DRAFT REPORTS"
-          />
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/draftReportList"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:background="@color/backgroundColor"
-            android:cacheColorHint="#00000000"
-            android:scrollbars="vertical"
-            android:visibility="visible"
-       />
-        <TextView
-            android:id="@+id/draftReportEmptyView"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_horizontal"
-            android:layout_margin="5dp"
-            android:text= "No draft reports"
-            android:visibility="gone"
-            />
+        android:layout_height="match_parent">
 
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_horizontal"
-            android:layout_margin="5dp"
-            android:textSize="24sp"
-            android:text="PUBLISHED REPORTS"
-            />
-
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/reportList"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:background="@color/backgroundColor"
-            android:cacheColorHint="#00000000"
-            android:scrollbars="vertical"
-            android:visibility="visible">
-        </androidx.recyclerview.widget.RecyclerView>
-        <TextView
-            android:id="@+id/publishedReportEmptyView"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_horizontal"
-            android:layout_margin="5dp"
-            android:text= "No draft reports"
-            android:visibility="gone"
-            />
         <ProgressBar
             android:id="@+id/progressBarReportsView"
             android:layout_gravity="center"
@@ -102,16 +17,50 @@
             android:layout_height="wrap_content"
             android:visibility="visible"/>
 
-    </LinearLayout>
-</ScrollView>
-    <com.google.android.material.floatingactionbutton.FloatingActionButton
-        android:id="@+id/new_report_button"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="end|bottom"
-        android:layout_margin="16dp"
-        android:tint="@color/white"
-        app:backgroundTint="@color/secondaryColor"
-        android:src="@android:drawable/ic_input_add"
-        />
-</FrameLayout>
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/reportList"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@color/backgroundColor"
+            android:cacheColorHint="#00000000"
+            android:scrollbars="vertical"
+            android:visibility="gone">
+        </androidx.recyclerview.widget.RecyclerView>
+
+        <LinearLayout
+            xmlns:android="http://schemas.android.com/apk/res/android"
+            android:orientation="vertical"
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            android:id="@+id/emptyReportsView"
+            android:visibility="gone">
+            <ImageView xmlns:android="http://schemas.android.com/apk/res/android"
+                android:id="@+id/empty_reports_image"
+                android:layout_marginTop="10dp"
+                android:layout_width="fill_parent"
+                android:layout_height="300dp"
+                android:gravity="center"
+                android:background="@color/backgroundColor"
+                android:contentDescription="@string/gallery_empty_text"
+                android:src="@drawable/reports_bg"
+                />
+            <TextView  xmlns:android="http://schemas.android.com/apk/res/android"
+                android:id="@+id/empty_gallery_text"
+                android:layout_height="wrap_content"
+                android:layout_width="wrap_content"
+                android:text="@string/reports_empty_state_text"
+                />
+        </LinearLayout>
+
+        <com.google.android.material.floatingactionbutton.FloatingActionButton
+            android:id="@+id/new_report_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="end|bottom"
+            android:layout_margin="16dp"
+            android:tint="@color/white"
+            app:backgroundTint="@color/secondaryColor"
+            android:src="@android:drawable/ic_input_add"
+            />
+    </FrameLayout>
+</LinearLayout>
