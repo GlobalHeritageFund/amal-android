@@ -10,19 +10,16 @@ import java.util.*
 
 @Entity(tableName = "report_draft_table")
 data class ReportDraft internal constructor(
-        @PrimaryKey val id: String = UUID.randomUUID().toString(),
+        //had to change id to var to allow id to be reset when re-create draft from preferences
+        @PrimaryKey var id: String = UUID.randomUUID().toString(),
         var images: List<LocalImage> = listOf(),
         var deviceToken: String = "",
         var creationDate: Date = Date(),
         var title: String = "",
         var assessorEmail: String = "",
-        //as of 11/15/22 uploadToEAMANA is not set for new reports so will be false for all
-        //TODO make sure uploadToEAMANA is never used and then stop setting it
-        var uploadToEAMENA: Boolean = false,
+        //as of 11/15/22 var uploadToEAMANA has been removed and is not set for new reports
         //restTarget introduced 11/15/22 if stays null know to save to firebase
         var restTarget: RestTarget? = null,
-        //uploadStatus introduced 11/17/22 but will not be used unless implement workmanager
-        var upLoadStatus: String? = null
 ) {
 
     companion object {

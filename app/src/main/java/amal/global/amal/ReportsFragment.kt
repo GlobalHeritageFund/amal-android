@@ -1,6 +1,5 @@
 package amal.global.amal
 
-import amal.global.amal.databinding.FragmentAssessBinding
 import amal.global.amal.databinding.FragmentReportsBinding
 import android.os.Bundle
 import android.util.Log
@@ -13,9 +12,10 @@ import android.view.*
 interface ReportsDelegate {
     fun newReportTapped(reportsFragment: ReportsFragment)
     fun tappedReport(report: Report, reportsFragment: ReportsFragment)
+    fun tappedDraftReport(draftReport: ReportDraft, reportsFragment: ReportsFragment)
 }
 
-class ReportsFragment : Fragment(), ReportsAdapterDelegate {
+class ReportsFragment : Fragment(), ReportsAdapterDelegate, DraftReportsAdapterDelegate {
 
     companion object {
         const val TAG = "Reports Fragment"
@@ -27,13 +27,14 @@ class ReportsFragment : Fragment(), ReportsAdapterDelegate {
     var delegate: ReportsDelegate? = null
 
     lateinit var adapter: ReportsAdapter
+    lateinit var draftAdapter: DraftReportsAdapter
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
-        adapter = ReportsAdapter(requireContext()).also { it.delegate = this }
+        adapter = ReportsAdapter(requireContext(),this)
+        draftAdapter = DraftReportsAdapter(requireContext(), this)
         _binding = FragmentReportsBinding.inflate(inflater, container, false)
-        val view = binding.root
-        return view
+        return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -47,6 +48,17 @@ class ReportsFragment : Fragment(), ReportsAdapterDelegate {
             override fun onItemClicked(position: Int, view: View) {
                 val report = adapter.reports[position]
                 delegate?.tappedReport(report, this@ReportsFragment)
+            }
+        })
+
+        binding.draftReportList.layoutManager = LinearLayoutManager(activity);
+
+        binding.draftReportList.adapter = draftAdapter
+
+        binding.draftReportList.addOnItemClickListener(object: OnItemClickListener {
+            override fun onItemClicked(position: Int, view: View) {
+                val draftReport = draftAdapter.draftReports[position]
+                delegate?.tappedDraftReport(draftReport, this@ReportsFragment)
             }
         })
 
@@ -68,17 +80,33 @@ class ReportsFragment : Fragment(), ReportsAdapterDelegate {
 
     override fun reportsFound() {
         if (_binding!=null) {//quick fix at the moment, might want to change flow at some point
+            binding.allReportsEmptyView.visibility = View.GONE
+            binding.allReportsList.visibility = View.VISIBLE
             binding.progressBarReportsView.visibility = View.GONE
-            binding.reportList.visibility = View.VISIBLE
-            binding.emptyReportsView.visibility = View.GONE
+            binding.publishedReportEmptyView.visibility = View.GONE
         }
     }
 
     override fun noReportsFound() {
         if (_binding!=null) {
             binding.progressBarReportsView.visibility = View.GONE
-            binding.emptyReportsView.visibility = View.VISIBLE
+            binding.publishedReportEmptyView.visibility = View.VISIBLE
             binding.reportList.visibility = View.GONE
+        }
+    }
+
+    override fun noDraftReportsFound() {
+        if (_binding!=null) {
+            binding.draftReportEmptyView.visibility = View.VISIBLE
+            binding.draftReportList.visibility = View.GONE
+        }
+    }
+
+    override fun draftReportsFound() {
+        if (_binding!=null) {
+            binding.allReportsEmptyView.visibility = View.GONE
+            binding.draftReportEmptyView.visibility = View.GONE
+            binding.allReportsList.visibility = View.VISIBLE
         }
     }
 }

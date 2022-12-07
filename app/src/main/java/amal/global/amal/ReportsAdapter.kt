@@ -4,7 +4,9 @@ import android.content.Context
 import android.graphics.Bitmap
 import androidx.recyclerview.widget.RecyclerView
 import android.util.Log
+import android.view.View
 import android.view.ViewGroup
+import android.widget.TextView
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.FirebaseDatabase
@@ -15,12 +17,13 @@ interface ReportsAdapterDelegate {
     fun reportsFound()
 }
 
-class ReportsAdapter(var context: Context, var reports: List<Report> = listOf()) : RecyclerView.Adapter<SubtitleViewHolder>() {
+class ReportsAdapter(val context: Context, val delegate: ReportsAdapterDelegate ) : RecyclerView.Adapter<SubtitleViewHolder>() {
 
     companion object {
         val TAG = "Reports Adapter"
     }
-    var delegate: ReportsAdapterDelegate? = null
+
+    val reports: MutableList<Report> = mutableListOf()
 
     init {
 
@@ -34,7 +37,7 @@ class ReportsAdapter(var context: Context, var reports: List<Report> = listOf())
             override fun onDataChange(snapshot: DataSnapshot) {
                 val map = snapshot.value as? HashMap<String, HashMap<String, Any>> ?: hashMapOf()
 
-                reports = map.entries
+                val reportsSnapshot = map.entries
                         .map {
                             var value = it.value
                             value["firebaseID"] = it.key
@@ -46,11 +49,12 @@ class ReportsAdapter(var context: Context, var reports: List<Report> = listOf())
                         .filter { (it["uploadComplete"] as? Boolean) ?: false }
                         .mapNotNull { Report.jsonAdapter.fromJsonValue(it) }
                         .sortedByDescending { it.creationDateValue }
+                reports.addAll(reportsSnapshot)
                 Log.d(TAG,"got into addValueEventListener")
                 if (reports.isEmpty()) {
-                    delegate?.noReportsFound()
+                    delegate.noReportsFound()
                 } else {
-                    delegate?.reportsFound()
+                    delegate.reportsFound()
                 }
                 notifyDataSetChanged()
             }

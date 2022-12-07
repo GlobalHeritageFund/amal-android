@@ -131,6 +131,13 @@ class TabActivity : AppCompatActivity(),
         pushFragment(fragment)
     }
 
+    override fun tappedDraftReport(draftReport: ReportDraft, reportsFragment: ReportsFragment) {
+        val fragment = NewReportFragment()
+        fragment.existingDraft = draftReport
+        fragment.delegate = this
+        pushFragment(fragment)
+    }
+
     override fun choseImages(fragment: ChooseImagesFragment, images: List<LocalImage>) {
         val fragment = NewReportFragment()
         fragment.report.deviceToken = CurrentUser(this).token
@@ -277,6 +284,11 @@ class TabActivity : AppCompatActivity(),
 
     override fun returnToAssessFragment(fragment: EditLocationFragment) {
         supportFragmentManager.popBackStack()
+    }
+
+    override fun returnToReports() {
+        val fragment = ReportsFragment().also{ it.delegate = this }
+        pushFragment(fragment)
     }
 
     private fun returnToSettings() {

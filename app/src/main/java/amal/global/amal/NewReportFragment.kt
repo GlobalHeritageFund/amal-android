@@ -16,6 +16,7 @@ import android.widget.Button
 import android.widget.RadioButton
 import androidx.appcompat.app.AlertDialog
 import androidx.core.content.ContentProviderCompat.requireContext
+import androidx.room.PrimaryKey
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.squareup.moshi.*
 import com.squareup.moshi.kotlin.reflect.KotlinJsonAdapterFactory
@@ -25,6 +26,7 @@ import java.util.*
 
 interface NewReportFragmentDelegate {
     fun uploadReport(fragment: NewReportFragment, report: ReportDraft)
+    fun returnToReports()
 }
 
 class NewReportFragment: Fragment() {
@@ -42,7 +44,6 @@ class NewReportFragment: Fragment() {
     private var _binding: FragmentNewReportBinding? = null
     var reportDraftList: MutableList<ReportDraft> = mutableListOf()
 
-    private val isNewDraft: Boolean = true
     private val binding get() = _binding!!
     val draftReportPreferenceName = "DraftReportPreferences"
     val preferences: SharedPreferences by lazy {
@@ -51,6 +52,7 @@ class NewReportFragment: Fragment() {
 
 //    private lateinit var dao: AmalRoomDatabaseDao
 
+    lateinit var existingDraft: ReportDraft
     var report = ReportDraft()
 
     var delegate: NewReportFragmentDelegate? = null
@@ -73,9 +75,11 @@ class NewReportFragment: Fragment() {
                 var tempButton = RadioButton(requireContext())
                 tempButton.text = it.toString()
                 tempButton.id = it.ordinal
+                if (existingDraft != null && existingDraft.restTarget == it) tempButton.isChecked = true
                 radioGroup.addView(tempButton)
             }
         }
+
         radioGroup.setOnCheckedChangeListener {
             group, checkedId ->
             if (checkedId !== -1) {
@@ -87,15 +91,15 @@ class NewReportFragment: Fragment() {
             setReportValues()
             //todo grey out publish button
             when (getNetworkAvailability(requireContext())) {
-                NewReportFragment.NetworkStatus.NOTCONNECTED -> {
+                NetworkStatus.NOTCONNECTED -> {
                     d(TAG, it.toString())
                     createNoNetworkAlert()
                 }
-                NewReportFragment.NetworkStatus.CONNECTEDBUTMETERED -> {
+                NetworkStatus.CONNECTEDBUTMETERED -> {
                     d(TAG, it.toString())
                     createMeteredAlert()
                 }
-                NewReportFragment.NetworkStatus.CONNECTED -> {
+                NetworkStatus.CONNECTED -> {
                     d(TAG, it.toString())
                     delegate?.uploadReport(this, report)
                 }
@@ -116,11 +120,23 @@ class NewReportFragment: Fragment() {
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
-        
-        binding.emailField.setText(currentUser.email ?: "")
+        var date: Date
 
-        val date = Date()
+        super.onViewCreated(view, savedInstanceState)
+
+        if (existingDraft != null && !existingDraft?.title.isNullOrEmpty()) {
+            binding.emailField.setText(existingDraft.title)
+        }
+
+        if (existingDraft != null && !existingDraft?.assessorEmail.isNullOrEmpty()) {
+            binding.emailField.setText(existingDraft.assessorEmail)
+        } else {
+            binding.emailField.setText(currentUser.email ?: "")
+        }
+
+        //chose to stay with initial creation date instead of resetting date when review draft
+        if (existingDraft != null) date = existingDraft.creationDate
+        else date = Date()
         val dateFormat = DateFormat.getDateTimeInstance(DateFormat.LONG, DateFormat.SHORT)
         binding.dateLabel.text = dateFormat.format(date)
 
@@ -128,6 +144,9 @@ class NewReportFragment: Fragment() {
         if (!result.isNullOrEmpty()) {
             reportDraftList = ReportDraft.jsonAdapter.fromJson(result)!!.list
         }
+
+        if (existingDraft != null) setReportValuesFromExistingDraft()
+
 //        val db = AmalRoomDatabase.getDatabase(requireContext().applicationContext)
 //        dao = db.amalRoomDatabaseDao()
     }
@@ -181,6 +200,14 @@ class NewReportFragment: Fragment() {
         return NetworkStatus.NOTCONNECTED
     }
 
+    private fun setReportValuesFromExistingDraft() {
+        report.id = existingDraft.id
+        report.images = existingDraft.images
+        report.creationDate = existingDraft.creationDate
+        report.title = existingDraft.title
+        report.assessorEmail = binding.emailField.text.toString()
+        report.restTarget = existingDraft.restTarget
+    }
     private fun setReportValues() {
         report.assessorEmail = binding.emailField.text.toString()
         report.creationDate = Date()
@@ -207,7 +234,7 @@ class NewReportFragment: Fragment() {
             Log.d(TAG," got in bottom dialog delete")
             //or if (report.id != null) dao.delete(report)
             var newList = reportDraftList  //tempvar for debugging
-            if (!isNewDraft) {
+            if (existingDraft != null) {
                 reportDraftList.removeAll { it.id == report.id }
                 val showNewList = reportDraftList //tempvar for debugging
                 saveListToPrefs()
@@ -255,5 +282,6 @@ class NewReportFragment: Fragment() {
         val editor = preferences.edit()
         editor.putString(draftReportPreferenceName,ReportDraft.jsonAdapter.toJson(ReportDraft.Companion.DraftWrapper(reportDraftList)))
         editor.apply()
+        delegate?.returnToReports()
     }
 }
