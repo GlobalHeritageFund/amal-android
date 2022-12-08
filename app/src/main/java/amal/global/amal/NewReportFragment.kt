@@ -50,8 +50,6 @@ class NewReportFragment: Fragment() {
         requireContext().getSharedPreferences(draftReportPreferenceName, Context.MODE_PRIVATE)
     }
 
-//    private lateinit var dao: AmalRoomDatabaseDao
-
     var existingDraft: ReportDraft? = null
     var report = ReportDraft() //this creates a new draft with default values
 
@@ -146,8 +144,6 @@ class NewReportFragment: Fragment() {
 
         if (existingDraft != null) setReportValuesFromExistingDraft()
 
-//        val db = AmalRoomDatabase.getDatabase(requireContext().applicationContext)
-//        dao = db.amalRoomDatabaseDao()
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
@@ -160,23 +156,7 @@ class NewReportFragment: Fragment() {
         }
 
     }
-
-//    override fun onOptionsItemSelected(item: MenuItem): Boolean {
-//        report.assessorEmail = binding.emailField.text.toString()
-//        report.creationDate = Date()
-//        report.title = binding.titleField.text.toString()
-//        val checkedId = binding.dbChooser.checkedRadioButtonId
-//        if (checkedId !== -1) report.restTarget = RestTarget.values()[checkedId]
-//        when (item!!.itemId) {
-//            R.id.uploadReport -> {
-//                delegate?.uploadReport(this, report)
-//                return true
-//            }
-//            else ->
-//                return super.onOptionsItemSelected(item)
-//        }
-//    }
-
+    
     override fun onDestroyView() {
         super.onDestroyView() //should these be switched?
         _binding = null
@@ -228,17 +208,12 @@ class NewReportFragment: Fragment() {
             setFinalReportValues()
             addReportToDraftList()
             saveListToPrefs()
-           //or save report draft dao.insert(report)
             bottomSheetDialog.dismiss()
         }
         val btnDelete = view.findViewById<Button>(R.id.delete_draft)
         btnDelete.setOnClickListener {
-            Log.d(TAG," got in bottom dialog delete")
-            //or if (report.id != null) dao.delete(report)
-            var newList = reportDraftList  //tempvar for debugging
             if (existingDraft != null) {
                 reportDraftList.removeAll { it.id == report.id }
-                val showNewList = reportDraftList //tempvar for debugging
                 saveListToPrefs()
             }
             bottomSheetDialog.dismiss()
@@ -260,7 +235,7 @@ class NewReportFragment: Fragment() {
                 addReportToDraftList()
                 saveListToPrefs()
                 dialog.dismiss()
-            } //or implement save  dao.insert() before dismiss
+            }
             builder.setNegativeButton("Cancel") {dialog, which -> dialog.dismiss()}
             builder.show()
     }
@@ -271,7 +246,6 @@ class NewReportFragment: Fragment() {
         builder.setPositiveButton("OK") { dialog, which ->
             addReportToDraftList()
             saveListToPrefs()
-                //save as draft dao.insert if change to room
             dialog.dismiss()
         }
         builder.show()

@@ -99,7 +99,7 @@ class ReportsAdapter(val context: Context, val delegate: ReportsAdapterDelegate 
                     .orderByChild("authorDeviceToken")
                     .equalTo(CurrentUser(context).token)
 
-            query.addValueEventListener(object : ValueEventListener {
+            query.addListenerForSingleValueEvent(object : ValueEventListener {
                 override fun onDataChange(snapshot: DataSnapshot) {
                     dbStatus = DatabaseStatus.RESPONSE_RECEIVED
 
