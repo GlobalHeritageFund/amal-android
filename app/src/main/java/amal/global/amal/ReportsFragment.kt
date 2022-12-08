@@ -66,32 +66,16 @@ class ReportsFragment : Fragment(), ReportsAdapterDelegate {
         _binding = null
     }
 
-    override fun reportsFound() {
+    override fun showEmptyScreen() {
+        if (_binding!=null) {
+            binding.progressBarReportsView.visibility = View.GONE
+            binding.emptyReportsView.visibility = View.VISIBLE
+            binding.reportList.visibility = View.GONE
+        }
+    }
+
+    override fun showReportsList() {
         if (_binding!=null) {//quick fix at the moment, might want to change flow at some point
-            binding.progressBarReportsView.visibility = View.GONE
-            binding.emptyReportsView.visibility = View.GONE
-            binding.reportList.visibility = View.VISIBLE
-        }
-    }
-
-    override fun noReportsFound() {
-        if (_binding!=null) {
-            binding.progressBarReportsView.visibility = View.GONE
-            binding.emptyReportsView.visibility = View.VISIBLE
-            binding.reportList.visibility = View.GONE
-        }
-    }
-
-    override fun noDraftReportsFound() {
-        if (_binding!=null) {
-            binding.progressBarReportsView.visibility = View.GONE
-            binding.emptyReportsView.visibility = View.VISIBLE
-            binding.reportList.visibility = View.GONE
-        }
-    }
-
-    override fun draftReportsFound() {
-        if (_binding!=null) {
             binding.progressBarReportsView.visibility = View.GONE
             binding.emptyReportsView.visibility = View.GONE
             binding.reportList.visibility = View.VISIBLE

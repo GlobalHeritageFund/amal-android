@@ -45,15 +45,15 @@ class NewReportFragment: Fragment() {
     var reportDraftList: MutableList<ReportDraft> = mutableListOf()
 
     private val binding get() = _binding!!
-    val draftReportPreferenceName = "DraftReportPreferences"
+    val draftReportPreferenceName = ReportsAdapter.DRAFT_REPORT_PREFERENCE
     val preferences: SharedPreferences by lazy {
         requireContext().getSharedPreferences(draftReportPreferenceName, Context.MODE_PRIVATE)
     }
 
 //    private lateinit var dao: AmalRoomDatabaseDao
 
-    lateinit var existingDraft: ReportDraft
-    var report = ReportDraft()
+    var existingDraft: ReportDraft? = null
+    var report = ReportDraft() //this creates a new draft with default values
 
     var delegate: NewReportFragmentDelegate? = null
 
@@ -75,7 +75,7 @@ class NewReportFragment: Fragment() {
                 var tempButton = RadioButton(requireContext())
                 tempButton.text = it.toString()
                 tempButton.id = it.ordinal
-                if (existingDraft != null && existingDraft.restTarget == it) {
+                if (existingDraft != null && existingDraft?.restTarget == it) {
                     tempButton.isChecked = true
                     binding.sendingToAmal.text = getString(R.string.sending_to_db,it.toString())
                 }
@@ -86,24 +86,20 @@ class NewReportFragment: Fragment() {
         radioGroup.setOnCheckedChangeListener {
             group, checkedId ->
             if (checkedId !== -1) {
-                var text = RestTarget.values()[checkedId].toString()
-                binding.sendingToAmal.text = getString(R.string.sending_to_db,text)
+                binding.sendingToAmal.text = getString(R.string.sending_to_db, RestTarget.values()[checkedId].toString())
             }
         }
         publishButton.setOnClickListener{
-            setReportValues()
-            //todo grey out publish button
+            setFinalReportValues()
+            //todo grey out publish button?
             when (getNetworkAvailability(requireContext())) {
                 NetworkStatus.NOTCONNECTED -> {
-                    d(TAG, it.toString())
                     createNoNetworkAlert()
                 }
                 NetworkStatus.CONNECTEDBUTMETERED -> {
-                    d(TAG, it.toString())
                     createMeteredAlert()
                 }
                 NetworkStatus.CONNECTED -> {
-                    d(TAG, it.toString())
                     delegate?.uploadReport(this, report)
                 }
             }
@@ -128,18 +124,18 @@ class NewReportFragment: Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         if (existingDraft != null && !existingDraft?.title.isNullOrEmpty()) {
-            binding.titleField.setText(existingDraft.title)
+            binding.titleField.setText(existingDraft?.title)
         }
 
         if (existingDraft != null && !existingDraft?.assessorEmail.isNullOrEmpty()) {
-            binding.emailField.setText(existingDraft.assessorEmail)
+            binding.emailField.setText(existingDraft?.assessorEmail)
         } else {
             binding.emailField.setText(currentUser.email ?: "")
         }
 
         //chose to stay with initial creation date instead of resetting date when review draft
-        if (existingDraft != null) date = existingDraft.creationDate
-        else date = Date()
+        if (existingDraft != null) date = existingDraft!!.creationDate
+        else date = report.creationDate
         val dateFormat = DateFormat.getDateTimeInstance(DateFormat.LONG, DateFormat.SHORT)
         binding.dateLabel.text = dateFormat.format(date)
 
@@ -182,7 +178,7 @@ class NewReportFragment: Fragment() {
 //    }
 
     override fun onDestroyView() {
-        super.onDestroyView()
+        super.onDestroyView() //should these be switched?
         _binding = null
     }
 
@@ -204,16 +200,17 @@ class NewReportFragment: Fragment() {
     }
 
     private fun setReportValuesFromExistingDraft() {
-        report.id = existingDraft.id
-        report.images = existingDraft.images
-        report.creationDate = existingDraft.creationDate
-        report.title = existingDraft.title
-        report.assessorEmail = binding.emailField.text.toString()
-        report.restTarget = existingDraft.restTarget
+        //non-null asserted bc only calling if existingDrsft not null
+        report.id = existingDraft!!.id //overwriting id created when new ReportDraft created
+        report.images = existingDraft!!.images
+        report.creationDate = existingDraft!!.creationDate //overwriting date created when ReportDraft created
+        report.title = existingDraft!!.title ?: ""
+        report.assessorEmail = existingDraft!!.assessorEmail
+        report.restTarget = existingDraft!!.restTarget //could be null
     }
-    private fun setReportValues() {
+
+    private fun setFinalReportValues() {
         report.assessorEmail = binding.emailField.text.toString()
-        report.creationDate = Date()
         report.title = binding.titleField.text.toString()
         val checkedId = binding.dbChooser.checkedRadioButtonId
         if (checkedId !== -1) report.restTarget = RestTarget.values()[checkedId]
@@ -228,7 +225,9 @@ class NewReportFragment: Fragment() {
         }
         val btnSaveDraft = view.findViewById<Button>(R.id.save_draft)
         btnSaveDraft.setOnClickListener {
-            setReportAndSaveToPrefs()
+            setFinalReportValues()
+            addReportToDraftList()
+            saveListToPrefs()
            //or save report draft dao.insert(report)
             bottomSheetDialog.dismiss()
         }
@@ -243,6 +242,7 @@ class NewReportFragment: Fragment() {
                 saveListToPrefs()
             }
             bottomSheetDialog.dismiss()
+            delegate?.returnToReports()
         }
         bottomSheetDialog.setCancelable(true)
         bottomSheetDialog.setContentView(view)
@@ -257,7 +257,8 @@ class NewReportFragment: Fragment() {
                 dialog.dismiss()
             }
             builder.setNeutralButton("Save Draft") { dialog, which ->
-                setReportAndSaveToPrefs()
+                addReportToDraftList()
+                saveListToPrefs()
                 dialog.dismiss()
             } //or implement save  dao.insert() before dismiss
             builder.setNegativeButton("Cancel") {dialog, which -> dialog.dismiss()}
@@ -268,17 +269,20 @@ class NewReportFragment: Fragment() {
         val builder = AlertDialog.Builder(requireContext());
         builder.setMessage("You do not currently have a network connection.  Your report will be saved as a draft so you can upload it at another time.");
         builder.setPositiveButton("OK") { dialog, which ->
-                setReportAndSaveToPrefs()
+            addReportToDraftList()
+            saveListToPrefs()
                 //save as draft dao.insert if change to room
-                dialog.dismiss()
-            }
+            dialog.dismiss()
+        }
         builder.show()
     }
-
-    private fun setReportAndSaveToPrefs() {
-        setReportValues()
-        reportDraftList.add(report)
-        saveListToPrefs()
+    private fun addReportToDraftList() {
+        if (existingDraft != null) {
+            reportDraftList.removeAll {it.id == report.id}
+            reportDraftList.add(report)
+        } else {
+            reportDraftList.add(report)
+        }
     }
 
     private fun saveListToPrefs() {

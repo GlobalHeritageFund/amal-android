@@ -1,8 +1,16 @@
 package amal.global.amal
 
+import amal.global.amal.ReportsAdapter.Companion.TYPE_DRAFT
+import amal.global.amal.ReportsAdapter.Companion.TYPE_EMPTY
+import amal.global.amal.ReportsAdapter.Companion.TYPE_PUBLISHED_REPORT
 import amal.global.amal.ReportsAdapter.Companion.TYPE_REPORT
 import android.content.Context
 import android.content.SharedPreferences
+import android.icu.lang.UCharacter.GraphemeClusterBreak.T
+import android.net.ConnectivityManager
+import android.net.NetworkCapabilities
+import android.os.Build
+import android.provider.ContactsContract.Data
 import androidx.recyclerview.widget.RecyclerView
 import android.util.Log
 import android.view.LayoutInflater
@@ -16,10 +24,8 @@ import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.database.ValueEventListener
 
 interface ReportsAdapterDelegate {
-    fun noReportsFound()
-    fun reportsFound()
-    fun noDraftReportsFound()
-    fun draftReportsFound()
+    fun showEmptyScreen()
+    fun showReportsList()
 }
 
 sealed class ReportItem {
@@ -59,6 +65,7 @@ class ReportsAdapter(val context: Context, val delegate: ReportsAdapterDelegate 
 
     companion object {
         val TAG = "Reports Adapter"
+        val DRAFT_REPORT_PREFERENCE = "DraftReportPreferences"
         const val TYPE_REPORT = 0
         const val TYPE_DIVIDER = 1
         const val TYPE_EMPTY = "None to show"
@@ -66,66 +73,62 @@ class ReportsAdapter(val context: Context, val delegate: ReportsAdapterDelegate 
         const val TYPE_DRAFT = "Draft Reports"
     }
 
-    val reports: MutableList<Report> = mutableListOf()
-    val draftReports: MutableList<ReportDraft> = mutableListOf()
+    enum class DatabaseStatus(val displayPhrase: String) {
+        NOT_CONNECTED("No network connection - cannot download"),
+        ERROR("Database error - cannot download reports"),
+        RESPONSE_RECEIVED(""),
+        LOADING("Loading...");
+    }
+
     val allReports: MutableList<ReportItem> = mutableListOf()
+    var dbStatus: DatabaseStatus = DatabaseStatus.NOT_CONNECTED
 
     init {
 
-        val draftReportPreferenceName = "DraftReportPreferences" //change so don't have this hard coded in two places
-        val preferences: SharedPreferences by lazy {
-            context.getSharedPreferences(draftReportPreferenceName, Context.MODE_PRIVATE)
-        }
-        val draftReportsString = preferences.getString(draftReportPreferenceName,"")
-        if (draftReportsString == "") {
-            delegate.noDraftReportsFound()
-        } else {
-            draftReports.addAll(ReportDraft.jsonAdapter.fromJson(draftReportsString)!!.list)
-            createReportItemList(draftReports, reports)
-            delegate.draftReportsFound()
-        }
+        val draftReports: List<ReportDraft>
+        val preferences: SharedPreferences = context.getSharedPreferences(DRAFT_REPORT_PREFERENCE, Context.MODE_PRIVATE)
+        val draftReportsString = preferences.getString(DRAFT_REPORT_PREFERENCE,"")
+        if (draftReportsString != "") draftReports = ReportDraft.jsonAdapter.fromJson(draftReportsString)!!.list
+        else draftReports = emptyList()
+        createReportItemList(draftReports, emptyList<Report>())
 
-        val reference = FirebaseDatabase.getInstance().reference.child("reports")
+        if (haveNetwork(context)) {
+            dbStatus = DatabaseStatus.LOADING
+            val reference = FirebaseDatabase.getInstance().reference.child("reports")
+            val query = reference
+                    .orderByChild("authorDeviceToken")
+                    .equalTo(CurrentUser(context).token)
 
-        val query = reference
-                .orderByChild("authorDeviceToken")
-                .equalTo(CurrentUser(context).token)
+            query.addValueEventListener(object : ValueEventListener {
+                override fun onDataChange(snapshot: DataSnapshot) {
+                    dbStatus = DatabaseStatus.RESPONSE_RECEIVED
 
-        query.addValueEventListener(object : ValueEventListener {
-            override fun onDataChange(snapshot: DataSnapshot) {
+                    val map = snapshot.value as? HashMap<String, HashMap<String, Any>>
+                            ?: hashMapOf()
 
-                val map = snapshot.value as? HashMap<String, HashMap<String, Any>> ?: hashMapOf()
-
-                val reportsSnapshot = map.entries
-                        .map {
-                            val value = it.value
-                            value["firebaseID"] = it.key
-                            val imagesMaps = value["images"] as? HashMap<*, *>
-                                    ?: hashMapOf<String, Any>()
-                            val images = imagesMaps.values.toList()
-                            value["images"] = images
-                            value
-                        }
-                        .filter { (it["uploadComplete"] as? Boolean) ?: false }
-                        .mapNotNull { Report.jsonAdapter.fromJsonValue(it) }
-                        .sortedByDescending { it.creationDateValue }
-                reports.addAll(reportsSnapshot)
-                Log.d(TAG, "got into addValueEventListener")
-                if (reports.isEmpty()) {
-                    delegate.noReportsFound()
-                } else {
-                    createReportItemList(draftReports, reports)
-                    delegate.reportsFound()
+                    val reportsSnapshot = map.entries
+                            .map {
+                                val value = it.value
+                                value["firebaseID"] = it.key
+                                val imagesMaps = value["images"] as? HashMap<*, *>
+                                        ?: hashMapOf<String, Any>()
+                                val images = imagesMaps.values.toList()
+                                value["images"] = images
+                                value
+                            }
+                            .filter { (it["uploadComplete"] as? Boolean) ?: false }
+                            .mapNotNull { Report.jsonAdapter.fromJsonValue(it) }
+                            .sortedByDescending { it.creationDateValue }
+                    createReportItemList(draftReports, reportsSnapshot)
                 }
-
-            }
-
-
-            override fun onCancelled(error: DatabaseError) {
-                Log.d(TAG, error.toString())
-            }
-
-        })
+                override fun onCancelled(error: DatabaseError) {
+                    Log.d(TAG, error.toString())
+                    dbStatus = DatabaseStatus.ERROR
+                }
+            })
+        } else {
+            dbStatus = DatabaseStatus.NOT_CONNECTED
+        }
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ReportItemViewHolder {
@@ -148,7 +151,7 @@ class ReportsAdapter(val context: Context, val delegate: ReportsAdapterDelegate 
         if (holder.itemViewType == TYPE_DIVIDER) {
             val dividerLine = holder.itemView.findViewById<View>(R.id.divider_line)
             val divider = allReports[position] as ReportItem.ReportsHeader
-            if (divider.reportType == TYPE_EMPTY) dividerLine.visibility = View.INVISIBLE
+            if (divider.reportType != TYPE_DRAFT  && divider.reportType != TYPE_PUBLISHED_REPORT) dividerLine.visibility = View.INVISIBLE
         }
     }
 
@@ -162,7 +165,7 @@ class ReportsAdapter(val context: Context, val delegate: ReportsAdapterDelegate 
         is ReportItem.ReportsHeader -> TYPE_DIVIDER
     }
 
-    private fun createReportItemList(draftReports: MutableList<ReportDraft>, reports: MutableList<Report>) {
+    private fun createReportItemList(draftReports: List<ReportDraft>, reports: List<Report>) {
         allReports.add(ReportItem.ReportsHeader(TYPE_DRAFT))
         if (draftReports.isNotEmpty()) {
             draftReports.forEach {
@@ -177,8 +180,28 @@ class ReportsAdapter(val context: Context, val delegate: ReportsAdapterDelegate 
                 allReports.add(ReportItem.PublishedReport(it))
             }
         } else {
-            allReports.add(ReportItem.ReportsHeader(TYPE_EMPTY))
+            when (dbStatus) {
+                DatabaseStatus.ERROR -> allReports.add(ReportItem.ReportsHeader(DatabaseStatus.ERROR.displayPhrase))
+                DatabaseStatus.RESPONSE_RECEIVED -> allReports.add(ReportItem.ReportsHeader(TYPE_EMPTY))
+                DatabaseStatus.LOADING -> allReports.add(ReportItem.ReportsHeader(DatabaseStatus.LOADING.displayPhrase))
+                DatabaseStatus.NOT_CONNECTED -> allReports.add(ReportItem.ReportsHeader(DatabaseStatus.NOT_CONNECTED.displayPhrase))
+            }
+        }
+        if (draftReports.isEmpty() && reports.isEmpty() && dbStatus == DatabaseStatus.RESPONSE_RECEIVED) {
+            delegate.showEmptyScreen()
+        } else {
+            delegate.showReportsList()
         }
         notifyDataSetChanged()
+    }
+
+    private fun haveNetwork(context: Context): Boolean {
+        val connectivityManager = context.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            return connectivityManager.activeNetwork != null
+        } else {
+            val networkInfo = connectivityManager.activeNetworkInfo ?: return false
+            return networkInfo.isConnectedOrConnecting
+        }
     }
 }
