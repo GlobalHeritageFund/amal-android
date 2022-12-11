@@ -81,7 +81,7 @@ class ReportsAdapter(val context: Context, val delegate: ReportsAdapterDelegate 
     }
 
     val allReports: MutableList<ReportItem> = mutableListOf()
-    var dbStatus: DatabaseStatus = DatabaseStatus.NOT_CONNECTED
+    private var dbStatus: DatabaseStatus = DatabaseStatus.NOT_CONNECTED
 
     init {
 

@@ -18,6 +18,15 @@
             android:contentDescription="@string/image_thumb" />
 
         <TextView
+            android:id="@+id/multiAssessText"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="@dimen/small_margin"
+            android:text="@string/batch_assess_header"
+            android:visibility="gone"
+        />
+
+        <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="@string/name"

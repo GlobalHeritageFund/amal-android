@@ -25,7 +25,10 @@ data class Metadata internal constructor(
         @Json(name="lat") public var latitude: Double = 0.0,
         @Json(name="lon") public var longitude: Double = 0.0,
         public var date: Long? = null,
-        public var localIdentifier: String = ""
+        public var localIdentifier: String = "",
+        //added 'hasBeenAssessed on Dec 8, 2o22 pics taken before then will not have this field
+        //so code written to handle if field does not exist for back compatibility
+        public var hasBeenAssessed: Boolean = false
 ) {
 
     fun coordinatesString(): String {

@@ -22,7 +22,10 @@ class EditLocationFragment : Fragment() {
     private var _binding: FragmentEditLocationBinding? = null
     private val binding get() = _binding!!
 
-    var image: LocalImage? = null
+//    var image: LocalImage? = null
+    //setting pre-existing coordinate as coordinates of first image
+    var imageList: List<LocalImage>? = null
+    var image: LocalImage? = imageList?.get(0)
 
     val coordinateOrNullIsland: LatLng
         get() = image?.metadata?.coordinate ?: LatLng(0.0, 0.0)
@@ -75,16 +78,18 @@ class EditLocationFragment : Fragment() {
             })
         })
 
-        binding.editLocationButton.setOnClickListener({
+        binding.editLocationButton.setOnClickListener {
             binding.editLocationButton.isEnabled = false
-            mapView.getMapAsync({
+            mapView.getMapAsync {
                 val latLong = it.cameraPosition.target
-                image?.metadata?.latitude = latLong.latitude
-                image?.metadata?.longitude = latLong.longitude
-                image?.saveMetaData()
+                imageList?.forEach {
+                    it.metadata?.latitude = latLong.latitude
+                    it.metadata?.longitude = latLong.longitude
+                    it.saveMetaData()
+                }
                 delegate?.returnToAssessFragment(this)
-            })
-        })
+            }
+        }
 
     }
 

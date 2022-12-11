@@ -156,7 +156,7 @@ class NewReportFragment: Fragment() {
         }
 
     }
-    
+
     override fun onDestroyView() {
         super.onDestroyView() //should these be switched?
         _binding = null

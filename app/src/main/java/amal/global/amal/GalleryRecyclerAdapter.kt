@@ -98,6 +98,15 @@ class GalleryRecyclerAdapter(private val context: Context): RecyclerView.Adapter
         notifyDataSetChanged()
     }
 
+    fun deleteSelectedImages() {
+        val imagesToDelete: List<LocalImage> = selectedItems()
+        imagesToDelete.forEach() {
+            PhotoStorage(context).deleteImage(it.filePath, it.settingsPath)
+        }
+//        reloadData()
+//        notifyDataSetChanged()
+    }
+
     fun getImage(position: Int): Any {
         val selectedGalleryItem = galleryItems[position] as GalleryItem.GalleryPhoto
         return selectedGalleryItem.photoToShow

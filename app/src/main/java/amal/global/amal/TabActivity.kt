@@ -99,10 +99,16 @@ class TabActivity : AppCompatActivity(),
         navigation.selectedItemId = R.id.navigation_capture
     }
 
-    override fun imageTapped(fragment: GalleryFragment, image: LocalImage) {
-        Log.d(TAG,"imageTapped called")
+//    override fun imageTapped(fragment: GalleryFragment, image: LocalImage) {
+//        Log.d(TAG,"imageTapped called")
+//        val assessFragment = AssessFragment().also { it.delegate = this }
+//        assessFragment.image = image
+//        pushFragment(assessFragment)
+//    }
+
+    override fun choseImagesToAssess(fragment: GalleryFragment, images: List<LocalImage>) {
         val assessFragment = AssessFragment().also { it.delegate = this }
-        assessFragment.image = image
+        assessFragment.imageList = images
         pushFragment(assessFragment)
     }
 
@@ -264,13 +270,13 @@ class TabActivity : AppCompatActivity(),
 
     override fun mapTapped(fragment: AssessFragment) {
         val map = MapFragment()
-        map.images = listOf(fragment.image!!)
+        map.images = fragment.imageList as List<Image>
         pushFragment(map)
     }
 
     override fun editLocationTapped(fragment: AssessFragment) {
         val editLocation = EditLocationFragment().also{it.delegate = this}
-        editLocation.image = fragment.image
+        editLocation.imageList = fragment.imageList
         pushFragment(editLocation)
     }
 

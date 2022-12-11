@@ -17,6 +17,5 @@
         android:src="@drawable/ic_img_select"
         android:visibility="visible"
         android:contentDescription="Selected checkbox" />
-<!--        android:src="@android:drawable/checkbox_on_background"-->
 
 </RelativeLayout>

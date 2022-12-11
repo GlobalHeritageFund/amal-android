@@ -25,7 +25,8 @@ class AssessFragment : Fragment() {
     private var _binding: FragmentAssessBinding? = null
     private val binding get() = _binding!!
 
-    var image: LocalImage? = null
+//    var image: LocalImage? = null
+    var imageList: List<LocalImage>? = null
 
     var delegate: AssessDelegate? = null
 
@@ -61,9 +62,13 @@ class AssessFragment : Fragment() {
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+//        just setting fields based on first item on list
+//        if only one image selected is correct
+//        if more than one selected have to choose one randomly it conflicting data so might as well be the first one
         super.onViewCreated(view, savedInstanceState)
 
         explicitlyBindMapViewSoItDoesntGetDeallocatedForOnDestroy()
+        var image: LocalImage? = imageList?.get(0)
 
         binding.nameField.setText(image?.metadata?.name ?: "")
         binding.nameField.afterTextChanged { editable: Editable? ->
@@ -118,8 +123,11 @@ class AssessFragment : Fragment() {
                 R.id.radioObject -> "object"
                 else -> ""
             }
-            image?.metadata?.category = string
-            image?.saveMetaData()
+            imageList?.forEach{
+                it.metadata?.category = string
+                it.saveMetaData()
+            }
+
         })
 
         activateConditionButtonAtIndex(image?.metadata?.conditionNumber ?: 0)
@@ -127,34 +135,45 @@ class AssessFragment : Fragment() {
         conditionButtons.withIndex().forEach({ indexedValue ->
             indexedValue.value.setOnClickListener({ _ ->
                 activateConditionButtonAtIndex(indexedValue.index)
-                image?.metadata?.conditionNumber = indexedValue.index
-                image?.saveMetaData()
+                imageList?.forEach{
+                    it.metadata?.conditionNumber = indexedValue.index
+                    it.saveMetaData()
+                }
+
             })
         })
 
         binding.hazardsCheckBox.isChecked = image?.metadata?.hazards ?: false
         binding.hazardsCheckBox.setOnCheckedChangeListener({ buttonView, isChecked ->
-            image?.metadata?.hazards = isChecked
-            image?.saveMetaData()
+            imageList?.forEach{
+                it.metadata?.hazards = isChecked
+                it.saveMetaData()
+            }
         })
 
         binding.safetyHazardsCheckBox.isChecked = image?.metadata?.safetyHazards ?: false
         binding.safetyHazardsCheckBox.setOnCheckedChangeListener({ buttonView, isChecked ->
-            image?.metadata?.safetyHazards = isChecked
-            image?.saveMetaData()
+            imageList?.forEach{
+                it.metadata?.safetyHazards = isChecked
+                it.saveMetaData()
+            }
         })
 
         binding.interventionCheckBox.isChecked = image?.metadata?.interventionRequired ?: false
         binding.interventionCheckBox.setOnCheckedChangeListener({ buttonView, isChecked ->
-            image?.metadata?.interventionRequired = isChecked
-            image?.saveMetaData()
+            imageList?.forEach{
+                it.metadata?.interventionRequired = isChecked
+                it.saveMetaData()
+            }
         })
 
 
         binding.notesField.setText(image?.metadata?.notes ?: "")
         binding.notesField.afterTextChanged { editable: Editable? ->
-            image?.metadata?.notes = editable.toString()
-            image?.saveMetaData()
+            imageList?.forEach{
+                it.metadata?.notes = editable.toString()
+                it.saveMetaData()
+            }
         }
 
         binding.coordinatesTextView.text = image?.metadata?.coordinatesString()
@@ -164,7 +183,7 @@ class AssessFragment : Fragment() {
             delegate?.editLocationTapped(this)
         })
 
-        updateImage()
+        updateImageView()
     }
 
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
@@ -178,8 +197,16 @@ class AssessFragment : Fragment() {
         binding.conditionDescription.text = conditionLabels[index]
     }
 
-    private fun updateImage() {
-        image?.load(requireContext())?.into(binding.imageView)
+    private fun updateImageView() {
+        if (!imageList.isNullOrEmpty()) {
+            if (imageList!!.size > 1) {
+                binding.imageView.visibility = View.GONE
+                binding.multiAssessText.text = getString(R.string.batch_assess_header,imageList!!.size.toString())
+                binding.multiAssessText.visibility = View.VISIBLE
+            } else {
+                imageList?.get(0)?.load(requireContext())?.into(binding.imageView)
+            }
+        }
     }
 
     fun explicitlyBindMapViewSoItDoesntGetDeallocatedForOnDestroy() {
@@ -187,15 +214,16 @@ class AssessFragment : Fragment() {
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        when (item.getItemId()) {
-            R.id.menu_item_delete -> {
-                Log.d("assess fragment", "delete item option selected")
-                delegate?.deleteButtonTapped(this, image?.filePath, image?.settingsPath)
-                return true
-            }
-            else ->
-                return super.onOptionsItemSelected(item)
-        }
+//        when (item.getItemId()) {
+//            R.id.menu_item_4 -> {
+//                Log.d("assess fragment", "delete item option selected")
+//                delegate?.deleteButtonTapped(this, image?.filePath, image?.settingsPath)
+//                return true
+//            }
+//            else ->
+//                return super.onOptionsItemSelected(item)
+//        }
+        return super.onOptionsItemSelected(item)
     }
     // MapView needs to have all of these forwarded manually
     override fun onDestroy() {
