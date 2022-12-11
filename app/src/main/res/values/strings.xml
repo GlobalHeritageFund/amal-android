@@ -63,4 +63,5 @@
     <string name="upload_now">Upload Now</string>
     <string name="sending_to_db">Sending to %s database</string>
     <string name="batch_assess_header">Assessing %s images</string>
+    <string name="save">Save</string>
 </resources>

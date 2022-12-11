@@ -81,7 +81,7 @@ class ReportsAdapter(val context: Context, val delegate: ReportsAdapterDelegate 
     }
 
     val allReports: MutableList<ReportItem> = mutableListOf()
-    private var dbStatus: DatabaseStatus = DatabaseStatus.NOT_CONNECTED
+    private var dbStatus: DatabaseStatus = DatabaseStatus.LOADING
 
     init {
 
@@ -124,10 +124,12 @@ class ReportsAdapter(val context: Context, val delegate: ReportsAdapterDelegate 
                 override fun onCancelled(error: DatabaseError) {
                     Log.d(TAG, error.toString())
                     dbStatus = DatabaseStatus.ERROR
+                    createReportItemList(draftReports, emptyList())
                 }
             })
         } else {
             dbStatus = DatabaseStatus.NOT_CONNECTED
+            createReportItemList(draftReports, emptyList())
         }
     }
 
@@ -166,6 +168,7 @@ class ReportsAdapter(val context: Context, val delegate: ReportsAdapterDelegate 
     }
 
     private fun createReportItemList(draftReports: List<ReportDraft>, reports: List<Report>) {
+        allReports.clear()
         allReports.add(ReportItem.ReportsHeader(TYPE_DRAFT))
         if (draftReports.isNotEmpty()) {
             draftReports.forEach {

@@ -88,23 +88,13 @@ class GalleryRecyclerAdapter(private val context: Context): RecyclerView.Adapter
         }
     }
 
-    //not sure if should send this through adapter first or just call directly through galleryfragment
-    //keep here for now until figure out how will implement the select function
-    fun deleteImage(imagePath: String, settingsPath: String) {
-        Log.d(GalleryRecyclerAdapter.TAG, "deleteImage was called")
-        PhotoStorage(context).deleteImage(imagePath, settingsPath)
-        reloadData()
-        // Todo Use notifyItemRemoved(position) once integrate and have position
-        notifyDataSetChanged()
-    }
-
     fun deleteSelectedImages() {
         val imagesToDelete: List<LocalImage> = selectedItems()
         imagesToDelete.forEach() {
             PhotoStorage(context).deleteImage(it.filePath, it.settingsPath)
         }
-//        reloadData()
-//        notifyDataSetChanged()
+        reloadData()
+        notifyDataSetChanged()
     }
 
     fun getImage(position: Int): Any {

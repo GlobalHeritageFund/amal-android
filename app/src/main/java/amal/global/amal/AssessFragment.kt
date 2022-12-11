@@ -1,23 +1,29 @@
 package amal.global.amal
 
 import amal.global.amal.databinding.FragmentAssessBinding
+import android.content.Context
+import android.net.ConnectivityManager
+import android.os.Build
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.text.Editable
 import android.util.Log
 import android.view.*
 import android.widget.Button
+import androidx.appcompat.app.AlertDialog
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.MapView
 import com.google.android.gms.maps.model.CameraPosition
 import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.MarkerOptions
+import com.google.android.material.snackbar.Snackbar
 
 interface AssessDelegate {
     fun mapTapped(fragment: AssessFragment)
     fun editLocationTapped(fragment: AssessFragment)
-    fun deleteButtonTapped(fragment: AssessFragment, imagePath: String?, settingsPath: String?)
+    fun deleteButtonTapped(fragment: AssessFragment, imageList: List<LocalImage>?)
+    fun saveButtonTapped(fragment: AssessFragment)
 }
 
 class AssessFragment : Fragment() {
@@ -180,7 +186,11 @@ class AssessFragment : Fragment() {
         binding.editLocationButton.text = if (hasCoordinates) "Edit Location" else "Set Location"
 
         binding.editLocationButton.setOnClickListener({ view ->
-            delegate?.editLocationTapped(this)
+            if (haveNetwork(requireContext())) {
+                delegate?.editLocationTapped(this)
+            } else {
+                Snackbar.make(binding.root,"Cannot edit location without a network connection.", Snackbar.LENGTH_LONG).show()
+            }
         })
 
         updateImageView()
@@ -213,16 +223,43 @@ class AssessFragment : Fragment() {
         mapView = bind(R.id.mapView)
     }
 
+    private fun haveNetwork(context: Context): Boolean {
+        val connectivityManager = context.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            return connectivityManager.activeNetwork != null
+        } else {
+            val networkInfo = connectivityManager.activeNetworkInfo ?: return false
+            return networkInfo.isConnectedOrConnecting
+        }
+    }
+
+    private fun createDeleteAlert() {
+        val builder = AlertDialog.Builder(requireContext());
+        builder.setMessage("This will permanently delete your selected images. Do you want to continue?");
+        builder.setPositiveButton(R.string.delete) { dialog, which ->
+            delegate?.deleteButtonTapped(this, imageList)
+            dialog.dismiss()
+        }
+        builder.setNegativeButton("Cancel") {dialog, which -> dialog.dismiss()}
+        builder.show()
+    }
+
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
-//        when (item.getItemId()) {
-//            R.id.menu_item_4 -> {
-//                Log.d("assess fragment", "delete item option selected")
-//                delegate?.deleteButtonTapped(this, image?.filePath, image?.settingsPath)
-//                return true
-//            }
-//            else ->
-//                return super.onOptionsItemSelected(item)
-//        }
+        when (item.getItemId()) {
+            R.id.menu_item_delete -> {
+                //I think this is non-intuitive and should not be here
+                //I would not think the delete button would delete the picture, only the draft assessment
+                //with delete functionality on gallery page active, this seems unnecessary and potentially confusing
+                createDeleteAlert()
+//                delegate?.deleteButtonTapped(this, imageList)
+                return true
+            }
+            R.id.menu_item_save -> {
+                delegate?.saveButtonTapped(this)
+            }
+            else ->
+                return super.onOptionsItemSelected(item)
+        }
         return super.onOptionsItemSelected(item)
     }
     // MapView needs to have all of these forwarded manually

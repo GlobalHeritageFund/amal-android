@@ -280,15 +280,20 @@ class TabActivity : AppCompatActivity(),
         pushFragment(editLocation)
     }
 
-    override fun deleteButtonTapped(fragment: AssessFragment, imagePath: String?, settingsPath: String?) {
-        Log.d(TAG,"delete button Tapped called")
-        if (imagePath != null && settingsPath != null) {
-            PhotoStorage(this).deleteImage(imagePath, settingsPath)
+    override fun deleteButtonTapped(fragment: AssessFragment, imageList: List<LocalImage>?) {
+        imageList?.forEach {
+            if (it.filePath != null && it.settingsPath != null) {
+                PhotoStorage(this).deleteImage(it.filePath, it.settingsPath)
+            }
         }
         binding.navigation.selectedItemId = R.id.navigation_assess
     }
 
     override fun returnToAssessFragment(fragment: EditLocationFragment) {
+        supportFragmentManager.popBackStack()
+    }
+
+    override fun saveButtonTapped(fragment: AssessFragment) {
         supportFragmentManager.popBackStack()
     }
 
