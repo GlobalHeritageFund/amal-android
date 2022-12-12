@@ -79,6 +79,7 @@ class GalleryRecyclerAdapter(private val context: Context): RecyclerView.Adapter
 
     private fun createGalleryItemList(imageList: List<LocalImage>) {
         var lastDate = ""
+        galleryItems.clear()
         imageList.forEach {
             if (it.localDateString != lastDate) {
                 lastDate = it.localDateString ?: ""

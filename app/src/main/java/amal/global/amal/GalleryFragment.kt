@@ -119,8 +119,6 @@ class GalleryFragment : Fragment() {
     fun handleMultiDeleteClick() {
         if (recyclerAdapter.selectedItems().size > 0) {
             createDeleteAlert()
-//            recyclerAdapter.deleteSelectedImages()
-//            updateData()
         } else {
             Snackbar.make(binding.root,"Must select at least one item to delete",Snackbar.LENGTH_LONG).show()
         }
@@ -131,7 +129,6 @@ class GalleryFragment : Fragment() {
         builder.setMessage("This will permanently delete your selected images. Do you want to continue?");
         builder.setPositiveButton(R.string.delete) { dialog, which ->
             recyclerAdapter.deleteSelectedImages()
-//            updateData()
             dialog.dismiss()
         }
         builder.setNegativeButton("Cancel") {dialog, which -> dialog.dismiss()}
