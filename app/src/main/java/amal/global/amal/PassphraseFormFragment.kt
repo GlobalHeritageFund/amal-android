@@ -27,9 +27,9 @@ class PassphraseFormFragment: Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        binding.submitButton.setOnClickListener({
+        binding.submitButton.setOnClickListener {
             delegate?.passphraseEntered(binding.passphraseField.text.toString(), this)
-        })
+        }
     }
 
     override fun onDestroyView() {

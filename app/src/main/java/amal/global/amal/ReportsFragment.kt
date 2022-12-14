@@ -1,18 +1,16 @@
 package amal.global.amal
 
-import amal.global.amal.databinding.FragmentAssessBinding
 import amal.global.amal.databinding.FragmentReportsBinding
 import android.os.Bundle
-import android.util.Log
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
 import android.view.*
 
 interface ReportsDelegate {
     fun newReportTapped(reportsFragment: ReportsFragment)
     fun tappedReport(report: Report, reportsFragment: ReportsFragment)
+    fun tappedDraftReport(draftReport: ReportDraft, reportsFragment: ReportsFragment)
 }
 
 class ReportsFragment : Fragment(), ReportsAdapterDelegate {
@@ -30,10 +28,9 @@ class ReportsFragment : Fragment(), ReportsAdapterDelegate {
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
-        adapter = ReportsAdapter(requireContext()).also { it.delegate = this }
         _binding = FragmentReportsBinding.inflate(inflater, container, false)
-        val view = binding.root
-        return view
+        adapter = ReportsAdapter(requireContext(),this)
+        return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -45,8 +42,8 @@ class ReportsFragment : Fragment(), ReportsAdapterDelegate {
 
         binding.reportList.addOnItemClickListener(object: OnItemClickListener {
             override fun onItemClicked(position: Int, view: View) {
-                val report = adapter.reports[position]
-                delegate?.tappedReport(report, this@ReportsFragment)
+                if (adapter!!.getItemViewType(position) == ReportsAdapter.TYPE_DIVIDER) return
+                reportClickHandle(position)
             }
         })
 
@@ -57,7 +54,6 @@ class ReportsFragment : Fragment(), ReportsAdapterDelegate {
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
-
         activity?.setTitle(R.string.title_report)
     }
 
@@ -66,19 +62,25 @@ class ReportsFragment : Fragment(), ReportsAdapterDelegate {
         _binding = null
     }
 
-    override fun reportsFound() {
-        if (_binding!=null) {//I know this is hacky and bad, but just looking for a quick fix at the moment
-            binding.progressBarReportsView.visibility = View.GONE
-            binding.reportList.visibility = View.VISIBLE
-            binding.emptyReportsView.visibility = View.GONE
-        }
-    }
-
-    override fun noReportsFound() {
-        if (_binding!=null) { //again, this is bad...
+    override fun showEmptyScreen() {
+        if (_binding!=null) {
             binding.progressBarReportsView.visibility = View.GONE
             binding.emptyReportsView.visibility = View.VISIBLE
             binding.reportList.visibility = View.GONE
         }
+    }
+
+    override fun showReportsList() {
+        if (_binding!=null) {//quick fix at the moment, might want to change flow at some point
+            binding.progressBarReportsView.visibility = View.GONE
+            binding.emptyReportsView.visibility = View.GONE
+            binding.reportList.visibility = View.VISIBLE
+        }
+    }
+
+    fun reportClickHandle(position: Int) {
+        val reportItem = adapter.allReports[position]
+        if (reportItem is ReportItem.PublishedReport) delegate?.tappedReport(reportItem.report, this@ReportsFragment)
+        if (reportItem is ReportItem.DraftReport) delegate?.tappedDraftReport(reportItem.draftReport, this)
     }
 }

@@ -11,9 +11,11 @@
 
     <ImageView
         android:id="@+id/selectionStateImageView"
-        android:layout_width="40dp"
-        android:layout_height="40dp"
-        android:src="@android:drawable/checkbox_on_background"
-        android:visibility="invisible"
+        android:layout_width="30dp"
+        android:layout_height="30dp"
+        android:layout_margin="5dp"
+        android:src="@drawable/ic_img_select"
+        android:visibility="visible"
         android:contentDescription="Selected checkbox" />
+
 </RelativeLayout>

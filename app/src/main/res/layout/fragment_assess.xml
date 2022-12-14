@@ -4,6 +4,7 @@
     android:id="@+id/scroll_view"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    android:layout_margin="5dp"
     android:scrollbars="vertical">
     <LinearLayout
         android:layout_width="match_parent"
@@ -15,6 +16,15 @@
             android:layout_width="match_parent"
             android:layout_height="200dp"
             android:contentDescription="@string/image_thumb" />
+
+        <TextView
+            android:id="@+id/multiAssessText"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="@dimen/small_margin"
+            android:text="@string/batch_assess_header"
+            android:visibility="gone"
+        />
 
         <TextView
             android:layout_width="match_parent"
@@ -34,6 +44,24 @@
             android:id="@+id/mapView"
             android:layout_width="match_parent"
             android:layout_height="100dp" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Coordinates"
+            android:labelFor="@+id/coordinatesTextView"/>
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textSize="16sp"
+            android:id="@+id/coordinatesTextView" />
+
+        <Button
+            android:id="@+id/editLocationButton"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Edit Location" />
 
         <TextView
             android:layout_width="match_parent"
@@ -192,25 +220,6 @@
             android:layout_width="match_parent"
             android:scrollbars="vertical"
         />
-
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Coordinates"
-            android:labelFor="@+id/coordinatesTextView"/>
-
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:textSize="16sp"
-            android:id="@+id/coordinatesTextView" />
-
-        <Button
-            android:id="@+id/editLocationButton"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Edit Location" />
-
 
     </LinearLayout>
 </ScrollView>

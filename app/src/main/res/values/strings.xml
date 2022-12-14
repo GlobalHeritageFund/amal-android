@@ -55,4 +55,13 @@
     <string name="no_camera_permission">The photo capture feature is not available when the application does not have camera permissions</string>
     <string name="database_target">Select Alternate Database Target</string>
     <string name="enter_title_here">Enter title here</string>
+    <string name="save_draft">Save Draft</string>
+    <string name="delete_draft">Delete Draft</string>
+    <string name="would_you_like_to_save_this_as_a_draft">Would you like to save this as a draft?</string>
+    <string name="publish">Publish</string>
+    <string name="metered_connection_dialog_text">You are on a connection that might be expensive to upload on. Would you like to continue to upload, or would you prefer to save the report as a draft so you can upload it later on a different connection?</string>
+    <string name="upload_now">Upload Now</string>
+    <string name="sending_to_db">Sending to %s database</string>
+    <string name="batch_assess_header">Assessing %s images</string>
+    <string name="save">Save</string>
 </resources>

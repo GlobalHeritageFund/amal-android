@@ -1,7 +1,6 @@
 package amal.global.amal
 
 import android.content.Context
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -20,7 +19,7 @@ class GalleryRecyclerViewHolder(itemView: View): RecyclerView.ViewHolder(itemVie
     }
 
     private fun bindDivider(item: GalleryItem.GalleryDateDivider) {
-        itemView.findViewById<TextView>(R.id.date_text)?.text = item.photoGroupDate
+        itemView.findViewById<TextView>(R.id.divider_text)?.text = item.photoGroupDate
     }
 
     fun bind(galleryItem: GalleryItem) {
@@ -56,7 +55,7 @@ class GalleryRecyclerAdapter(private val context: Context): RecyclerView.Adapter
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): GalleryRecyclerViewHolder {
         val layout = when (viewType) {
             TYPE_PHOTO -> R.layout.cell_gallery
-            TYPE_DIVIDER -> R.layout.date_divider
+            TYPE_DIVIDER -> R.layout.list_divider
             else -> throw IllegalArgumentException("Invalid view type")
         }
 
@@ -70,13 +69,16 @@ class GalleryRecyclerAdapter(private val context: Context): RecyclerView.Adapter
     override fun onBindViewHolder(holder: GalleryRecyclerViewHolder, position: Int) {
         holder.bind(galleryItems[position])
         if (holder.itemViewType == TYPE_PHOTO) {
-            holder.itemView.findViewById<ImageView>(R.id.selectionStateImageView).visibility = if (selectedImages.contains(position)) View.VISIBLE else View.INVISIBLE
+            var cellView = holder.itemView.findViewById<ImageView>(R.id.selectionStateImageView)
+            if (selectedImages.contains(position)) cellView.setImageResource(R.drawable.ic_img_select_active)
+            else cellView.setImageResource(R.drawable.ic_img_select)
         }
 
     }
 
     private fun createGalleryItemList(imageList: List<LocalImage>) {
         var lastDate = ""
+        galleryItems.clear()
         imageList.forEach {
             if (it.localDateString != lastDate) {
                 lastDate = it.localDateString ?: ""
@@ -86,13 +88,12 @@ class GalleryRecyclerAdapter(private val context: Context): RecyclerView.Adapter
         }
     }
 
-    //not sure if should send this through adapter first or just call directly through galleryfragment
-    //keep here for now until figure out how will implement the select function
-    fun deleteImage(imagePath: String, settingsPath: String) {
-        Log.d(GalleryRecyclerAdapter.TAG, "deleteImage was called")
-        PhotoStorage(context).deleteImage(imagePath, settingsPath)
+    fun deleteSelectedImages() {
+        val imagesToDelete: List<LocalImage> = selectedItems()
+        imagesToDelete.forEach() {
+            PhotoStorage(context).deleteImage(it.filePath, it.settingsPath)
+        }
         reloadData()
-        // Todo Use notifyItemRemoved() instead
         notifyDataSetChanged()
     }
 

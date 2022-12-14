@@ -7,4 +7,14 @@
         app:showAsAction="always"
         android:title="@string/importString">
     </item>
+    <item
+        android:id="@+id/menu_item_delete"
+        app:showAsAction="always"
+        android:title="Delete">
+    </item>
+    <item
+        android:id="@+id/menu_item_assess"
+        app:showAsAction="always"
+        android:title="Assess">
+    </item>
 </menu>

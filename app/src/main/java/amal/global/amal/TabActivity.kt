@@ -11,6 +11,7 @@ import android.content.Intent
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import androidx.appcompat.app.AlertDialog
 import android.view.View
+import androidx.core.content.ContextCompat.startActivity
 import com.google.firebase.auth.FirebaseAuth
 import java.util.*
 
@@ -30,8 +31,10 @@ class TabActivity : AppCompatActivity(),
         AssessDelegate,
         CaptureDelegate,
         PassphraseFormFragmentDelegate,
-        SettingsFragmentDelegate
+        SettingsFragmentDelegate,
+        EditLocationFragmentDelegate
 {
+
     companion object {
         const val TAG = "Tab Activity"
     }
@@ -96,10 +99,16 @@ class TabActivity : AppCompatActivity(),
         navigation.selectedItemId = R.id.navigation_capture
     }
 
-    override fun imageTapped(fragment: GalleryFragment, image: LocalImage) {
-        Log.d(TAG,"imageTapped called")
+//    override fun imageTapped(fragment: GalleryFragment, image: LocalImage) {
+//        Log.d(TAG,"imageTapped called")
+//        val assessFragment = AssessFragment().also { it.delegate = this }
+//        assessFragment.image = image
+//        pushFragment(assessFragment)
+//    }
+
+    override fun choseImagesToAssess(fragment: GalleryFragment, images: List<LocalImage>) {
         val assessFragment = AssessFragment().also { it.delegate = this }
-        assessFragment.image = image
+        assessFragment.imageList = images
         pushFragment(assessFragment)
     }
 
@@ -124,6 +133,13 @@ class TabActivity : AppCompatActivity(),
     override fun tappedReport(report: Report, reportsFragment: ReportsFragment) {
         val fragment = ReportDetailFragment()
         fragment.report = report
+        fragment.delegate = this
+        pushFragment(fragment)
+    }
+
+    override fun tappedDraftReport(draftReport: ReportDraft, reportsFragment: ReportsFragment) {
+        val fragment = NewReportFragment()
+        fragment.existingDraft = draftReport
         fragment.delegate = this
         pushFragment(fragment)
     }
@@ -159,7 +175,9 @@ class TabActivity : AppCompatActivity(),
                 .then {
                     this.runOnUiThread {
                         val builder = AlertDialog.Builder(this);
+
                         builder.setMessage("You activated the ${RestTarget[passphrase]} database target.");
+
                         builder.setPositiveButton("OK") { dialog, which -> returnToSettings() }
                         builder.show()
                     }
@@ -196,11 +214,11 @@ class TabActivity : AppCompatActivity(),
         contentView
                 .findViewById<View>(R.id.publishAnonymouslyView)
                 .setOnClickListener {
-                    fragment.uploadItem?.isEnabled = false
+//                    fragment.uploadItem?.isEnabled = false
                     upload(report)
                             .catch {
                                 this.runOnUiThread {
-                                    fragment.uploadItem?.isEnabled = true
+//                                    fragment.uploadItem?.isEnabled = true
                                 }
                             }
                     dialog.dismiss()
@@ -252,22 +270,36 @@ class TabActivity : AppCompatActivity(),
 
     override fun mapTapped(fragment: AssessFragment) {
         val map = MapFragment()
-        map.images = listOf(fragment.image!!)
+        map.images = fragment.imageList as List<Image>
         pushFragment(map)
     }
 
     override fun editLocationTapped(fragment: AssessFragment) {
-        val editLocation = EditLocationFragment()
-        editLocation.image = fragment.image
+        val editLocation = EditLocationFragment().also{it.delegate = this}
+        editLocation.imageList = fragment.imageList
         pushFragment(editLocation)
     }
 
-    override fun deleteButtonTapped(fragment: AssessFragment, imagePath: String?, settingsPath: String?) {
-        Log.d(TAG,"delete button Tapped called")
-        if (imagePath != null && settingsPath != null) {
-            PhotoStorage(this).deleteImage(imagePath, settingsPath)
+    override fun deleteButtonTapped(fragment: AssessFragment, imageList: List<LocalImage>?) {
+        imageList?.forEach {
+            if (it.filePath != null && it.settingsPath != null) {
+                PhotoStorage(this).deleteImage(it.filePath, it.settingsPath)
+            }
         }
         binding.navigation.selectedItemId = R.id.navigation_assess
+    }
+
+    override fun returnToAssessFragment(fragment: EditLocationFragment) {
+        supportFragmentManager.popBackStack()
+    }
+
+    override fun saveButtonTapped(fragment: AssessFragment) {
+        supportFragmentManager.popBackStack()
+    }
+
+    override fun returnToReports() {
+        val fragment = ReportsFragment().also{ it.delegate = this }
+        pushFragment(fragment)
     }
 
     private fun returnToSettings() {

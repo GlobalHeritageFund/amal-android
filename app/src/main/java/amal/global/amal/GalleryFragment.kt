@@ -2,20 +2,23 @@ package amal.global.amal
 
 import amal.global.amal.GalleryRecyclerAdapter.Companion.TYPE_DIVIDER
 import amal.global.amal.databinding.FragmentGalleryBinding
+import android.os.Build.VERSION_CODES.S
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.*
+import androidx.appcompat.app.AlertDialog
+import androidx.core.content.ContentProviderCompat.requireContext
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.google.android.material.snackbar.Snackbar
 import java.nio.file.Files.delete
 
 interface GalleryDelegate {
-    fun imageTapped(fragment: GalleryFragment, image: LocalImage)
     fun importButtonTapped(fragment: GalleryFragment)
+    fun choseImagesToAssess(fragment: GalleryFragment, images: List<LocalImage>)
 }
 
 class GalleryFragment : Fragment() {
-    //TODO will need to make empty state logic reactive to change in data, but leave for now bc will be affected by other changes
 
     companion object {
         const val TAG = "Gallery Fragment"
@@ -69,7 +72,7 @@ class GalleryFragment : Fragment() {
         binding.assessRecyclerView.addOnItemClickListener(object: OnItemClickListener {
             override fun onItemClicked(position: Int, view: View) {
                 if (recyclerAdapter!!.getItemViewType(position) == TYPE_DIVIDER) return
-                assessGalleryClickHandle(position)
+                recyclerAdapter.toggleSelectionAt(position)
             }
         })
     }
@@ -85,20 +88,48 @@ class GalleryFragment : Fragment() {
                 delegate?.importButtonTapped(this)
                 true
             }
+            R.id.menu_item_delete -> {
+                handleMultiDeleteClick()
+                true
+            }
+            R.id.menu_item_assess -> {
+                handleMultiAssessClick()
+                true
+            }
             else ->
                 super.onOptionsItemSelected(item)
         }
     }
 
+
     override fun onDestroyView() {
-        super.onDestroyView()
         _binding = null
+        super.onDestroyView()
     }
 
-    fun assessGalleryClickHandle(position: Int) {
-        val galleryPhoto = recyclerAdapter!!.galleryItems[position]  as GalleryItem.GalleryPhoto
-        val image = galleryPhoto.photoToShow as LocalImage
-        delegate?.imageTapped(this, image)
+    fun handleMultiDeleteClick() {
+        if (recyclerAdapter.selectedItems().size > 0) {
+            createDeleteAlert()
+        } else {
+            Snackbar.make(binding.root,"Must select at least one item to delete",Snackbar.LENGTH_LONG).show()
+        }
+    }
+
+    private fun createDeleteAlert() {
+        val builder = AlertDialog.Builder(requireContext());
+        builder.setMessage("This will permanently delete the selected images. Do you want to continue?");
+        builder.setPositiveButton(R.string.delete) { dialog, which ->
+            recyclerAdapter.deleteSelectedImages()
+            dialog.dismiss()
+        }
+        builder.setNegativeButton("Cancel") {dialog, which -> dialog.dismiss()}
+        builder.show()
+    }
+
+    fun handleMultiAssessClick() {
+        if (recyclerAdapter.selectedItems().size > 0) delegate?.choseImagesToAssess(this, recyclerAdapter.selectedItems())
+        else Snackbar.make(binding.root,"Must select at least one item to assess",Snackbar.LENGTH_LONG).show()
+
     }
 
     fun updateData() {

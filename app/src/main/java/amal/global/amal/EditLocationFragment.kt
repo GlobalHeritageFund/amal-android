@@ -7,26 +7,33 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import com.google.android.gms.maps.CameraUpdateFactory
+import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.MapView
 import com.google.android.gms.maps.model.CameraPosition
 import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.MarkerOptions
 
+interface EditLocationFragmentDelegate {
+    fun returnToAssessFragment(fragment: EditLocationFragment)
+}
 class EditLocationFragment : Fragment() {
 
     private var _binding: FragmentEditLocationBinding? = null
     private val binding get() = _binding!!
 
-    var image: LocalImage? = null
+    //setting pre-existing coordinate as coordinates of first image
+    var imageList: List<LocalImage> = emptyList()
 
     val coordinateOrNullIsland: LatLng
-        get() = image?.metadata?.coordinate ?: LatLng(0.0, 0.0)
+        get() = imageList.getOrNull(0)?.metadata?.coordinate ?: LatLng(0.0, 0.0)
 
     val hasCoordinates: Boolean
-        get() = image?.metadata?.hasCoordinates ?: false
+        get() = imageList.getOrNull(0)?.metadata?.hasCoordinates ?: false
 
     val zoomLevel: Float
         get() = if (hasCoordinates) 12.0f else 2.0f
+
+    var delegate: EditLocationFragmentDelegate? = null
 
     lateinit var mapView: MapView
 
@@ -45,7 +52,7 @@ class EditLocationFragment : Fragment() {
         val bundle = savedInstanceState?.getBundle("MapViewBundleKey") ?: savedInstanceState
         mapView.onCreate(bundle)
 
-        mapView.getMapAsync({ map ->
+        mapView.getMapAsync { map ->
 
             if (hasCoordinates) {
                 val marker = MarkerOptions()
@@ -54,6 +61,8 @@ class EditLocationFragment : Fragment() {
                 map.addMarker(marker)
             }
 
+            map.mapType = GoogleMap.MAP_TYPE_SATELLITE
+
             val cameraPosition = CameraPosition
                     .builder()
                     .target(coordinateOrNullIsland)
@@ -61,20 +70,23 @@ class EditLocationFragment : Fragment() {
                     .build()
             map.moveCamera(CameraUpdateFactory.newCameraPosition(cameraPosition))
 
-            map.setOnCameraMoveListener({
+            map.setOnCameraMoveListener {
                 binding.editLocationButton.isEnabled = true
-            })
-        })
+            }
+        }
 
-        binding.editLocationButton.setOnClickListener({
+        binding.editLocationButton.setOnClickListener {
             binding.editLocationButton.isEnabled = false
-            mapView.getMapAsync({
+            mapView.getMapAsync {
                 val latLong = it.cameraPosition.target
-                image?.metadata?.latitude = latLong.latitude
-                image?.metadata?.longitude = latLong.longitude
-                image?.saveMetaData()
-            })
-        })
+                imageList.forEach {
+                    it.metadata.latitude = latLong.latitude
+                    it.metadata.longitude = latLong.longitude
+                    it.saveMetaData()
+                }
+                delegate?.returnToAssessFragment(this)
+            }
+        }
 
     }
 
@@ -89,8 +101,8 @@ class EditLocationFragment : Fragment() {
     }
 
     override fun onDestroyView() {
-        super.onDestroyView()
         _binding = null
+        super.onDestroyView()
     }
 
     override fun onLowMemory() {

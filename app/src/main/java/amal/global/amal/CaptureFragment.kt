@@ -8,7 +8,6 @@ import android.hardware.SensorManager
 import android.os.Bundle
 import android.util.Log
 import android.view.*
-import android.widget.Toast
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
@@ -33,7 +32,6 @@ class CaptureFragment : Fragment() {
 
     private var _binding: FragmentCaptureBinding? = null
     private val binding get() = _binding!!
-//    private var flashToRotate: View? = null
     private lateinit var fusedLocationClient: FusedLocationProviderClient
     private lateinit var orientationListener: OrientationEventListener
 
@@ -41,18 +39,6 @@ class CaptureFragment : Fragment() {
     var delegate: CaptureDelegate? = null
     private var isSelected = false
     private var haveCameraPermission = true
-
-//    val requestPermissionLauncher =
-//            registerForActivityResult(ActivityResultContracts.RequestPermission()
-//            ) { isGranted: Boolean ->
-//                if (isGranted) {
-//                    // All is good - do nothing
-//                    Log.d(TAG, "permission granted")
-//                } else {
-//                    //change view to cover camera
-//                    Log.d(TAG, "permission denied")
-//                }
-//            }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -72,15 +58,9 @@ class CaptureFragment : Fragment() {
         return view
     }
 
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
-    }
-
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
         super.onCreateOptionsMenu(menu, inflater)
         inflater.inflate(R.menu.menu_capture, menu)
-//        val flashToRotateItem = menu.findItem(R.id.menu_item_flash)
-//        flashToRotate = flashToRotateItem?.actionView
     }
 
 
@@ -123,8 +103,8 @@ class CaptureFragment : Fragment() {
     }
 
     override fun onDestroyView() {
-        super.onDestroyView()
         _binding = null
+        super.onDestroyView()
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
@@ -153,16 +133,12 @@ class CaptureFragment : Fragment() {
     private fun handleOrientationChange(orientation: Int) {
         if (orientation >= 315 || orientation < 45) {
             binding.shutterButton.animate().rotation(0F).start()
-//            flashToRotate?.animate()?.rotation(0F)?.start()
         } else if (orientation in 45..134) {
             binding.shutterButton.animate().rotation(270F).start()
-//            flashToRotate?.animate()?.rotation(270F)?.start()
         } else if (orientation in 135..224) {
             binding.shutterButton.animate().rotation(180F).start()
-//            flashToRotate?.animate()?.rotation(180F)?.start()
         } else if (orientation in 225..314) {
             binding.shutterButton.animate().rotation(90F).start()
-//            flashToRotate?.animate()?.rotation(90F)?.start()
         } else {
             Log.d(TAG, "stall")
             //Keep the current State
@@ -194,7 +170,6 @@ class CaptureFragment : Fragment() {
         binding.cameraView.captureImage()
     }
 
-    //TODO not sure what would happen if camera did not have a flashlight can check for flashlight permissin before calling
     private fun toggleFlash(isSelected: Boolean) {
         //Could also do flash auto instead of flash on if desired
         if (isSelected) binding.cameraView.flash = FLASH_ON
