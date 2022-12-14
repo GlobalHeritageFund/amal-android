@@ -117,7 +117,7 @@ class GalleryFragment : Fragment() {
 
     private fun createDeleteAlert() {
         val builder = AlertDialog.Builder(requireContext());
-        builder.setMessage("This will permanently delete your selected images. Do you want to continue?");
+        builder.setMessage("This will permanently delete the selected images. Do you want to continue?");
         builder.setPositiveButton(R.string.delete) { dialog, which ->
             recyclerAdapter.deleteSelectedImages()
             dialog.dismiss()

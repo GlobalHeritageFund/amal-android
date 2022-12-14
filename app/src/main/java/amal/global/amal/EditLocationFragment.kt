@@ -22,14 +22,13 @@ class EditLocationFragment : Fragment() {
     private val binding get() = _binding!!
 
     //setting pre-existing coordinate as coordinates of first image
-    var imageList: List<LocalImage>? = null
-    var image: LocalImage? = imageList?.get(0)
+    var imageList: List<LocalImage> = emptyList()
 
     val coordinateOrNullIsland: LatLng
-        get() = image?.metadata?.coordinate ?: LatLng(0.0, 0.0)
+        get() = imageList.getOrNull(0)?.metadata?.coordinate ?: LatLng(0.0, 0.0)
 
     val hasCoordinates: Boolean
-        get() = image?.metadata?.hasCoordinates ?: false
+        get() = imageList.getOrNull(0)?.metadata?.hasCoordinates ?: false
 
     val zoomLevel: Float
         get() = if (hasCoordinates) 12.0f else 2.0f
@@ -80,9 +79,9 @@ class EditLocationFragment : Fragment() {
             binding.editLocationButton.isEnabled = false
             mapView.getMapAsync {
                 val latLong = it.cameraPosition.target
-                imageList?.forEach {
-                    it.metadata?.latitude = latLong.latitude
-                    it.metadata?.longitude = latLong.longitude
+                imageList.forEach {
+                    it.metadata.latitude = latLong.latitude
+                    it.metadata.longitude = latLong.longitude
                     it.saveMetaData()
                 }
                 delegate?.returnToAssessFragment(this)

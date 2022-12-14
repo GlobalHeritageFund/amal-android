@@ -29,7 +29,7 @@ class AssessFragment : Fragment() {
     private var _binding: FragmentAssessBinding? = null
     private val binding get() = _binding!!
 
-    var imageList: List<LocalImage>? = null
+    var imageList: List<LocalImage> = emptyList()
 
     var delegate: AssessDelegate? = null
 
@@ -71,7 +71,7 @@ class AssessFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         explicitlyBindMapViewSoItDoesntGetDeallocatedForOnDestroy()
-        var image: LocalImage? = imageList?.get(0)
+        val image: LocalImage? = imageList.getOrNull(0)
 
         binding.nameField.setText(image?.metadata?.name ?: "")
         binding.nameField.afterTextChanged { editable: Editable? ->
@@ -126,7 +126,7 @@ class AssessFragment : Fragment() {
                 R.id.radioObject -> "object"
                 else -> ""
             }
-            imageList?.forEach {
+            imageList.forEach {
                 it.metadata?.category = string
                 it.saveMetaData()
             }
@@ -138,7 +138,7 @@ class AssessFragment : Fragment() {
         conditionButtons.withIndex().forEach { indexedValue ->
             indexedValue.value.setOnClickListener { _ ->
                 activateConditionButtonAtIndex(indexedValue.index)
-                imageList?.forEach {
+                imageList.forEach {
                     it.metadata?.conditionNumber = indexedValue.index
                     it.saveMetaData()
                 }
@@ -148,7 +148,7 @@ class AssessFragment : Fragment() {
 
         binding.hazardsCheckBox.isChecked = image?.metadata?.hazards ?: false
         binding.hazardsCheckBox.setOnCheckedChangeListener { buttonView, isChecked ->
-            imageList?.forEach {
+            imageList.forEach {
                 it.metadata?.hazards = isChecked
                 it.saveMetaData()
             }
@@ -156,7 +156,7 @@ class AssessFragment : Fragment() {
 
         binding.safetyHazardsCheckBox.isChecked = image?.metadata?.safetyHazards ?: false
         binding.safetyHazardsCheckBox.setOnCheckedChangeListener { buttonView, isChecked ->
-            imageList?.forEach {
+            imageList.forEach {
                 it.metadata?.safetyHazards = isChecked
                 it.saveMetaData()
             }
@@ -164,7 +164,7 @@ class AssessFragment : Fragment() {
 
         binding.interventionCheckBox.isChecked = image?.metadata?.interventionRequired ?: false
         binding.interventionCheckBox.setOnCheckedChangeListener { buttonView, isChecked ->
-            imageList?.forEach {
+            imageList.forEach {
                 it.metadata?.interventionRequired = isChecked
                 it.saveMetaData()
             }
@@ -173,7 +173,7 @@ class AssessFragment : Fragment() {
 
         binding.notesField.setText(image?.metadata?.notes ?: "")
         binding.notesField.afterTextChanged { editable: Editable? ->
-            imageList?.forEach{
+            imageList.forEach{
                 it.metadata?.notes = editable.toString()
                 it.saveMetaData()
             }
@@ -205,13 +205,13 @@ class AssessFragment : Fragment() {
     }
 
     private fun updateImageView() {
-        if (!imageList.isNullOrEmpty()) {
-            if (imageList!!.size > 1) {
+        if (imageList.isNotEmpty()) {
+            if (imageList.size > 1) {
                 binding.imageView.visibility = View.GONE
-                binding.multiAssessText.text = getString(R.string.batch_assess_header,imageList!!.size.toString())
+                binding.multiAssessText.text = getString(R.string.batch_assess_header,imageList.size.toString())
                 binding.multiAssessText.visibility = View.VISIBLE
             } else {
-                imageList?.get(0)?.load(requireContext())?.into(binding.imageView)
+                imageList.getOrNull(0)?.load(requireContext())?.into(binding.imageView)
             }
         }
     }
