@@ -2,11 +2,9 @@ package amal.global.amal
 
 import amal.global.amal.databinding.FragmentReportsBinding
 import android.os.Bundle
-import android.util.Log
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
 import android.view.*
 
 interface ReportsDelegate {
@@ -49,7 +47,6 @@ class ReportsFragment : Fragment(), ReportsAdapterDelegate {
             }
         })
 
-
         view?.findViewById<FloatingActionButton>(R.id.new_report_button)?.setOnClickListener{
             delegate?.newReportTapped(this)
         }
@@ -57,7 +54,6 @@ class ReportsFragment : Fragment(), ReportsAdapterDelegate {
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
-
         activity?.setTitle(R.string.title_report)
     }
 

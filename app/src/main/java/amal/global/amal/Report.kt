@@ -13,7 +13,6 @@ interface ReportInterface {
 
 }
 
-//@Entity(tableName = "report_table")
 @JsonClass(generateAdapter = true)
 data class Report internal constructor(
         val firebaseID: String,
@@ -29,26 +28,26 @@ data class Report internal constructor(
         get() = Uri.parse("https://app.amal.global/reports/" + this.firebaseID)
 
     fun fetchPDFURL(): Promise<Uri> {
-        return Promise<Uri>({ fulfill, reject ->
+        return Promise<Uri> { fulfill, reject ->
             val reference = FirebaseStorage.getInstance().reference
                     .child("pdfs")
                     .child(firebaseID + ".pdf")
             val task = reference.downloadUrl
 
-            task.addOnCompleteListener({ task ->
+            task.addOnCompleteListener { task ->
                 val exception = task.exception
                 if (task.isSuccessful) {
                     fulfill(task.result)
                 } else if (exception != null) {
                     reject(Error(exception.message))
                 }
-            })
+            }
 
-            task.addOnFailureListener({ exception ->
+            task.addOnFailureListener { exception ->
                 reject(Error(exception.message))
-            })
+            }
 
-        })
+        }
     }
 
     val creationDateValue: Date
@@ -64,20 +63,4 @@ data class Report internal constructor(
             }
 
     }
-
-//    class Converters {
-//        private val moshi = Moshi.Builder().build()
-//        private val remoteImageType = Types.newParameterizedType(List::class.java, RemoteImage::class.java)
-//        private val remoteImagesAdapter = moshi.adapter<List<LocalImage>>(remoteImageType)
-//
-//        @TypeConverter
-//        fun stringToImages(string: String): List<LocalImage> {
-//            return remoteImagesAdapter.fromJson(string).orEmpty()
-//        }
-//
-//        @TypeConverter
-//        fun imagesToString(images: List<LocalImage>): String {
-//            return remoteImagesAdapter.toJson(images)
-//        }
-//    }
 }

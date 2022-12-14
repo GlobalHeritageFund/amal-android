@@ -23,9 +23,6 @@ data class ReportDraft internal constructor(
 ) {
 
     companion object {
-//        this will be used for upload status when implement work manager
-//        const val QUEUED = "Queued for upload"
-//        const val DRAFT = "Draft"
         @JsonClass(generateAdapter = true)
         data class DraftWrapper(@Json(name = "list") val list: MutableList<ReportDraft>)
 
@@ -52,6 +49,7 @@ class DateAdapter {
     }
 }
 
+//pretty sure this whole thing can be deleted bc was only for if used Room db, but don't have time to verify right now
 class Converters {
     private val moshi = Moshi.Builder().build()
     private val localImageType = Types.newParameterizedType(List::class.java, LocalImage::class.java)

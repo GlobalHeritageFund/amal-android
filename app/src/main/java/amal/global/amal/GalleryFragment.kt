@@ -14,7 +14,6 @@ import com.google.android.material.snackbar.Snackbar
 import java.nio.file.Files.delete
 
 interface GalleryDelegate {
-//    fun imageTapped(fragment: GalleryFragment, image: LocalImage)
     fun importButtonTapped(fragment: GalleryFragment)
     fun choseImagesToAssess(fragment: GalleryFragment, images: List<LocalImage>)
 }
@@ -73,7 +72,6 @@ class GalleryFragment : Fragment() {
         binding.assessRecyclerView.addOnItemClickListener(object: OnItemClickListener {
             override fun onItemClicked(position: Int, view: View) {
                 if (recyclerAdapter!!.getItemViewType(position) == TYPE_DIVIDER) return
-//                assessGalleryClickHandle(position)
                 recyclerAdapter.toggleSelectionAt(position)
             }
         })
@@ -105,16 +103,9 @@ class GalleryFragment : Fragment() {
 
 
     override fun onDestroyView() {
-        super.onDestroyView()
         _binding = null
+        super.onDestroyView()
     }
-
-    //currently not being called bc switched clickhandler to toggleBoxes instead
-//    fun assessGalleryClickHandle(position: Int) {
-//        val galleryPhoto = recyclerAdapter!!.galleryItems[position]  as GalleryItem.GalleryPhoto
-//        val image = galleryPhoto.photoToShow as LocalImage
-//        delegate?.imageTapped(this, image)
-//    }
 
     fun handleMultiDeleteClick() {
         if (recyclerAdapter.selectedItems().size > 0) {

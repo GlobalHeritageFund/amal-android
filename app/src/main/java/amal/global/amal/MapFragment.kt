@@ -32,7 +32,7 @@ class MapFragment : Fragment() {
         val bundle = savedInstanceState?.getBundle("MapViewBundleKey") ?: savedInstanceState
         mapView.onCreate(bundle)
 
-        mapView.getMapAsync({ map ->
+        mapView.getMapAsync { map ->
             val coordinates: List<LatLng> = images
                     .filter { it.metadata.hasCoordinates }
                     .map({ it.metadata.coordinate })
@@ -49,7 +49,7 @@ class MapFragment : Fragment() {
             map.mapType = GoogleMap.MAP_TYPE_SATELLITE
             map.moveCamera(CameraUpdateFactory.newCameraPosition(cameraPosition))
 
-        })
+        }
 
     }
 

@@ -1,16 +1,9 @@
 package amal.global.amal
 
-import amal.global.amal.ReportsAdapter.Companion.TYPE_DRAFT
-import amal.global.amal.ReportsAdapter.Companion.TYPE_EMPTY
-import amal.global.amal.ReportsAdapter.Companion.TYPE_PUBLISHED_REPORT
-import amal.global.amal.ReportsAdapter.Companion.TYPE_REPORT
 import android.content.Context
 import android.content.SharedPreferences
-import android.icu.lang.UCharacter.GraphemeClusterBreak.T
 import android.net.ConnectivityManager
-import android.net.NetworkCapabilities
 import android.os.Build
-import android.provider.ContactsContract.Data
 import androidx.recyclerview.widget.RecyclerView
 import android.util.Log
 import android.view.LayoutInflater
@@ -140,7 +133,6 @@ class ReportsAdapter(val context: Context, val delegate: ReportsAdapterDelegate 
             else -> throw IllegalArgumentException("Invalid view type")
         }
 
-//        val itemView = parent.inflate(R.layout.subtitle_row, false)
         val view = LayoutInflater
                 .from(parent.context)
                 .inflate(layout, parent, false)

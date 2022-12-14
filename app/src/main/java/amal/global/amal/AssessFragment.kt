@@ -7,7 +7,6 @@ import android.os.Build
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.text.Editable
-import android.util.Log
 import android.view.*
 import android.widget.Button
 import androidx.appcompat.app.AlertDialog
@@ -15,7 +14,6 @@ import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.MapView
 import com.google.android.gms.maps.model.CameraPosition
-import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.MarkerOptions
 import com.google.android.material.snackbar.Snackbar
 
@@ -31,7 +29,6 @@ class AssessFragment : Fragment() {
     private var _binding: FragmentAssessBinding? = null
     private val binding get() = _binding!!
 
-//    var image: LocalImage? = null
     var imageList: List<LocalImage>? = null
 
     var delegate: AssessDelegate? = null
@@ -95,7 +92,7 @@ class AssessFragment : Fragment() {
         val bundle = savedInstanceState?.getBundle("MapViewBundleKey") ?: savedInstanceState
         mapView.onCreate(bundle)
 
-        mapView.getMapAsync({ map ->
+        mapView.getMapAsync { map ->
             map.setOnMapClickListener {
                 delegate?.mapTapped(this@AssessFragment)
             }
@@ -115,63 +112,63 @@ class AssessFragment : Fragment() {
                 val cameraPosition = CameraPosition.builder().target(it.coordinate).zoom(12.0f).build()
                 map.moveCamera(CameraUpdateFactory.newCameraPosition(cameraPosition))
             }
-        })
+        }
 
         when (image?.metadata?.category ?: "") {
             "area" -> binding.categoryRadioGroup.check(R.id.radioOverall)
             "site" -> binding.categoryRadioGroup.check(R.id.radioSite)
             "object" -> binding.categoryRadioGroup.check(R.id.radioObject)
         }
-        binding.categoryRadioGroup.setOnCheckedChangeListener({ radioGroup, checkedID ->
+        binding.categoryRadioGroup.setOnCheckedChangeListener { radioGroup, checkedID ->
             val string = when (checkedID) {
                 R.id.radioOverall -> "area"
                 R.id.radioSite -> "site"
                 R.id.radioObject -> "object"
                 else -> ""
             }
-            imageList?.forEach{
+            imageList?.forEach {
                 it.metadata?.category = string
                 it.saveMetaData()
             }
 
-        })
+        }
 
         activateConditionButtonAtIndex(image?.metadata?.conditionNumber ?: 0)
 
-        conditionButtons.withIndex().forEach({ indexedValue ->
-            indexedValue.value.setOnClickListener({ _ ->
+        conditionButtons.withIndex().forEach { indexedValue ->
+            indexedValue.value.setOnClickListener { _ ->
                 activateConditionButtonAtIndex(indexedValue.index)
-                imageList?.forEach{
+                imageList?.forEach {
                     it.metadata?.conditionNumber = indexedValue.index
                     it.saveMetaData()
                 }
 
-            })
-        })
+            }
+        }
 
         binding.hazardsCheckBox.isChecked = image?.metadata?.hazards ?: false
-        binding.hazardsCheckBox.setOnCheckedChangeListener({ buttonView, isChecked ->
-            imageList?.forEach{
+        binding.hazardsCheckBox.setOnCheckedChangeListener { buttonView, isChecked ->
+            imageList?.forEach {
                 it.metadata?.hazards = isChecked
                 it.saveMetaData()
             }
-        })
+        }
 
         binding.safetyHazardsCheckBox.isChecked = image?.metadata?.safetyHazards ?: false
-        binding.safetyHazardsCheckBox.setOnCheckedChangeListener({ buttonView, isChecked ->
-            imageList?.forEach{
+        binding.safetyHazardsCheckBox.setOnCheckedChangeListener { buttonView, isChecked ->
+            imageList?.forEach {
                 it.metadata?.safetyHazards = isChecked
                 it.saveMetaData()
             }
-        })
+        }
 
         binding.interventionCheckBox.isChecked = image?.metadata?.interventionRequired ?: false
-        binding.interventionCheckBox.setOnCheckedChangeListener({ buttonView, isChecked ->
-            imageList?.forEach{
+        binding.interventionCheckBox.setOnCheckedChangeListener { buttonView, isChecked ->
+            imageList?.forEach {
                 it.metadata?.interventionRequired = isChecked
                 it.saveMetaData()
             }
-        })
+        }
 
 
         binding.notesField.setText(image?.metadata?.notes ?: "")
@@ -185,13 +182,13 @@ class AssessFragment : Fragment() {
         binding.coordinatesTextView.text = image?.metadata?.coordinatesString()
         binding.editLocationButton.text = if (hasCoordinates) "Edit Location" else "Set Location"
 
-        binding.editLocationButton.setOnClickListener({ view ->
+        binding.editLocationButton.setOnClickListener { view ->
             if (haveNetwork(requireContext())) {
                 delegate?.editLocationTapped(this)
             } else {
-                Snackbar.make(binding.root,"Cannot edit location without a network connection.", Snackbar.LENGTH_LONG).show()
+                Snackbar.make(binding.root, "Cannot edit location without a network connection.", Snackbar.LENGTH_LONG).show()
             }
-        })
+        }
 
         updateImageView()
     }
@@ -251,7 +248,6 @@ class AssessFragment : Fragment() {
                 //I would not think the delete button would delete the picture, only the draft assessment
                 //with delete functionality on gallery page active, this seems unnecessary and potentially confusing
                 createDeleteAlert()
-//                delegate?.deleteButtonTapped(this, imageList)
                 return true
             }
             R.id.menu_item_save -> {
@@ -289,8 +285,8 @@ class AssessFragment : Fragment() {
     }
 
     override fun onDestroyView() {
-        super.onDestroyView()
         _binding = null
+        super.onDestroyView()
     }
 
     override fun onStop() {

@@ -8,19 +8,12 @@ import android.net.ConnectivityManager
 import android.net.NetworkCapabilities
 import android.os.Build
 import android.os.Bundle
-import android.util.Log
-import android.util.Log.d
 import androidx.fragment.app.Fragment
 import android.view.*
 import android.widget.Button
 import android.widget.RadioButton
 import androidx.appcompat.app.AlertDialog
-import androidx.core.content.ContentProviderCompat.requireContext
-import androidx.room.PrimaryKey
 import com.google.android.material.bottomsheet.BottomSheetDialog
-import com.squareup.moshi.*
-import com.squareup.moshi.kotlin.reflect.KotlinJsonAdapterFactory
-import okio.`-DeprecatedOkio`.source
 import java.text.DateFormat
 import java.util.*
 
@@ -89,7 +82,6 @@ class NewReportFragment: Fragment() {
         }
         publishButton.setOnClickListener{
             setFinalReportValues()
-            //todo grey out publish button?
             when (getNetworkAvailability(requireContext())) {
                 NetworkStatus.NOTCONNECTED -> {
                     createNoNetworkAlert()
@@ -180,7 +172,7 @@ class NewReportFragment: Fragment() {
     }
 
     private fun setReportValuesFromExistingDraft() {
-        //non-null asserted bc only calling if existingDrsft not null
+        //non-null asserted bc only calling if existingDraft not null
         report.id = existingDraft!!.id //overwriting id created when new ReportDraft created
         report.images = existingDraft!!.images
         report.creationDate = existingDraft!!.creationDate //overwriting date created when ReportDraft created

@@ -21,7 +21,6 @@ class EditLocationFragment : Fragment() {
     private var _binding: FragmentEditLocationBinding? = null
     private val binding get() = _binding!!
 
-//    var image: LocalImage? = null
     //setting pre-existing coordinate as coordinates of first image
     var imageList: List<LocalImage>? = null
     var image: LocalImage? = imageList?.get(0)
@@ -54,7 +53,7 @@ class EditLocationFragment : Fragment() {
         val bundle = savedInstanceState?.getBundle("MapViewBundleKey") ?: savedInstanceState
         mapView.onCreate(bundle)
 
-        mapView.getMapAsync({ map ->
+        mapView.getMapAsync { map ->
 
             if (hasCoordinates) {
                 val marker = MarkerOptions()
@@ -72,10 +71,10 @@ class EditLocationFragment : Fragment() {
                     .build()
             map.moveCamera(CameraUpdateFactory.newCameraPosition(cameraPosition))
 
-            map.setOnCameraMoveListener({
+            map.setOnCameraMoveListener {
                 binding.editLocationButton.isEnabled = true
-            })
-        })
+            }
+        }
 
         binding.editLocationButton.setOnClickListener {
             binding.editLocationButton.isEnabled = false
@@ -103,8 +102,8 @@ class EditLocationFragment : Fragment() {
     }
 
     override fun onDestroyView() {
-        super.onDestroyView()
         _binding = null
+        super.onDestroyView()
     }
 
     override fun onLowMemory() {
