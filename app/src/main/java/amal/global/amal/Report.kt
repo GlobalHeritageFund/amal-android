@@ -1,8 +1,6 @@
 package amal.global.amal
 
 import android.net.Uri
-import androidx.room.Entity
-import androidx.room.TypeConverter
 import com.google.firebase.storage.FirebaseStorage
 import com.squareup.moshi.*
 import com.squareup.moshi.kotlin.reflect.KotlinJsonAdapterFactory
