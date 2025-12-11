@@ -48,7 +48,7 @@
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Coordinates"
+            android:text="@string/coordinates"
             android:labelFor="@+id/coordinatesTextView"/>
 
         <TextView
@@ -61,14 +61,14 @@
             android:id="@+id/editLocationButton"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Edit Location" />
+            android:text="@string/edit_location" />
 
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="@string/category" />
 
-        <RadioGroup xmlns:android="http://schemas.android.com/apk/res/android"
+        <RadioGroup
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal"

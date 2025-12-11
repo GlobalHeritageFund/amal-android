@@ -6,7 +6,7 @@
         android:id="@+id/contentImageView"
         android:layout_width="match_parent"
         android:layout_height="100dp"
-        android:contentDescription="Image"
+        android:contentDescription="@string/image"
         android:padding="5dp" />
 
     <ImageView
@@ -16,6 +16,6 @@
         android:layout_margin="5dp"
         android:src="@drawable/ic_img_select"
         android:visibility="visible"
-        android:contentDescription="Selected checkbox" />
+        android:contentDescription="@string/selected_checkbox" />
 
 </RelativeLayout>

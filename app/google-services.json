@@ -1,0 +1,55 @@
+{
+  "project_info": {
+    "project_number": "202868802196",
+    "firebase_url": "https://amalinheritage-566f5.firebaseio.com",
+    "project_id": "amalinheritage-566f5",
+    "storage_bucket": "amalinheritage-566f5.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:202868802196:android:70f525d9e4085e73acea81",
+        "android_client_info": {
+          "package_name": "global.amal.app"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "202868802196-q023dh8kt2rmiv0uo743pip23d7pu17r.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "global.amal.app",
+            "certificate_hash": "fa7b41b64ff51475028c689f2399ee4017d75472"
+          }
+        },
+        {
+          "client_id": "202868802196-v3fs6ac02fc14cf5jde52skkkg7hcoon.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCYNEiX9TWra-dhUlc7bV54r6txP0O53jw"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "202868802196-v3fs6ac02fc14cf5jde52skkkg7hcoon.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "202868802196-sjoamk8ig6rhk6sb3lpop0jfgrgvj4t4.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "org.amalglobal.amalinheritage"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

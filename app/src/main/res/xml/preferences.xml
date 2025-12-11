@@ -36,7 +36,7 @@
             android:title="Privacy Policy"
             android:summary="Go to the privacy policy in your web browser.">
             <intent android:action="android.intent.action.VIEW"
-                android:data="https://globalheritagefund.org/index.php/news-resources/library/privacy-policy/" />
+                android:data="https://docs.google.com/document/d/1up4e5H8TPGCsKISR651VFoMkJtRucnXJMY-5MfqTWPQ/edit?usp=sharing"/>
         </Preference>
         <Preference
             android:title="Terms of Service"

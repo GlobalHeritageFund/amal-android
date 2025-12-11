@@ -1,14 +1,20 @@
-apply plugin: 'com.android.application'
-apply plugin: 'kotlin-android'
-apply plugin: 'kotlin-kapt'
+plugins {
+    id 'com.android.application'
+    id 'org.jetbrains.kotlin.android'
+    id 'com.google.devtools.ksp'
+    id 'com.google.gms.google-services'
+    id 'com.google.firebase.crashlytics'
+}
 
 android {
-    compileSdkVersion 32
+    namespace "global.amal.app"
+    compileSdkVersion 35
+
     defaultConfig {
-        applicationId "amal.global.amal"
-        minSdkVersion 19
-        targetSdkVersion 32
-        versionCode 18
+        applicationId "global.amal.app"
+        minSdkVersion 23
+        targetSdkVersion 35
+        versionCode 30
         versionName "1.0"
         multiDexEnabled  true
     }
@@ -19,59 +25,87 @@ android {
 
     buildTypes {
         release {
+            ndk {
+                debugSymbolLevel = 'FULL'
+            }
             minifyEnabled true
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
-    namespace 'amal.global.amal'
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
+    kotlinOptions {
+        jvmTarget = "1.8"
+    }
 }
 
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
-
-    //support libs
     implementation 'androidx.multidex:multidex:2.0.1'
-    implementation 'androidx.appcompat:appcompat:1.4.2'
-    implementation 'androidx.preference:preference:1.2.0'
-    implementation 'com.google.android.material:material:1.6.1'
-    implementation 'androidx.exifinterface:exifinterface:1.3.4'
+
+    //should no longer need this defined explicity since modern jetbrains kotlin plugin should handle it
+    //implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
+
+    //Core and UI libraries
+    implementation 'androidx.activity:activity-ktx:1.9.0'//changed from non-ktx 1.8.0
+    implementation 'androidx.appcompat:appcompat:1.7.0'//was 1.4.2
+    implementation 'androidx.preference:preference-ktx:1.2.1'//changed from non-ktx 1.2.0
+    implementation 'com.google.android.material:material:1.12.0'//was 1.6.1
+    implementation 'androidx.exifinterface:exifinterface:1.3.7'//was 1.3.4
     implementation 'androidx.cardview:cardview:1.0.0'
-
-    // Kotlin
-    implementation "org.jetbrains.kotlinx:kotlinx-coroutines-core:$kotlin_coroutines"
-    implementation "org.jetbrains.kotlinx:kotlinx-coroutines-android:$kotlin_coroutines"
-
-    //other
     implementation 'androidx.constraintlayout:constraintlayout:2.1.4'
-    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
-    implementation 'com.wonderkiln:camerakit:0.13.4'
-    implementation 'com.jakewharton:disklrucache:2.0.2'
-    implementation 'joda-time:joda-time:2.12.1'
-    implementation 'com.google.android.gms:play-services-maps:18.1.0'
-    implementation 'com.google.android.gms:play-services-location:21.0.1'
-    implementation 'com.firebaseui:firebase-ui-auth:7.2.0'
 
-    //firebase
-    implementation 'com.google.firebase:firebase-core:21.1.1'
-    implementation 'com.google.firebase:firebase-database:20.1.0'
-    implementation 'com.google.firebase:firebase-storage:20.1.0'
-    implementation 'com.google.firebase:firebase-auth:21.1.0'
-    implementation "com.google.android.gms:play-services-auth:20.3.0"
 
-    implementation "com.squareup.okhttp3:okhttp:4.10.0"
+    // Kotlin and coroutines
+    //don't remember old version being used, but can find in old commit if necessary
+    implementation "org.jetbrains.kotlinx:kotlinx-coroutines-core:1.8.0"
+    implementation "org.jetbrains.kotlinx:kotlinx-coroutines-android:1.8.0"
 
-    //json
-    implementation 'com.squareup.moshi:moshi-kotlin:1.14.0'
-    kapt 'com.squareup.moshi:moshi-kotlin-codegen:1.14.0'
+    //camerax
+    def camerax_version = "1.3.4"//changed from 1.2.2, although core and view also defined as 1.4.2
+    implementation "androidx.camera:camera-core:${camerax_version}"
+    implementation "androidx.camera:camera-camera2:${camerax_version}"
+    implementation "androidx.camera:camera-lifecycle:${camerax_version}"
+    implementation "androidx.camera:camera-view:${camerax_version}"
+    implementation "androidx.camera:camera-extensions:${camerax_version}"
+    //commenting out below bc causing issues and currently not using video
+    //implementation "androidx.camera:camera-video:${camerax_version}"
+
+    //firebase (now switched over to using BOM - using enforcePlatform and older bom to match kotlin1.9 version using)
+    implementation enforcedPlatform('com.google.firebase:firebase-bom:32.8.1') //when changed package name suggested 33.1.4
+    implementation 'com.google.firebase:firebase-auth'//was 21.1.0
+    //core should no longer be needed separately,as functionality should now be included in firebase-auth
+    //implementation 'com.google.firebase:firebase-core'//was 21.1.1
+    implementation 'com.google.firebase:firebase-database'//was 20.1.0
+    implementation 'com.google.firebase:firebase-storage'//was 20.1.0
+
+    // Crashlytics NDK and Analytics libraries
+    // No versions specified because using BOM
+    implementation("com.google.firebase:firebase-crashlytics-ndk")
+    implementation("com.google.firebase:firebase-analytics")
+
+    //firebase ui & google auth
+    implementation 'com.firebaseui:firebase-ui-auth:8.0.2'//changed from 7.2.0
+    implementation "com.google.android.gms:play-services-auth"//changed from 20.3.0
+
+    //google play services
+    implementation 'com.google.android.gms:play-services-maps:18.2.0' //changed from 18.1.0
+    implementation 'com.google.android.gms:play-services-location:21.3.0' //changed from 21.0.1
+
+    //networking and json
+    implementation "com.squareup.okhttp3:okhttp:4.12.0" //changed from 4.10.2
+    implementation 'com.squareup.moshi:moshi-kotlin:1.15.1' //changed from 1.14.0
+    ksp 'com.squareup.moshi:moshi-kotlin-codegen:1.15.1' //changed from 1.15.2?
 
     //glide
-    implementation 'com.github.bumptech.glide:glide:4.14.2'
-    kapt 'com.github.bumptech.glide:compiler:4.14.2'
+    implementation 'com.github.bumptech.glide:glide:4.16.0' //changed from 4.14.2
+    ksp 'com.github.bumptech.glide:ksp:4.14.2'
+
+    //other utilities
+    //unsure is lrucache is used but keeping for now
+    implementation 'com.jakewharton:disklrucache:2.0.2'
+    implementation 'joda-time:joda-time:2.12.7' //changed from 2.12.1
 
 }
-
-repositories {
-    mavenCentral()
-}
-
-apply plugin: 'com.google.gms.google-services'

@@ -5,12 +5,12 @@
     <item
         android:id="@+id/menu_item_web_report"
         app:showAsAction="never"
-        android:title="Web Report">
+        android:title="@string/web_report">
     </item>
     <item
         android:id="@+id/menu_item_pdf_report"
         app:showAsAction="never"
-        android:title="PDF Report">
+        android:title="@string/pdf_report">
     </item>
 
 </menu>

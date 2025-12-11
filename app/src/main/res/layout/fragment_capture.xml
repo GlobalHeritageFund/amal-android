@@ -3,14 +3,12 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="amal.global.amal.CaptureFragment">
+    tools:context="global.amal.app.CaptureFragment">
 
-    <com.wonderkiln.camerakit.CameraView
-        android:id="@+id/cameraView"
+    <androidx.camera.view.PreviewView
+        android:id="@+id/viewFinder"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:adjustViewBounds="true"
-        android:visibility="visible"/>
+        android:layout_height="match_parent" />
 
     <androidx.appcompat.widget.LinearLayoutCompat
         android:id="@+id/noCameraView"

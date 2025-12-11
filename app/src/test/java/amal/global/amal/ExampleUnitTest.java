@@ -1,4 +1,4 @@
-package amal.global.amal;
+package global.amal.app;
 
 import org.junit.Test;
 
